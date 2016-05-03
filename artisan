@@ -13,6 +13,12 @@
 |
 */
 
+if( isset($argv[1]) && $argv[1] == 'list' &&
+    isset($argv[2]) && $argv[2] == '--xml' ) {
+    $argv[2] = '--format=xml';
+    $_SERVER['argv'] = $argv;
+}
+
 require __DIR__.'/bootstrap/autoload.php';
 
 $app = require_once __DIR__.'/bootstrap/app.php';

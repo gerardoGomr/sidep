@@ -1,5 +1,5 @@
-/.idea
-/.git
+.idea/
+.git/
 /vendor
 /node_modules
 /public/storage
@@ -7,3 +7,5 @@ Homestead.yaml
 Homestead.json
 .env
 /config
+_ide_helper.php
+artisan.php
