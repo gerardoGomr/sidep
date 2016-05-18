@@ -1,0 +1,30 @@
+Sidep\Dominio\ServidoresPublicos\Encargo:
+  type: entity
+  table: encargo
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    adscripcion:
+      type: string
+      length: 80
+      nullable: false
+      column: adscripcion
+  oneToOne:
+    puesto:
+      targetEntity: Puesto
+      joinColumn:
+        name: puesto_id
+        referencedColumnName: id
+    servidorPublico:
+      targetEntity: ServidorPublico
+      joinColumn:
+        name: servidor_publico_id
+        referencedColumnName: id
+    cuentaAcceso:
+      targetEntity: CuentaAcceso
+      joinColumn:
+        name: cuenta_acceso_id
+        referencedColumnName: id

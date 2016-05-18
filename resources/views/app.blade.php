@@ -46,7 +46,7 @@
 			<!-- Footer -->
 			<div id="footer" class="hidden-print">
 				<!--  Copyright Line -->
-				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIGED v1.0</a> - Sistema Integral de Gestión de Documentos C3 - Unidad de Informática</div>
+				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIGED v1.0</a> - Sistema Integral de Declaraciones  Patrimoniales C3 - Unidad de Informática</div>
 				<!--  End Copyright Line -->
 			</div>
 			<!-- Footer END -->

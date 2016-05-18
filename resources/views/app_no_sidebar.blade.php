@@ -36,23 +36,7 @@
 
 			<div id="content">
 				<div class="layout-app">
-					<div class="row row-app">
-						<div class="col-md-12">
-							<div class="col-separator col-unscrollable box">
-								<h4 class="innerAll bg-gray text-center"><i class="fa fa-lock"></i> Sistema Integral de Gestión de Documentos C3</h4>
-								<div class="col-table">
-									<div class="col-table-row">
-										<div class="col-app col-unscrollable">
-											<div class="col-app">
-												@yield('contenido')
-											</div>
-										</div>
-									</div>
-
-								</div>
-							</div>
-						</div>
-					</div>
+					@yield('contenido')
 				</div>
 			</div>
 
@@ -62,7 +46,7 @@
 			<!-- Footer -->
 			<div id="footer" class="hidden-print">
 				<!--  Copyright Line -->
-				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIGED v1.0</a> - Sistema Integral de Gestión de Documentos C3 - Unidad de Informática</div>
+				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIDEP v2.0</a> - Sistema Integral de Declaraciones Patrimoniales C3 - Unidad de Informática</div>
 				<!--  End Copyright Line -->
 			</div>
 			<!-- Footer END -->

@@ -1,0 +1,34 @@
+Sidep\Dominio\ServidoresPublicos\ServidorPublico:
+  type: entity
+  table: servidor_publico
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    nombre:
+      type: string
+      length: 80
+      nullable: false
+      column: nombre
+    paterno:
+      type: string
+      length: 80
+      nullable: false
+      column: paterno
+    materno:
+      type: string
+      length: 80
+      nullable: false
+      column: materno
+    curp:
+      type: string
+      length: 18
+      nullable: false
+      column: curp
+    rfc:
+      type: string
+      length: 15
+      nullable: false
+      column: rfc

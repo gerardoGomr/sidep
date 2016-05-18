@@ -1,0 +1,14 @@
+Sidep\Dominio\ServidoresPublicos\Puesto:
+  type: entity
+  table: puesto
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    puesto:
+      type: string
+      length: 100
+      nullable: false
+      column: puesto

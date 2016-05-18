@@ -34,6 +34,8 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
         ],
+
+        'usuarioC3Autenticado' => [\Sidep\Http\Middleware\UsuarioC3Autenticado::class]
     ];
 
     /**

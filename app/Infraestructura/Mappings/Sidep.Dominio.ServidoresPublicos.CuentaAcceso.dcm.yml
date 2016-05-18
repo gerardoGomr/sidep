@@ -1,0 +1,19 @@
+Sidep\Dominio\ServidoresPublicos\CuentaAcceso:
+  type: entity
+  table: cuenta_acceso
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    username:
+      type: string
+      length: 80
+      nullable: false
+      column: username
+    password:
+      type: string
+      length: 80
+      nullable: false
+      column: contrasenia

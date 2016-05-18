@@ -3,7 +3,7 @@
 	<div id="sidebar-fusion-wrapper">
 		<div id="brandWrapper" class="custom-logo" style="background: url('public/img/fondo.png') repeat-x">
 			 <a href="{{ url('/') }}" class="display-block-inline pull-left">
-			 	<img src="{{ asset('public/img/logo_255.png') }}" border="0" alt="Centro Estatal de Control de Confianza Certificado">
+			 	<img src="{{ asset('public/img/logo_255.png') }}" class="border-none" alt="Centro Estatal de Control de Confianza Certificado">
 			 </a>
 		</div>
 		<div id="logoWrapper">
@@ -13,26 +13,14 @@
 			</div>
 		</div>
 		<ul class="menu list-unstyled" id="navigation_current_page">
-			<li class="reset profile-avatar">
-				<div class="tab-content">
-					<div class="tab-pane active" id="profile_avatar_large">
-						<div class="profile-avatar innerT">
-							<div class="text-center innerTB">
-								<span class="display-block-inline animated bounceIn"><img src="{{ asset('public/img/50x50.png') }}" class="img-responsive img-circle thumb" /></span>
-							</div>
-						</div>
-						<div class="innerAll">
-							<h4 class="text-white margin-none"><i class="fa text-small fa-circle text-success pull-right"></i> {{ request()->session()->get('usuario')->nombreCompleto() }}</h4>
-							<p class="margin-none text-muted text-small">Director</p>
-						</div>
-					</div>
-				</div>
-			</li>
-			<li class="active">
-				<a href="{{ url('registrar') }}" class="glyphicons file_import"><i></i><span>Registrar oficios</span></a>
-			</li>
 			<li>
-				<a href="{{ url('redactar') }}" class="glyphicons circle_plus"><i></i><span>Redactar documento</span></a>
+				<a href="" class="glyphicons group"><i></i><span>Servidores públicos</span></a>
+			</li>
+			<li class="hasSubmenu">
+				<a href="#submenuAdmon" class="glyphicons cogwheels" data-toggle="collapse"><i></i><span>Administración</span></a>
+				<ul id="submenuAdmon" class="animated fadeIn collapse">
+					<li class="text-small"><a href="{{ url('registrar') }}" class="glyphicons ban"><i></i><span>Declaraciones no realizadas</span></a></li>
+				</ul>
 			</li>
 
 			<li>
