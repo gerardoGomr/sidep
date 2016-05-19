@@ -488,9 +488,9 @@ h6 [class*="icon-"] {
   border-right: none !important;
 }
 .box-shadow-none {
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 0 5px 1px #B33636 !important;
+  -moz-box-shadow: #B33636 !important;
+  -webkit-box-shadow: #B33636 !important;
 }
 .bg-container {
   background: #eaeaea !important;
@@ -2749,9 +2749,9 @@ input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
   border-color: #efefef;
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 0 5px 1px #B33636 !important;
+  -moz-box-shadow: #B33636 !important;
+  -webkit-box-shadow: #B33636 !important;
 }
 select,
 textarea,
@@ -2771,9 +2771,6 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   font-size: 13px;
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
   border-radius: 0 0 0 0;
   border-color: #efefef;
 }
@@ -3977,9 +3974,9 @@ html.app .loginWrapper #content {
   text-shadow: none;
 }
 .widget.widget-body-multiple {
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 0 5px 1px #B33636 !important;
+  -moz-box-shadow: #B33636 !important;
+  -webkit-box-shadow: #B33636 !important;
 }
 .widget.widget-body-multiple > .widget-body {
   margin-bottom: 5px;
@@ -4398,9 +4395,9 @@ div.glyphicons.glyphicon-regular i:before {
 }
 .select2-drop {
   border-color: #efefef;
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 0 5px 1px #B33636 !important;
+  -moz-box-shadow: #B33636 !important;
+  -webkit-box-shadow: #B33636 !important;
 }
 /* --- LOADING [less.form-wizards] from assets/components/common/forms/wizards/assets/custom/less/form-wizards.less */
 .wizard .wizard-head {
@@ -5389,9 +5386,6 @@ div.DTCR_pointer {
 /* --- LOADING [less.buttons] from assets/components/common/ui/buttons/assets/buttons.less */
 .btn {
   text-shadow: none;
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
 }
 .btn.active,
 .btn:active {
@@ -5982,9 +5976,9 @@ div.DTCR_pointer {
 .progress {
   background: #f0f0f0;
   margin: 0 0 10px;
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 0 5px 1px #B33636 !important;
+  -moz-box-shadow: #B33636 !important;
+  -webkit-box-shadow: #B33636 !important;
   border-radius: 0 0 0 0;
 }
 .progress.count-outside {
@@ -6218,9 +6212,9 @@ div.DTCR_pointer {
 .accordion .panel {
   border-color: #efefef;
   border-radius: 0 0 0 0;
-  box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 0 5px 1px #B33636 !important;
+  -moz-box-shadow: #B33636 !important;
+  -webkit-box-shadow: #B33636 !important;
 }
 .accordion .panel-body {
   font-size: 13px;

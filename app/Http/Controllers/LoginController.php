@@ -24,7 +24,6 @@ class LoginController extends Controller
      */
     public function login(Request $request, EntityManager $entityManager)
     {
-
         $logueo = LoguearEncargos::loguear($request, new DoctrineEncargosC3Repositorio($entityManager));
 
         if ($logueo->login()) {;

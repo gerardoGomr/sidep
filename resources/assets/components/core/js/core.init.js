@@ -257,7 +257,7 @@ if (window.location != window.parent.location)
 		disableResponsiveNavbarSubmenus();
 	});
 
-	$(window).bind('exitBreakpoint992',function() {		
+	$(window).bind('exitBreakpoint992',function() {
 		disableContentNiceScroll();
 	});
 
@@ -271,8 +271,9 @@ if (window.location != window.parent.location)
 	{
 		window.loadTriggered = true;
 
-		if ($(window).width() < 992)
+		if ($(window).width() < 992) {
 			$('.hasNiceScroll').getNiceScroll().stop();
+		}
 
 		if ($(window).width() < 768)
 			enableResponsiveNavbarSubmenus();

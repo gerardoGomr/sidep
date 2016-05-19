@@ -15,8 +15,11 @@
 Route::group(['prefix' => 'admin'], function() {
     Route::group(['middleware' => ['usuarioC3Autenticado']], function() {
         Route::get('/', function () {
-            return view('welcome');
+            return view('admin.principal');
         });
+
+        // servidores publicos
+        Route::get('servidores', 'Admin\ServidoresPublicosController@index');
     });
 
     // login

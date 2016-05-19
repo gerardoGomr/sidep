@@ -32,12 +32,15 @@ elixir(function(mix) {
 				'components/core/js/sidebar.kis.init.js',
 				'components/core/js/core.init.js',
 				'components/core/js/animations.init.js',
+				'components/core/js/hack768-1024.js',
 				'components/common/forms/validator/assets/lib/jquery-validation/dist/jquery.validate.min.js',
 				'components/common/forms/validator/assets/lib/jquery-validation/dist/additional-methods.min.js',
 				'components/common/forms/validator/assets/lib/jquery-validation/dist/jquery.form.js',
 				'components/common/forms/validator/assets/lib/jquery-validation/dist/validaciones.js',
 				'components/common/forms/elements/bootstrap-datepicker/assets/lib/js/bootstrap-datepicker.js',
 				'components/common/forms/elements/bootstrap-datepicker/assets/lib/js/locales/bootstrap-datepicker.es.js',
+				'components/common/forms/elements/fuelux-radio/fuelux-radio.js',
+				'components/common/forms/elements/fuelux-checkbox/fuelux-checkbox.js'
 			],
 			'public/js/base-scripts.js',
 			'resources/assets'

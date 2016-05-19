@@ -3,8 +3,9 @@
 	if (!Modernizr.touch && $('#menu').is(':visible'))
 		$('.container-fluid').removeClass('menu-hidden');
 
-	if (Modernizr.touch)
+	if (Modernizr.touch) {
 		$('#menu').removeClass('hidden-xs');
+	}
 
 	// handle menu toggle button action
 	window.toggleMenuHidden = function()
@@ -15,7 +16,6 @@
 		$('.container-fluid').toggleClass('menu-hidden');
 		$('body').toggleClass('menu-left-visible');
 		$('#menu').removeClass('hidden-xs');
-
 		resizeNiceScroll();
 	}
 

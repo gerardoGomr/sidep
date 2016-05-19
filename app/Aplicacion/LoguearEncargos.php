@@ -2,10 +2,12 @@
 namespace Sidep\Aplicacion;
 
 use Illuminate\Http\Request;
+use Sidep\Dominio\ServidoresPublicos\CuentaAcceso;
 use Sidep\Dominio\ServidoresPublicos\EncargosRepositorio;
 
 /**
  * Class LoguearEncargos
+ * Clase Application Service
  * loguear a un encargo, perteneciente a un servidor publico
  * @package Sidep\Aplicacion
  * @author Gerardo Adrián Gómez Ruiz
