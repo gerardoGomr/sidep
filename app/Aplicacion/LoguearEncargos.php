@@ -2,8 +2,7 @@
 namespace Sidep\Aplicacion;
 
 use Illuminate\Http\Request;
-use Sidep\Dominio\ServidoresPublicos\CuentaAcceso;
-use Sidep\Dominio\ServidoresPublicos\EncargosRepositorio;
+use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 
 /**
  * Class LoguearEncargos

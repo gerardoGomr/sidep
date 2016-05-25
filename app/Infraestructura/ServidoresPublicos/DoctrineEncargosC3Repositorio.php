@@ -1,7 +1,7 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
-use Sidep\Dominio\ServidoresPublicos\EncargosRepositorio;
+use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;
 
 /**

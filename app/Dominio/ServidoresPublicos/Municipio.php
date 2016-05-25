@@ -2,12 +2,13 @@
 namespace Sidep\Dominio\ServidoresPublicos;
 
 /**
- * Class Puesto
+ * Class Municipio
+ * municipio donde vive el funcionario público
  * @package Sidep\Dominio\ServidoresPublicos
  * @author Gerardo Adrián Gómez Ruiz
- * @version 1.0
+ * @version
  */
-class Puesto
+class Municipio
 {
     /**
      * @var int
@@ -17,17 +18,17 @@ class Puesto
     /**
      * @var string
      */
-    private $puesto;
+    private $municipio;
 
     /**
-     * Puesto constructor.
+     * Municipio constructor.
      * @param int $id
-     * @param string $puesto
+     * @param string $municipio
      */
-    public function __construct($id = 0, $puesto = null)
+    public function __construct($id = 0, $municipio = null)
     {
-        $this->id     = $id;
-        $this->puesto = $puesto;
+        $this->id        = $id;
+        $this->municipio = $municipio;
     }
 
     /**
@@ -41,8 +42,8 @@ class Puesto
     /**
      * @return string
      */
-    public function getPuesto()
+    public function getMunicipio()
     {
-        return $this->puesto;
+        return $this->municipio;
     }
 }

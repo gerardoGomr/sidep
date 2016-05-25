@@ -1,0 +1,19 @@
+Sidep\Dominio\ServidoresPublicos\Dependencia:
+  type: entity
+  table: dependencia
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    dependencia:
+      type: string
+      length: 80
+      nullable: false
+      column: dependencia
+    clave:
+      type: string
+      length: 80
+      nullable: false
+      column: clave

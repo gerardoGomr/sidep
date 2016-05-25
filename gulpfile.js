@@ -39,8 +39,10 @@ elixir(function(mix) {
 				'components/common/forms/validator/assets/lib/jquery-validation/dist/validaciones.js',
 				'components/common/forms/elements/bootstrap-datepicker/assets/lib/js/bootstrap-datepicker.js',
 				'components/common/forms/elements/bootstrap-datepicker/assets/lib/js/locales/bootstrap-datepicker.es.js',
+				'components/common/forms/elements/select2/assets/lib/js/select2.js',
 				'components/common/forms/elements/fuelux-radio/fuelux-radio.js',
-				'components/common/forms/elements/fuelux-checkbox/fuelux-checkbox.js'
+				'components/common/forms/elements/fuelux-checkbox/fuelux-checkbox.js',
+				'components/common/forms/validaciones.js'
 			],
 			'public/js/base-scripts.js',
 			'resources/assets'
@@ -59,6 +61,7 @@ elixir(function(mix) {
 				'components/plugins/prettyprint/assets/css/prettify.css',
 				'components/library/animate/animate.min.css',
 				'components/common/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
+				'components/common/forms/elements/select2/assets/lib/css/select2.css',
 				'components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
 				'components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
 				'components/library/icons/glyphicons/assets/css/glyphicons_social.css',
@@ -69,10 +72,17 @@ elixir(function(mix) {
 			'resources/assets'
 		)
 		.copy([
-			'resources/assets/components/library/icons/fontawesome/assets/fonts',
-			'resources/assets/components/library/icons/glyphicons/assets/fonts',
-			'resources/assets/components/library/icons/pictoicons/fonts'
+				'resources/assets/components/library/icons/fontawesome/assets/fonts',
+				'resources/assets/components/library/icons/glyphicons/assets/fonts',
+				'resources/assets/components/library/icons/pictoicons/fonts',
+				'resources/assets/components/core/fonts/'
 			],
 			'public/fonts'
+		)
+		.copy([
+				'resources/assets/components/common/forms/elements/select2/assets/lib/css/select2.png',
+				'resources/assets/components/common/forms/elements/select2/assets/lib/css/select2-spinner.gif',
+				'resources/assets/components/common/forms/elements/select2/assets/lib/css/select2x2.png'
+			], 'public/css'
 		);
 });

@@ -1,5 +1,5 @@
 <?php
-namespace Sidep\Dominio\ServidoresPublicos;
+namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
 /**
  * Interface EncargosRepositorio
