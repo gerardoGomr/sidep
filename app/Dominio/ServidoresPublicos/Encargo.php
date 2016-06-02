@@ -39,10 +39,24 @@ class Encargo
      */
     private $puesto;
 
+    /**
+     * @var Coleccion
+     */
     private $movimientos;
 
+    /**
+     * @var Coleccion
+     */
     private $declaraciones;
 
+    /**
+     * Encargo constructor.
+     * @param $servidorPublico
+     * @param $adscripcion
+     * @param null $cuentaAcceso
+     * @param null $puesto
+     * @param Coleccion|null $declaraciones
+     */
     public function __construct($servidorPublico, $adscripcion, $cuentaAcceso = null, $puesto = null, Coleccion $declaraciones = null)
     {
         $this->servidorPublico = $servidorPublico;
@@ -111,7 +125,7 @@ class Encargo
     }
 
     /**
-     * @return \SplObjectStorage
+     * @return Coleccion
      */
     public function getMovimientos()
     {
@@ -119,7 +133,7 @@ class Encargo
     }
 
     /**
-     * @return \SplObjectStorage
+     * @return Coleccion
      */
     public function getDeclaraciones()
     {
@@ -147,6 +161,14 @@ class Encargo
         return false;
     }
 
+    /**
+     * generar un movimiento de alta al encargo del servidor público
+     * @param bool $exento
+     * @param Movimiento $movimiento
+     * @param Declaracion $declaracion
+     * @throws NoEsDeclaracionInicialException
+     * @throws NoEsMovimientoDeAltaException
+     */
     public function alta($exento, Movimiento $movimiento, Declaracion $declaracion)
     {
         // generar cuenta de acceso
@@ -156,8 +178,8 @@ class Encargo
         if ($movimiento->getMovimientoTipo() !== MovimientoTipo::ALTA) {
             throw new NoEsMovimientoDeAltaException('Se esperaba un movimiento de alta');
         }
-        $this->movimientos->attach($movimiento);
-        // $this->movimientos->push(new Movimiento(MovimientoTipo::ALTA))
+        $this->movimientos->agregar($movimiento);
+
         // generar declaración inicial si no está marcado como exento
         if ($exento === false) {
             if ($declaracion->getDeclaracionTipo() !== DeclaracionTipo::INICIAL) {
