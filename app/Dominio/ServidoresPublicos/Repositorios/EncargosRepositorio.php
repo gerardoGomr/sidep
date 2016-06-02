@@ -14,4 +14,9 @@ interface EncargosRepositorio
      * @return Encargo
      */
     public function obtenerEncargoPorUsernameCuentaAcceso($username);
+
+    /**
+     * @return array|null
+     */
+    public function obtenerEncargos();
 }

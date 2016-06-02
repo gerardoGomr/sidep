@@ -14,15 +14,15 @@
                                     <div id="busquedaServidores" class="col-md-12 col-lg-6">
                                         <div class="box-generic padding-none">
                                             <div class="heading-buttons border-bottom innerLR">
-                                                <h5 class="margin-none strong innerTB pull-left">Servidor público</h5>
-                                                <button id="nuevoServidor" class="btn btn-sm btn-default pull-right"><i class="fa fa-plus-square"></i> Es servidor público de nuevo ingreso</button>
+                                                <h4 class="margin-none strong innerTB pull-left">Servidor público</h4>
+                                                <button id="nuevoServidor" class="btn btn-sm btn-inverse btn-stroke pull-right"><i class="fa fa-plus-square"></i> Es servidor público de nuevo ingreso</button>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="innerAll">
                                                 <div class="form-group">
                                                     <label class="control-label">Buscar:</label>
                                                     <div class="input-group">
-                                                        <input type="text" name="servidor" id="servidor" class="form-control">
+                                                        <input type="text" name="servidor" id="servidor" class="form-control" placeholder="Ingrese nombres, RFC, CURP o dependencia">
                                                         <a href="" class="input-group-addon"><i class="fa fa-search"></i></a>
                                                     </div>
                                                 </div>
@@ -50,7 +50,7 @@
                                     <form id="formAltaEncargo" class="form-horizontal">
                                         <div id="contenedorFormServidor" class="col-md-12 col-lg-6 hide">
                                             <div class="box-generic padding-none animated fadeIn">
-                                                <h5 class="strong border-bottom innerAll">Datos del servidor público</h5>
+                                                <h4 class="strong border-bottom innerAll">Datos del servidor público</h4>
                                                 <div class="innerAll">
                                                     <div class="row">
                                                         <div class="col-md-6">
@@ -154,7 +154,7 @@
 
                                         <div id="contenedorFormPrincipal" class="col-md-12 col-lg-6 hide">
                                             <div class="box-generic padding-none animated fadeIn">
-                                                <h5 class="strong border-bottom innerAll">Datos del encargo</h5>
+                                                <h4 class="strong border-bottom innerAll">Datos del encargo</h4>
                                                 <div class="innerAll">
                                                     <div class="separator"></div>
                                                     <div class="form-group">

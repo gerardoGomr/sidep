@@ -7,28 +7,28 @@
   src: url(../fonts/Oswald-Regular.ttf);
 }
 @font-face {
-  font-family: 'Oswald Light';
-  font-style: normal;
-  font-weight: 300;
-  src: url(../fonts/Oswald-Light.ttf);
-}
-@font-face {
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 300;
   src: url(../fonts/Ubuntu-Regular.ttf);
 }
 @font-face {
-  font-family: 'Delicious SmallCaps';
-  font-style: normal;
-  font-weight: 300;
-  src: url(../fonts/Delicious-SmallCaps.otf);
-}
-@font-face {
   font-family: 'Aller Regular';
   font-style: normal;
   font-weight: 300;
   src: url(../fonts/Aller_Rg.ttf);
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  src: url(../fonts/Poppins-Regular.ttf);
+}
+@font-face {
+  font-family: 'Poppins Light';
+  font-style: normal;
+  font-weight: 300;
+  src: url(../fonts/Poppins-Light.ttf);
 }
 /* --- LOADING [less.mixins] from assets/components/core/less/mixins.less */
 /* --- LOADING [less.scaffolding] from assets/components/core/less/scaffolding.less */
@@ -37,7 +37,7 @@ html {
   height: 100%;
 }
 body {
-  font-family: 'Aller Regular', sans-serif;
+  font-family: 'Poppins Light', sans-serif;
   background: #eaeaea;
   font-size: 14px;
   color: #525252;
@@ -78,7 +78,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Aller Regular', sans-serif;
+  font-family: 'Poppins Light', sans-serif;
   margin: 0 0 5px;
   font-weight: 700;
   color: #4d4d4d;
@@ -264,7 +264,7 @@ input,
 button,
 select,
 textarea {
-  font-family: 'Aller Regular', sans-serif;
+  font-family: 'Poppins Light', sans-serif;
 }
 pre.prettyprint {
   word-break: normal;

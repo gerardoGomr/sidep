@@ -26,27 +26,33 @@ class ServidorPublico extends Persona
      */
     private $rfc;
 
-    public function __construct()
+    public function __construct($nombre = '', $paterno = '', $materno = '', $rfc = '')
     {
+        $this->rfc = $rfc;
+        parent::__construct($nombre, $paterno, $materno);
     }
 
     /**
-     * obtener el nombre completo del funcionario
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return string
      */
-    public function nombreCompleto()
+    public function getCurp()
     {
-        // TODO: Implement nombreCompleto() method.
-        $nombre = $this->nombre;
+        return $this->curp;
+    }
 
-        if (strlen($this->paterno)) {
-            $nombre .= ' ' . $this->paterno;
-        }
-
-        if (strlen($this->materno)) {
-            $nombre .= ' ' . $this->materno;
-        }
-
-        return $nombre;
+    /**
+     * @return string
+     */
+    public function getRfc()
+    {
+        return $this->rfc;
     }
 }

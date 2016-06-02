@@ -88,7 +88,7 @@ jQuery(document).ready(function ($) {
     // click en cancelar
     $('#cancelar').on('click', function (event) {
         event.preventDefault();
-        
+
         bootbox.confirm('¿Desea cancelar el registro de alta del servidor público?', function (e) {
             if (e === true) {
                 window.location.href = $('#cancelar').attr('href');

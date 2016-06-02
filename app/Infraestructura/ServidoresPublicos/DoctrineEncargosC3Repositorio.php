@@ -53,4 +53,12 @@ class DoctrineEncargosC3Repositorio implements EncargosRepositorio
             return null;
         }
     }
+
+    /**
+     * @return array|null
+     */
+    public function obtenerEncargos()
+    {
+        // TODO: Implement obtenerEncargos() method.
+    }
 }

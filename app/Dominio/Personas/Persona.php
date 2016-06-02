@@ -70,16 +70,6 @@ abstract class Persona
     }
 
     /**
-     * Sets the nombre del funcionario.
-     *
-     * @param string $nombre the nombre
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-    }
-
-    /**
      * Gets the apellido paterno del funcionario.
      *
      * @return string
@@ -87,16 +77,6 @@ abstract class Persona
     public function getPaterno()
     {
         return $this->paterno;
-    }
-
-    /**
-     * Sets the apellido paterno del funcionario.
-     *
-     * @param string $paterno the paterno
-     */
-    public function setPaterno($paterno)
-    {
-        $this->paterno = $paterno;
     }
 
     /**
@@ -110,22 +90,6 @@ abstract class Persona
     }
 
     /**
-     * Sets the apellido materno del funcionario.
-     *
-     * @param string $materno the materno
-     */
-    public function setMaterno($materno)
-    {
-        $this->materno = $materno;
-    }
-
-    /**
-     * obtener el nombre completo del funcionario
-     * @return string
-     */
-    abstract public function nombreCompleto();
-
-    /**
      * Gets the el sexo de la persona.
      *
      * @return string
@@ -133,32 +97,6 @@ abstract class Persona
     public function getSexo()
     {
         return $this->sexo;
-    }
-
-    /**
-     * Sets the el sexo de la persona.
-     *
-     * @param string $sexo the sexo
-     */
-    public function setSexo($sexo)
-    {
-        if(is_integer($sexo)) {
-            $sexo = (string)$sexo;
-        }
-
-        switch ($sexo) {
-            case '1':
-                $this->sexo = self::MASCULINO;
-                break;
-
-            case '0':
-                $this->sexo = self::FEMENINO;
-                break;
-
-            default:
-                $this->sexo = $sexo;
-                break;
-        }
     }
 
     /**
@@ -172,16 +110,6 @@ abstract class Persona
     }
 
     /**
-     * Sets the telefono de la persona.
-     *
-     * @param string $telefono the telefono
-     */
-    public function setTelefono($telefono)
-    {
-        $this->telefono = $telefono;
-    }
-
-    /**
      * Gets the celular de la persona.
      *
      * @return string
@@ -189,16 +117,6 @@ abstract class Persona
     public function getCelular()
     {
         return $this->celular;
-    }
-
-    /**
-     * Sets the celular de la persona.
-     *
-     * @param string $celular the celular
-     */
-    public function setCelular($celular)
-    {
-        $this->celular = $celular;
     }
 
     /**
@@ -212,12 +130,22 @@ abstract class Persona
     }
 
     /**
-     * Sets the correo de la persona.
-     *
-     * @param string $email the email
+     * obtener el nombre completo del funcionario
+     * @return string
      */
-    public function setEmail($email)
+    public function nombreCompleto()
     {
-        $this->email = $email;
+        // TODO: Implement nombreCompleto() method.
+        $nombre = $this->nombre;
+
+        if (strlen($this->paterno)) {
+            $nombre .= ' ' . $this->paterno;
+        }
+
+        if (strlen($this->materno)) {
+            $nombre .= ' ' . $this->materno;
+        }
+
+        return $nombre;
     }
 }
