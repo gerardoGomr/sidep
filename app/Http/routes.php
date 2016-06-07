@@ -21,6 +21,10 @@ Route::group(['prefix' => 'admin'], function() {
         // servidores publicos
         Route::get('servidores', 'Admin\ServidoresPublicos\ServidoresPublicosController@index');
         Route::get('servidores/alta', 'Admin\ServidoresPublicos\ServidoresPublicosController@alta');
+        Route::post('servidores/busqueda',[
+            'as'   => 'servidores-busqueda',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@busqueda'
+        ]);
     });
 
     // login

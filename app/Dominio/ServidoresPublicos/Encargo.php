@@ -56,14 +56,15 @@ class Encargo
      * @param null $cuentaAcceso
      * @param null $puesto
      * @param Coleccion|null $declaraciones
+     * @param Coleccion|null $movimientos
      */
-    public function __construct($servidorPublico, $adscripcion, $cuentaAcceso = null, $puesto = null, Coleccion $declaraciones = null)
+    public function __construct($servidorPublico, $adscripcion, $cuentaAcceso = null, $puesto = null, Coleccion $declaraciones = null, Coleccion $movimientos = null)
     {
         $this->servidorPublico = $servidorPublico;
         $this->adscripcion     = $adscripcion;
         $this->cuentaAcceso    = $cuentaAcceso;
         $this->puesto          = $puesto;
-        $this->movimientos     = new \SplObjectStorage();
+        $this->movimientos     = $movimientos;
         $this->declaraciones   = $declaraciones;
     }
 

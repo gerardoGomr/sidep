@@ -173,4 +173,30 @@ class Puesto extends \Sidep\Dominio\ServidoresPublicos\Puesto implements \Doctri
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
+    public function getId()
+    {
+        if ($this->__isInitialized__ === false) {
+            return (int)  parent::getId();
+        }
+
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', []);
+
+        return parent::getId();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPuesto()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPuesto', []);
+
+        return parent::getPuesto();
+    }
+
 }

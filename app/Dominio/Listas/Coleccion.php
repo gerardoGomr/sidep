@@ -16,6 +16,16 @@ class Coleccion
         $this->lista->push($elemento);
     }
 
+    public function obtener()
+    {
+
+    }
+
+    public function elementos()
+    {
+        return $this->lista;
+    }
+
     public function ultimo()
     {
         return $this->lista->pop();

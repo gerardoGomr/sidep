@@ -1,6 +1,7 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
+use Sidep\Dominio\Listas\Coleccion;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;
 
@@ -17,11 +18,6 @@ class DoctrineEncargosC3Repositorio implements EncargosRepositorio
      * @var EntityManager
      */
     private $entityManager;
-
-    /**
-     * @var string
-     */
-    private $class;
 
     /**
      * DoctrineEncargosRepositorio constructor.
@@ -41,24 +37,56 @@ class DoctrineEncargosC3Repositorio implements EncargosRepositorio
     {
         // TODO: Implement obtenerEncargoPorCuentaAcceso() method.
         try {
-            $query =  $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c
- JOIN e.puesto p JOIN e.servidorPublico s WHERE c.username = :username')
+            $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE c.username = :username')
             ->setParameter('username', $username);
             $encargo = $query->getResult();
 
             return $encargo[0];
 
-        } catch (\Exception $e) {
-            echo $e->getMessage();
+        } catch (\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
             return null;
         }
     }
 
     /**
+     * @param string $parametro
      * @return array|null
      */
-    public function obtenerEncargos()
+    public function obtenerEncargos($parametro = '')
     {
         // TODO: Implement obtenerEncargos() method.
+        try {
+            $encargos = new Coleccion(new \Sidep\Aplicacion\Coleccion());
+            /*$encargo  = $this->entityManager->getRepository($this->class)->findBy([
+                'curp'   => $parametro,
+                'rfc'    => $parametro,
+                'nombre' => $parametro
+            ]);*/
+
+            $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE s.curp = :curp OR s.rfc = :rfc OR CONCAT(s.nombre, s.paterno, s.materno) LIKE :nombres OR CONCAT(s.paterno, s.materno, s.nombre) LIKE :nombres')
+                ->setParameter('curp', $parametro)
+                ->setParameter('rfc', $parametro)
+                ->setParameter('nombres', "%$parametro%");
+
+            $encargo = $query->getResult();
+
+            if (count($encargo) === 0) {
+                return null;
+            }
+
+            foreach ( $encargo as $encargo ) {
+                $encargos->agregar($encargo);
+            }
+
+            return $encargos;
+
+        } catch(\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+
+            return null;
+        }
     }
 }

@@ -1,9 +1,12 @@
 jQuery(document).ready(function ($) {
     // variables
-    var $tablaResultados     = $('#tablaResultados'),
-        $formAltaEncargo     = $('#formAltaEncargo'),
+    var $formAltaEncargo     = $('#formAltaEncargo'),
         $campoOtroPuesto     = $('#campoOtroPuesto'),
-        $otroPuesto          = $('#otroPuesto');
+        $otroPuesto          = $('#otroPuesto'),
+        $servidor            = $('#servidor'),
+        $loadingBusqueda     = $('#loadingBusqueda'),
+        $rutaBase            = $('#rutaBase'),
+        $resultadosBusqueda  = $('#resultadosBusqueda');
 
     // focus
     setTimeout(function () {
@@ -24,10 +27,30 @@ jQuery(document).ready(function ($) {
         autoclose: true
     });
 
+    // select 2
     $('#puesto').select2();
 
+    // buscar servidores públicos.- prevenir submit
+    $servidor.on('keypress', function (event) {
+        if (event === 13 || event.which === 13) {
+            return false;
+        }
+    });
+
+    $servidor.on('keyup', function (event) {
+        if (event === 13 || event.which === 13) {
+            buscarServidorPublico($(this).val());
+        }
+    });
+
+    $('#buscarServidor').on('click', function(event) {
+        event.preventDefault();
+        buscarServidorPublico($servidor.val());
+    });
+    // ***************************************************************************
+
     // click en tabla
-    $tablaResultados.on('click', 'tr.resultados', function () {
+    $resultadosBusqueda.on('click', 'tr.resultados', function () {
         bootbox.confirm('¿Usar a este servidor público?', function (event) {
             if (event === true) {
                 $('#busquedaServidores').addClass('hide');
@@ -118,6 +141,37 @@ jQuery(document).ready(function ($) {
                 'maxlength': 'Máximo 13 caracteres',
                 'minlength': 'Se necesitan al menos 10 caracteres'
             }
+        });
+    }
+
+    /**
+     * buscar un servidor mediante el dato enviado
+     * @param string dato
+     */
+    function buscarServidorPublico(dato)
+    {
+        $.ajax({
+            url: $rutaBase.val() + '/busqueda',
+            type: 'post',
+            dataType: 'json',
+            data: {dato: dato, _token: $formAltaEncargo.find('input[name="_token"]').val()},
+            beforeSend: function () {
+                $loadingBusqueda.removeClass('hide');
+            }
+        })
+        .done(function (respuesta) {
+            $loadingBusqueda.addClass('hide');
+            if (respuesta.resultado !== 'OK') {
+                bootbox.alert('Ocurrió un error al realizar la operación solicitada. Intente de nuevo.');
+                return false;
+            }
+
+            $resultadosBusqueda.html(respuesta.contenido);
+        })
+        .fail(function (jQxr, textStatus, errorThrown) {
+            $loadingBusqueda.addClass('hide');
+            console.log(textStatus + ': ' + errorThrown);
+            bootbox.alert('Ocurrió un error al realizar la operación solicitada. Intente de nuevo.')
         });
     }
 });

@@ -23,31 +23,20 @@
                                                     <label class="control-label">Buscar:</label>
                                                     <div class="input-group">
                                                         <input type="text" name="servidor" id="servidor" class="form-control" placeholder="Ingrese nombres, RFC, CURP o dependencia">
-                                                        <a href="" class="input-group-addon"><i class="fa fa-search"></i></a>
+                                                        <a href="" id="buscarServidor" class="input-group-addon"><i class="fa fa-search"></i></a>
                                                     </div>
                                                 </div>
                                                 <div class="separator"></div>
-                                                <table id="tablaResultados" class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Nombre</th>
-                                                            <th>CURP</th>
-                                                            <th>RFC</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="resultados">
-                                                            <td>Gerardo Adrián Gómez Ruiz</td>
-                                                            <td>CURP</td>
-                                                            <td>RFC</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+                                                <span id="loadingBusqueda" class="hide"><i class="fa fa-spinner fa-spin fa-2x"></i></span>
+                                                <div id="resultadosBusqueda">
+                                                    @include('admin.servidores_publicos.servidores_publicos_encargo_resultados')
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <form id="formAltaEncargo" class="form-horizontal">
+                                        {!! csrf_field() !!}
                                         <div id="contenedorFormServidor" class="col-md-12 col-lg-6 hide">
                                             <div class="box-generic padding-none animated fadeIn">
                                                 <h4 class="strong border-bottom innerAll">Datos del servidor público</h4>
@@ -231,6 +220,7 @@
                                         </div>
                                     </form>
                                 </div>
+                                <input type="hidden" id="rutaBase" value="{{ url('admin/servidores') }}">
                             </div>
                         </div>
                     </div>

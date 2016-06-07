@@ -2,8 +2,9 @@
 namespace Sidep\Http\Controllers\Admin\ServidoresPublicos;
 
 use Sidep\Dominio\ServidoresPublicos\Repositorios\DependenciasRepositorio;
+use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\PuestosRepositorio;
-use Sidep\Http\Requests;
+use Illuminate\Http\Request;
 use Sidep\Http\Controllers\Controller;
 
 /**
@@ -14,6 +15,20 @@ use Sidep\Http\Controllers\Controller;
  */
 class ServidoresPublicosController extends Controller
 {
+    /**
+     * @var EncargosRepositorio
+     */
+    private $encargosRepositorio;
+
+    /**
+     * ServidoresPublicosController constructor.
+     * @param EncargosRepositorio $encargosRepositorio
+     */
+    public function __construct(EncargosRepositorio $encargosRepositorio)
+    {
+        $this->encargosRepositorio = $encargosRepositorio;
+    }
+
     /**
      * mostrar view principal
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -34,5 +49,19 @@ class ServidoresPublicosController extends Controller
         $dependencias = $dependenciasRepositorio->obtenerTodos();
         $puestos      = $puestosRepositorio->obtenerTodos();
         return view('admin.servidores_publicos.servidores_publicos_encargo_alta', compact('dependencias', 'puestos'));
+    }
+
+    public function busqueda(Request $request)
+    {
+        $datoBusqueda = str_replace(' ', '', $request->get('dato'));
+        $encargos     = $this->encargosRepositorio->obtenerEncargos($datoBusqueda);
+
+        $respuesta    = [
+            'resultado' => 'OK',
+            'contenido' => view('admin.servidores_publicos.servidores_publicos_encargo_resultados',
+                compact('encargos'))->render()
+        ];
+
+        return response()->json($respuesta);
     }
 }
