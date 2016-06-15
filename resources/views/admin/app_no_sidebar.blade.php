@@ -7,7 +7,7 @@
 <html class="app footer-sticky"><!-- <![endif]-->
 	<!-- HEAD DEFINITION -->
 	<head>
-		<title>Centro Estatal de Control de Confianza Certificado</title>
+		<title>CENTRO ESTATAL DE CONTROL DE CONFIANZA CERTIFICADO</title>
 
 		<!-- Meta -->
 		<meta charset="utf-8" />
@@ -46,7 +46,7 @@
 			<!-- Footer -->
 			<div id="footer" class="hidden-print">
 				<!--  Copyright Line -->
-				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIDEP v2.0</a> - Sistema Integral de Declaraciones Patrimoniales C3 - Unidad de Informática</div>
+				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIDEP v2.0</a> - SISTEMA INTEGRAL DE DECLARACIONES PATRIMONIALES C3 - UNIDAD DE INFORMÁTICA</div>
 				<!--  End Copyright Line -->
 			</div>
 			<!-- Footer END -->

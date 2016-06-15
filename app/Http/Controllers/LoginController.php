@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Http\Request;
 use Sidep\Aplicacion\LoguearEncargos;
 use Sidep\Http\Requests;
-use Sidep\Infraestructura\ServidoresPublicos\DoctrineEncargosC3Repositorio;
+use Sidep\Infraestructura\ServidoresPublicos\DoctrineEncargosRepositorio;
 
 /**
  * Class LoginController
@@ -24,7 +24,7 @@ class LoginController extends Controller
      */
     public function login(Request $request, EntityManager $entityManager)
     {
-        $logueo = LoguearEncargos::loguear($request, new DoctrineEncargosC3Repositorio($entityManager));
+        $logueo = LoguearEncargos::loguear($request, new DoctrineEncargosRepositorio($entityManager));
 
         if ($logueo->login()) {;
             return redirect('admin');

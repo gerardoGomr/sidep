@@ -2,21 +2,16 @@
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
 /**
- * Interface PuestosRepositorio
+ * Interface ServidoresPublicoRepositorio
  * @package Sidep\Dominio\ServidoresPublicos\Repositorios
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-interface PuestosRepositorio
+interface ServidoresPublicosRepositorio
 {
     /**
-     * @return array
-     */
-    public function obtenerTodos();
-
-    /**
      * @param int $id
-     * @return Puesto
+     * @return ServidorPublico
      */
     public function obtenerPorId($id);
 }

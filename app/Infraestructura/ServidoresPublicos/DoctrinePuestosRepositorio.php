@@ -1,6 +1,7 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
+use Sidep\Dominio\ServidoresPublicos\Repositorios\Puesto;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\PuestosRepositorio;
 use Doctrine\ORM\EntityManager;
 
@@ -43,6 +44,26 @@ class DoctrinePuestosRepositorio implements PuestosRepositorio
             $puestos = $query->getResult();
 
             return $puestos;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return Puesto
+     */
+    public function obtenerPorId($id)
+    {
+        // TODO: Implement obtenerPorId() method.
+        try {
+            $query   =  $this->entityManager->createQuery('SELECT p FROM ServidoresPublicos:Puesto p WHERE p.id = :id ORDER BY p.puesto');
+            $query->setParameter(':id', $id);
+            $puestos = $query->getResult();
+
+            return $puestos[0];
+
         } catch (\Exception $e) {
             echo $e->getMessage();
             return null;

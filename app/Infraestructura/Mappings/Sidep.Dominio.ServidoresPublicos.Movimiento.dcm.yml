@@ -1,0 +1,26 @@
+Sidep\Dominio\ServidoresPublicos\Movimiento:
+  type: entity
+  table: movimiento
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    fecha:
+      type: date
+      length: 10
+      nullable: false
+      column: fecha
+    comentario:
+      type: string
+      length: 100
+      nullable: false
+      column: comentario
+  manyToOne:
+    encargo:
+      targetEntity: Encargo
+      inversedBy: movimientos
+      joinColumn:
+        name: encargo_id
+        referencedColumnName: id

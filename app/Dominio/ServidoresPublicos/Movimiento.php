@@ -1,6 +1,8 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos;
 
+use \DateTime;
+
 /**
  * Class Movimiento
  * @package Sidep\Dominio\ServidoresPublicos
@@ -20,21 +22,33 @@ class Movimiento
     private $movimientoTipo;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $fecha;
 
     /**
+     * @var string
+     */
+    private $comentario;
+
+    /**
+     * @var Encargo
+     */
+    private $encargo;
+
+    /**
      * Movimiento constructor.
      * @param int $movimientoTipo
+     * @param DateTime $fecha
+     * @param string $comentario
      * @param int $id
-     * @param string $fecha
      */
-    public function __construct($movimientoTipo = 0, $id = 0, $fecha = null)
+    public function __construct($movimientoTipo = 0, DateTime $fecha = null, $comentario = '', $id = 0)
     {
         $this->id             = $id;
         $this->movimientoTipo = $movimientoTipo;
         $this->fecha          = $fecha;
+        $this->comentario     = $comentario;
     }
 
     /**
@@ -58,6 +72,27 @@ class Movimiento
      */
     public function getFecha()
     {
-        return $this->fecha;
+        return $this->fecha->format('d/m/Y');
+    }
+
+    /**
+     * @return string
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * muestra la descripción del movimiento
+     * @return void
+     */
+    public function generarComentario()
+    {
+        if ($this->movimientoTipo == MovimientoTipo::ALTA) {
+            $this->comentario = 'Se generó una alta el día ' . $this->getFecha();
+        } else {
+            $this->comentario = 'Se generó una baja el día ' . $this->getFecha();
+        }
     }
 }

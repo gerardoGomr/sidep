@@ -1,6 +1,7 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos;
 
+use \DateTime;
 use Sidep\Dominio\Personas\Persona;
 
 /**
@@ -25,6 +26,16 @@ class ServidorPublico extends Persona
      * @var string
      */
     private $rfc;
+
+    /**
+     * @var DateTime
+     */
+    private $fechaNacimiento;
+
+    /**
+     * @var Domicilio
+     */
+    private $domicilio;
 
     public function __construct($nombre = '', $paterno = '', $materno = '', $rfc = '')
     {
@@ -54,5 +65,18 @@ class ServidorPublico extends Persona
     public function getRfc()
     {
         return $this->rfc;
+    }
+
+    /**
+     * @param $curp
+     * @param $fechaNacimiento
+     * @param Domicilio $domicilio
+     * @return void
+     */
+    public function registrar($curp, DateTime $fechaNacimiento, Domicilio $domicilio)
+    {
+        $this->curp            = $curp;
+        $this->fechaNacimiento = $fechaNacimiento;
+        $this->domicilio       = $domicilio;
     }
 }

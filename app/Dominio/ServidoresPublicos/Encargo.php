@@ -3,8 +3,7 @@ namespace Sidep\Dominio\ServidoresPublicos;
 
 use Sidep\Dominio\Excepciones\NoEsMovimientoDeAltaException;
 use Sidep\Dominio\Excepciones\NoEsDeclaracionInicialException;
-use Sidep\Dominio\Listas\Coleccion;
-
+use Sidep\Dominio\Listas\IColeccion;
 
 /**
  * Class Encargo
@@ -40,6 +39,11 @@ class Encargo
     private $puesto;
 
     /**
+     * @var Dependencia
+     */
+    private $dependencia;
+
+    /**
      * @var Coleccion
      */
     private $movimientos;
@@ -51,20 +55,22 @@ class Encargo
 
     /**
      * Encargo constructor.
-     * @param $servidorPublico
+     * @param ServidorPublico $servidorPublico
      * @param $adscripcion
-     * @param null $cuentaAcceso
-     * @param null $puesto
-     * @param Coleccion|null $declaraciones
-     * @param Coleccion|null $movimientos
+     * @param CuentaAcceso|null $cuentaAcceso
+     * @param Puesto|null $puesto
+     * @param Dependencia $dependencia
+     * @param null|IColeccion $declaraciones
+     * @param null|IColeccion $movimientos
      */
-    public function __construct($servidorPublico, $adscripcion, $cuentaAcceso = null, $puesto = null, Coleccion $declaraciones = null, Coleccion $movimientos = null)
+    public function __construct(ServidorPublico $servidorPublico, $adscripcion, CuentaAcceso $cuentaAcceso = null, Puesto $puesto = null, Dependencia $dependencia, $declaraciones = null, IColeccion $movimientos = null)
     {
         $this->servidorPublico = $servidorPublico;
         $this->adscripcion     = $adscripcion;
         $this->cuentaAcceso    = $cuentaAcceso;
         $this->puesto          = $puesto;
         $this->movimientos     = $movimientos;
+        $this->dependencia     = $dependencia;
         $this->declaraciones   = $declaraciones;
     }
 
@@ -142,6 +148,14 @@ class Encargo
     }
 
     /**
+     * @return Dependencia
+     */
+    public function getDependencia()
+    {
+        return $this->dependencia;
+    }
+
+    /**
      * generar cuenta de acceso del encargo del servidor público
      */
     public function generarCuentaDeAcceso()
@@ -179,14 +193,14 @@ class Encargo
         if ($movimiento->getMovimientoTipo() !== MovimientoTipo::ALTA) {
             throw new NoEsMovimientoDeAltaException('Se esperaba un movimiento de alta');
         }
-        $this->movimientos->agregar($movimiento);
+        $this->movimientos->add($movimiento);
 
         // generar declaración inicial si no está marcado como exento
         if ($exento === false) {
             if ($declaracion->getDeclaracionTipo() !== DeclaracionTipo::INICIAL) {
                 throw new NoEsDeclaracionInicialException('Se esperaba una declaración inicial');
             }
-            $this->declaraciones->agregar($declaracion);
+            $this->declaraciones->add($declaracion);
         }
     }
 

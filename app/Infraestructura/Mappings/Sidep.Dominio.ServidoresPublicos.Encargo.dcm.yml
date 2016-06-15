@@ -18,13 +18,27 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
       joinColumn:
         name: puesto_id
         referencedColumnName: id
+      cascade: ["persist"]
     servidorPublico:
       targetEntity: ServidorPublico
       joinColumn:
         name: servidor_publico_id
         referencedColumnName: id
+      cascade: ["persist"]
     cuentaAcceso:
       targetEntity: CuentaAcceso
       joinColumn:
         name: cuenta_acceso_id
         referencedColumnName: id
+      cascade: ["persist"]
+    dependencia:
+      targetEntity: Dependencia
+      joinColumn:
+        name: dependencia_id
+        referencedColumnName: id
+      cascade: ["persist"]
+  oneToMany:
+    movimientos:
+     targetEntity: Movimiento
+     mappedBy: encargo
+     cascade: ["persist"]

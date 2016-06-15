@@ -160,7 +160,8 @@ return [
         Sidep\Providers\RouteServiceProvider::class,
         Sidep\Providers\EncargosRepositorioServiceProvider::class,
         Sidep\Providers\DependenciasRepositorioServiceProvider::class,
-        Sidep\Providers\PuestosRepositorioServiceProvider::class
+        Sidep\Providers\PuestosRepositorioServiceProvider::class,
+        Sidep\Providers\ServidoresPublicosRepositorioServiceProvider::class
     ],
 
     /*

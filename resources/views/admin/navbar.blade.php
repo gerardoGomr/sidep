@@ -7,7 +7,7 @@
 	<form id="formBusquedaGeneral" name="formBusquedaGeneral">
 	  	<div class="col-xs-8 col-md-4 col-lg-6 visible-md visible-lg visible-xs padding-none">
 	    	<div class="input-group innerL">
-	      		<input id="txtBusqueda" name="txtBusqueda" type="text" class="form-control input-sm" placeholder="Busqueda rápida" autocomplete="off">
+	      		<input id="txtBusqueda" name="txtBusqueda" type="text" class="form-control input-sm" placeholder="BÚSQUEDA RÁPIDA" autocomplete="off">
 	      		<span class="input-group-btn">
 	        		<button id="btnBuscar" name="btnBuscar" class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
 	      		</span>
@@ -26,8 +26,8 @@
 				</span>
 			</a>
 			<ul class="dropdown-menu pull-right">
-				<li><a href="{{ url('admin/perfil') }}"><i class="fa fa-gears"></i> Mi perfil</a></li>
-				<li><a href="{{ url('admin/logout') }}"><i class="fa fa-sign-out"></i> Cerrar sesión</a></li>
+				<li><a href="{{ url('admin/perfil') }}"><i class="fa fa-gears"></i> MI CUENTA</a></li>
+				<li><a href="{{ url('admin/logout') }}"><i class="fa fa-sign-out"></i> CERRAR SESIÓN</a></li>
 		    </ul>
 		</div>
 

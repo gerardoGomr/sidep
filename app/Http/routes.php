@@ -25,6 +25,11 @@ Route::group(['prefix' => 'admin'], function() {
             'as'   => 'servidores-busqueda',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@busqueda'
         ]);
+
+        Route::post('servidores/encargo/alta',[
+            'as'   => 'servidores-encargo-alta',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@registrarEncargo'
+        ]);
     });
 
     // login

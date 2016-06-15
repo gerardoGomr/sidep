@@ -1,6 +1,7 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
+use Sidep\Dominio\ServidoresPublicos\Repositorios\Dependencia;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\DependenciasRepositorio;
 use Doctrine\ORM\EntityManager;
 
@@ -32,7 +33,6 @@ class DoctrineDependenciasRepositorio implements DependenciasRepositorio
         $this->class         = 'Sidep\Dominio\ServidoresPublicos\Dependencia';
     }
 
-
     /**
      * @return array
      */
@@ -45,9 +45,30 @@ class DoctrineDependenciasRepositorio implements DependenciasRepositorio
 
             return $dependencias;
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
             return null;
         }
 
+    }
+
+    /**
+     * @param int $id
+     * @return Dependencia
+     */
+    public function obtenerPorId($id)
+    {
+        // TODO: Implement obtenerPorId() method.
+        try {
+            $query        =  $this->entityManager->createQuery('SELECT d FROM ServidoresPublicos:Dependencia d WHERE d.id = :id');
+            $query->setParameter(':id', $id);
+            $dependencias = $query->getResult();
+
+            return $dependencias[0];
+        } catch (\Exception $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+            return null;
+        }
     }
 }

@@ -4,7 +4,7 @@
 	<div class="row row-app">
 		<div class="col-separator col-unscrollable box">
 			<div class="col-table">
-				<h4 class="innerAll bg-gray text-center"><i class="fa fa-lock"></i> Sistema Integral de Declaraciones Patrimoniales C3</h4>
+				<h4 class="innerAll bg-gray text-center"><i class="fa fa-lock"></i> SISTEMA INTEGRAL DE DECLARACIONES PATRIMONIALES C3</h4>
 				<div class="col-table-row">
 					<div class="col-app col-unscrollable">
 						<div class="col-app">
@@ -14,7 +14,7 @@
 									<div class="panel-body">
 										@if(isset($error))
 											<div class="alert alert-danger text-center">
-												<p><strong>Error de inicio de sesión</strong></p>
+												<p><strong>ERROR DE INICIO DE SESIÓN</strong></p>
 												{{ $error }}
 											</div>
 										@endif
@@ -23,12 +23,12 @@
 										<form role="form" action="{{ url('admin/login') }}" method="post" name="formLogin">
 											{{ csrf_field() }}
 											<div class="form-group">
-												<input type="text" class="form-control" name="username" id="username" placeholder="Usuario">
+												<input type="text" class="form-control noUpperCase" name="username" id="username" placeholder="CLAVE DE USUARIO">
 											</div>
 											<div class="form-group">
-												<input type="password" class="form-control" name="password" id="password" autocomplete="off" placeholder="Contraseña">
+												<input type="password" class="form-control noUpperCase" name="password" id="password" autocomplete="off" placeholder="CONTRASEÑA">
 											</div>
-											<input type="submit" class="btn btn-primary btn-block" value="Ingresar" />
+											<input type="submit" class="btn btn-primary btn-block" value="INGRESAR A SISTEMA" />
 										</form>
 									</div>
 								</div>

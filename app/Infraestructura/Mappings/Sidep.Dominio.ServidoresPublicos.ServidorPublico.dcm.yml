@@ -32,3 +32,10 @@ Sidep\Dominio\ServidoresPublicos\ServidorPublico:
       length: 15
       nullable: false
       column: rfc
+  oneToOne:
+    domicilio:
+      targetEntity: Domicilio
+      joinColumn:
+        name: domicilio_id
+        referencedColumnName: id
+      cascade: ["persist"]

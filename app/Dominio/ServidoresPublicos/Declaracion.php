@@ -1,6 +1,8 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos;
 
+use DateTime;
+
 /**
  * Class Declaracion
  * @package Sidep\Dominio\ServidoresPublicos
@@ -20,12 +22,12 @@ class Declaracion
     private $declaracionTipo;
 
     /**
-     * @var string
+     * @var DateTime
      */
-    private $fechaInicial;
+    private $fechaGeneracion;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $fechaPlazo;
 
@@ -50,17 +52,17 @@ class Declaracion
     private $numeroRequerimiento;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $fechaGeneracionRequerimiento;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $fechaRecepcionRequerimiento;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $fechaPlazoCumplimiento;
 
@@ -70,19 +72,21 @@ class Declaracion
     private $sancionada;
 
     /**
-     * @var string
+     * @var DateTime
      */
     private $fechaEnvioFuncionPublica;
 
     /**
      * Declaracion constructor.
      * @param int $tipo
-     * @param int $id
+     * @param DateTime $fecha
+     * @param int|null $id
      */
-    public function __construct($tipo, $id = null)
+    public function __construct($tipo, DateTime $fecha, $id = null)
     {
-        $this->id = $id;
+        $this->id              = $id;
         $this->declaracionTipo = $tipo;
+        $this->fechaGeneracion = $fecha;
     }
 
     /**
@@ -94,19 +98,19 @@ class Declaracion
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
-    public function getFechaInicial()
+    public function getFechaGeneracion()
     {
-        return $this->fechaInicial;
+        return $this->fechaGeneracion;
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getFechaPlazo()
     {
-        return $this->fechaPlazo;
+        return $this->fechaPlazo->format('d/m/Y');
     }
 
     /**
@@ -142,7 +146,7 @@ class Declaracion
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getFechaGeneracionRequerimiento()
     {
@@ -150,7 +154,7 @@ class Declaracion
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getFechaRecepcionRequerimiento()
     {
@@ -158,7 +162,7 @@ class Declaracion
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getFechaPlazoCumplimiento()
     {
@@ -174,7 +178,7 @@ class Declaracion
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getFechaEnvioFuncionPublica()
     {
@@ -187,5 +191,27 @@ class Declaracion
     public function getDeclaracionTipo()
     {
         return $this->declaracionTipo;
+    }
+
+    /**
+     * calcula la fecha de cumplimiento de la declaracion en base al tipo
+     * @return void
+     */
+    public function generarFechaDeCumplimiento()
+    {
+        switch ($this->declaracionTipo) {
+            case DeclaracionTipo::INICIAL:
+                // 60 días
+                $dias = new \DateInterval('P60D');
+                break;
+
+            case DeclaracionTipo::MODIFICACION:
+            case DeclaracionTipo::CONCLUSION:
+                // 30 días
+                $dias = new \DateInterval('P30D');
+                break;
+        }
+
+        $this->fechaPlazo = $this->fechaGeneracion->add($dias);
     }
 }

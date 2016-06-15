@@ -13,4 +13,10 @@ interface DependenciasRepositorio
      * @return array
      */
     public function obtenerTodos();
+
+    /**
+     * @param int $id
+     * @return Dependencia
+     */
+    public function obtenerPorId($id);
 }

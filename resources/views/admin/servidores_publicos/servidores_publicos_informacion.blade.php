@@ -81,7 +81,6 @@
                         <a href="" class="btn btn-default"><i class="fa fa-edit"></i> Editar datos personales</a>
                         <a href="" class="btn btn-default"><i class="fa fa-minus-circle"></i> Registrar baja</a>
                         <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> Registrar promoción</a>
-                        <a href="" class="btn btn-default"><i class="fa fa-thumbs-down"></i> Registrar degradación</a>
                         <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> Registrar cambio de adscripción</a>
                     </div>
                 </div>

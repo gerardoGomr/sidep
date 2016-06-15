@@ -2,6 +2,7 @@
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
 use Sidep\Dominio\Listas\Coleccion;
+use Sidep\Dominio\ServidoresPublicos\Encargo;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;
 
@@ -12,7 +13,7 @@ use Doctrine\ORM\EntityManager;
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-class DoctrineEncargosC3Repositorio implements EncargosRepositorio
+class DoctrineEncargosRepositorio implements EncargosRepositorio
 {
     /**
      * @var EntityManager
@@ -59,11 +60,6 @@ class DoctrineEncargosC3Repositorio implements EncargosRepositorio
         // TODO: Implement obtenerEncargos() method.
         try {
             $encargos = new Coleccion(new \Sidep\Aplicacion\Coleccion());
-            /*$encargo  = $this->entityManager->getRepository($this->class)->findBy([
-                'curp'   => $parametro,
-                'rfc'    => $parametro,
-                'nombre' => $parametro
-            ]);*/
 
             $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE s.curp = :curp OR s.rfc = :rfc OR CONCAT(s.nombre, s.paterno, s.materno) LIKE :nombres OR CONCAT(s.paterno, s.materno, s.nombre) LIKE :nombres')
                 ->setParameter('curp', $parametro)
@@ -87,6 +83,26 @@ class DoctrineEncargosC3Repositorio implements EncargosRepositorio
             $pdoLogger->log($e);
 
             return null;
+        }
+    }
+
+    /**
+     * persistir el encargo generado
+     * @param Encargo $encargo
+     * @return bool
+     */
+    public function guardar(Encargo $encargo)
+    {
+        // TODO: Implement guardar() method.
+        try {
+            $this->entityManager->persist($encargo);
+            $this->entityManager->flush();
+            return true;
+
+        } catch (\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+            return false;
         }
     }
 }

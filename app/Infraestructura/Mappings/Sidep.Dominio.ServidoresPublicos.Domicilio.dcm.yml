@@ -1,0 +1,34 @@
+Sidep\Dominio\ServidoresPublicos\Domicilio:
+  type: entity
+  table: domicilio
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    calle:
+      type: string
+      length: 80
+      nullable: false
+      column: calle
+    noExterior:
+      type: string
+      length: 20
+      nullable: false
+      column: num_exterior
+    noInterior:
+      type: string
+      length: 20
+      nullable: true
+      column: num_interior
+    localidadColonia:
+      type: string
+      length: 80
+      nullable: false
+      column: localidad_colonia
+    municipio:
+      type: string
+      length: 80
+      nullable: false
+      column: municipio

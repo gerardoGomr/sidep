@@ -109,6 +109,6 @@ class CuentaAcceso
         $caracter3 = $this->letrasAAsignar[rand(0, 25)];
 
         // password
-        $this->password = $caracter1 . $caracter2 . $caracter3 . $digito1 . $digito2 . $digito3;
+        $this->password = self::generarHash($caracter1 . $caracter2 . $caracter3 . $digito1 . $digito2 . $digito3);
     }
 }
