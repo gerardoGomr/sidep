@@ -8,7 +8,7 @@
         </tr>
         </thead>
         <tbody>
-            @foreach ($encargos->elementos() as $encargo)
+            @foreach ($encargos as $encargo)
                 <tr class="resultados" data-id="{{ $encargo->getServidorPublico()->getId() }}">
                     <td>{{ $encargo->getServidorPublico()->nombreCompleto() }}</td>
                     <td>{{ $encargo->getServidorPublico()->getCurp() }}</td>

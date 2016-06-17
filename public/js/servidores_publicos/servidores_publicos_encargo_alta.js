@@ -173,7 +173,7 @@ jQuery(document).ready(function ($) {
             url:      $rutaBusqueda.val(),
             type:     'post',
             dataType: 'json',
-            data:     {dato: dato, _token: $formAltaEncargo.find('input[name="_token"]').val(), },
+            data:     {dato: dato, _token: $formAltaEncargo.find('input[name="_token"]').val(), origen: 'alta'},
             beforeSend: function () {
                 $loadingBusqueda.removeClass('hide');
             }

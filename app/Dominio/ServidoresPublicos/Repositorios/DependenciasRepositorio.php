@@ -1,7 +1,7 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
-use Sidep\Dominio\Repositorio;
+use Sidep\Dominio\Repositorios\Repositorio;
 
 /**
  * Interface DependenciasRepositorio
