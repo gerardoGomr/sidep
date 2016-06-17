@@ -1,17 +1,15 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
+use Sidep\Dominio\Repositorios\Repositorio;
+
 /**
  * Interface ServidoresPublicoRepositorio
  * @package Sidep\Dominio\ServidoresPublicos\Repositorios
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-interface ServidoresPublicosRepositorio
+interface ServidoresPublicosRepositorio extends Repositorio
 {
-    /**
-     * @param int $id
-     * @return ServidorPublico
-     */
-    public function obtenerPorId($id);
+
 }

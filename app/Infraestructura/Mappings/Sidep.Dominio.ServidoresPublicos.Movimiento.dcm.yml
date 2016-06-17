@@ -17,6 +17,11 @@ Sidep\Dominio\ServidoresPublicos\Movimiento:
       length: 100
       nullable: false
       column: comentario
+    movimientoTipo:
+      type: string
+      length: 1
+      nullable: false
+      column: movimiento_tipo
   manyToOne:
     encargo:
       targetEntity: Encargo
@@ -24,3 +29,4 @@ Sidep\Dominio\ServidoresPublicos\Movimiento:
       joinColumn:
         name: encargo_id
         referencedColumnName: id
+      cascade: ["persist", "refresh"]

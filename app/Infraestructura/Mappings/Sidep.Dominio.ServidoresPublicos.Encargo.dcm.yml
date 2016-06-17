@@ -13,12 +13,6 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
       nullable: false
       column: adscripcion
   oneToOne:
-    puesto:
-      targetEntity: Puesto
-      joinColumn:
-        name: puesto_id
-        referencedColumnName: id
-      cascade: ["persist"]
     servidorPublico:
       targetEntity: ServidorPublico
       joinColumn:
@@ -31,6 +25,13 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
         name: cuenta_acceso_id
         referencedColumnName: id
       cascade: ["persist"]
+  manyToOne:
+    puesto:
+      targetEntity: Puesto
+      joinColumn:
+        name: puesto_id
+        referencedColumnName: id
+      cascade: ["persist"]
     dependencia:
       targetEntity: Dependencia
       joinColumn:
@@ -41,4 +42,4 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
     movimientos:
      targetEntity: Movimiento
      mappedBy: encargo
-     cascade: ["persist"]
+     cascade: ["persist", "refresh"]

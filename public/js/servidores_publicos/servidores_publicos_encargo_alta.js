@@ -7,7 +7,7 @@ jQuery(document).ready(function ($) {
         $loadingBusqueda     = $('#loadingBusqueda'),
         $rutaBusqueda        = $('#rutaBusqueda'),
         $servidorRegistrado  = $('#servidorRegistrado'),
-        $idServidorPublico   = $('#idServidorPublico');
+        $idServidorPublico   = $('#idServidorPublico'),
         $resultadosBusqueda  = $('#resultadosBusqueda');
 
     // focus
@@ -173,7 +173,7 @@ jQuery(document).ready(function ($) {
             url:      $rutaBusqueda.val(),
             type:     'post',
             dataType: 'json',
-            data:     {dato: dato, _token: $formAltaEncargo.find('input[name="_token"]').val()},
+            data:     {dato: dato, _token: $formAltaEncargo.find('input[name="_token"]').val(), },
             beforeSend: function () {
                 $loadingBusqueda.removeClass('hide');
             }

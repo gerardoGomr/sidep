@@ -25,10 +25,14 @@ Route::group(['prefix' => 'admin'], function() {
             'as'   => 'servidores-busqueda',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@busqueda'
         ]);
-
-        Route::post('servidores/encargo/alta',[
+        Route::post('servidores/alta',[
             'as'   => 'servidores-encargo-alta',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@registrarEncargo'
+        ]);
+
+        Route::post('servidores/detalle', [
+            'as'   => 'servidores-detalle',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@detalle'
         ]);
     });
 

@@ -1,6 +1,7 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
+use Sidep\Dominio\Repositorios\Repositorio;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
 
 /**
@@ -9,7 +10,7 @@ use Sidep\Dominio\ServidoresPublicos\Encargo;
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-interface EncargosRepositorio
+interface EncargosRepositorio extends Repositorio
 {
     /**
      * @param string $username

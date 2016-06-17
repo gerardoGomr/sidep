@@ -193,6 +193,7 @@ class Encargo
         if ($movimiento->getMovimientoTipo() !== MovimientoTipo::ALTA) {
             throw new NoEsMovimientoDeAltaException('Se esperaba un movimiento de alta');
         }
+
         $this->movimientos->add($movimiento);
 
         // generar declaración inicial si no está marcado como exento

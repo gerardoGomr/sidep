@@ -1,22 +1,15 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
+use Sidep\Dominio\Repositorio;
+
 /**
  * Interface DependenciasRepositorio
  * @package Sidep\Dominio\ServidoresPublicos\Repositorios
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-interface DependenciasRepositorio
+interface DependenciasRepositorio extends Repositorio
 {
-    /**
-     * @return array
-     */
-    public function obtenerTodos();
 
-    /**
-     * @param int $id
-     * @return Dependencia
-     */
-    public function obtenerPorId($id);
 }

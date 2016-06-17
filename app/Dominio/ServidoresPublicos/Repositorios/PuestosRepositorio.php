@@ -1,22 +1,15 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
+use Sidep\Dominio\Repositorios\Repositorio;
+
 /**
  * Interface PuestosRepositorio
  * @package Sidep\Dominio\ServidoresPublicos\Repositorios
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-interface PuestosRepositorio
+interface PuestosRepositorio extends Repositorio
 {
-    /**
-     * @return array
-     */
-    public function obtenerTodos();
 
-    /**
-     * @param int $id
-     * @return Puesto
-     */
-    public function obtenerPorId($id);
 }

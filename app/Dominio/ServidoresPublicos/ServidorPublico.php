@@ -68,6 +68,22 @@ class ServidorPublico extends Persona
     }
 
     /**
+     * @return DateTime
+     */
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    /**
+     * @return Domicilio
+     */
+    public function getDomicilio()
+    {
+        return $this->domicilio;
+    }
+
+    /**
      * @param $curp
      * @param $fechaNacimiento
      * @param Domicilio $domicilio

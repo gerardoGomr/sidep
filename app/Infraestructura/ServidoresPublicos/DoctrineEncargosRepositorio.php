@@ -1,7 +1,7 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
-use Sidep\Dominio\Listas\Coleccion;
+//use Sidep\Dominio\Listas\Coleccion;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;
@@ -59,12 +59,11 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
     {
         // TODO: Implement obtenerEncargos() method.
         try {
-            $encargos = new Coleccion(new \Sidep\Aplicacion\Coleccion());
-
             $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE s.curp = :curp OR s.rfc = :rfc OR CONCAT(s.nombre, s.paterno, s.materno) LIKE :nombres OR CONCAT(s.paterno, s.materno, s.nombre) LIKE :nombres')
                 ->setParameter('curp', $parametro)
                 ->setParameter('rfc', $parametro)
-                ->setParameter('nombres', "%$parametro%");
+                ->setParameter('nombres', "%$parametro%")
+                ->setMaxResults(50);
 
             $encargo = $query->getResult();
 
@@ -72,11 +71,11 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
                 return null;
             }
 
-            foreach ( $encargo as $encargo ) {
+            /*foreach ( $encargo as $encargo ) {
                 $encargos->agregar($encargo);
-            }
+            }*/
 
-            return $encargos;
+            return $encargo;
 
         } catch(\PDOException $e) {
             $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
@@ -103,6 +102,45 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
             $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return false;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function obtenerTodos()
+    {
+        // TODO: Implement obtenerTodos() method.
+        return $this->obtenerEncargos();
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function obtenerPorId($id)
+    {
+        // TODO: Implement obtenerPorId() method.
+        try {
+            $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE e.id = :id')
+                ->setParameter('id', $id);
+            $encargo = $query->getResult();
+
+            if (count($encargo) === 0) {
+                return null;
+            }
+
+            /*foreach ( $encargo as $encargo ) {
+                $encargos->agregar($encargo);
+            }*/
+
+            return $encargo[0];
+
+        } catch(\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+
+            return null;
         }
     }
 }

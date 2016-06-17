@@ -1,40 +1,32 @@
 <div class="tab-pane active" id="informacion">
     <div class="innerAll">
-        {{--<div class="btn-group btn-group-sm center">
-            <a href="" class="btn btn-info"><i class="fa fa-edit"></i> Editar datos personales</a>
-            <a href="" class="btn btn-danger"><i class="fa fa-minus-circle"></i> Registrar baja</a>
-            <a href="" class="btn btn-success"><i class="fa fa-minus-circle"></i> Registrar promoción</a>
-            <a href="" class="btn btn-warning"><i class="fa fa-minus-circle"></i> Registrar degradación</a>
-        </div>
-        <div class="separator"></div>--}}
-
         <div class="row">
-            <div class="col-sm-8 col-lg-8">
+            <div class="col-sm-7 col-lg-8">
                 <div class="row">
                     <div class="col-sm-12 col-lg-6">
                         <div class="box-generic padding-none margin-none">
-                            <h5 class="innerAll border-bottom margin-none">Datos del encargo</h5>
+                            <h5 class="innerAll border-bottom margin-none">DATOS DEL ENCARGO</h5>
                             <div class="innerAll">
                                 <table class="table table-hover margin-none">
                                     <tbody>
                                     <tr>
-                                        <td class="border-top-none">Dependencia:</td>
-                                        <td class="border-top-none">Centro Estatal de Control de Confianza</td>
+                                        <td class="border-top-none strong">DEPENDENCIA:</td>
+                                        <td class="border-top-none">{{ $encargo->getDependencia()->getDependencia() }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-muted">Adscripción:</td>
-                                        <td>Unidad de Informática</td>
+                                        <td class="strong">ADSCRIPCIÓN:</td>
+                                        <td>{{ $encargo->getAdscripcion() }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Fecha de alta:</td>
-                                        <td>01 octubre de 2014</td>
+                                        <td class="strong">FECHA DE ALTA:</td>
+                                        <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Activo:</td>
+                                        <td class="strong">ACTIVO:</td>
                                         <td>Si</td>
                                     </tr>
                                     <tr>
-                                        <td>Proceso:</td>
+                                        <td class="strong">PROCESO:</td>
                                         <td>No</td>
                                     </tr>
                                     </tbody>
@@ -45,28 +37,28 @@
 
                     <div class="col-sm-12 col-lg-6">
                         <div class="box-generic padding-none margin-none">
-                            <h5 class="innerAll border-bottom margin-none">Datos del servidor público</h5>
+                            <h5 class="innerAll border-bottom margin-none">DATOS DEL SERVIDOR PÚBLICO</h5>
                             <table class="table table-striped margin-none">
                                 <tbody>
                                 <tr>
-                                    <td class="border-top-none">CURP:</td>
-                                    <td class="border-top-none">GORG880410HCSMZR07</td>
+                                    <td class="border-top-none strong">CURP:</td>
+                                    <td class="border-top-none">{{ $encargo->servidorPublico()->getCurp() }}</td>
                                 </tr>
                                 <tr>
-                                    <td>RFC:</td>
-                                    <td>GORG880410 4U6</td>
+                                    <td class="strong">RFC:</td>
+                                    <td>{{ $encargo->servidorPublico()->getRfc() }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Edo. Civil:</td>
+                                    <td class="strong">EDO. CIVIL:</td>
                                     <td>Unión libre</td>
                                 </tr>
                                 <tr>
-                                    <td>Domicilio:</td>
-                                    <td>Av. Camino de la Ronda Ma. 57 Ed.451 DEPTO. B</td>
+                                    <td class="strong">DOMICILIO:</td>
+                                    <td>{{ $encargo->servidorPublico()->getDomicilio()->direccionCompleta() }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Municipio:</td>
-                                    <td>Tuxtla Gutiérrez</td>
+                                    <td class="strong">MUNICIPIO:</td>
+                                    <td>{{ $encargo->servidorPublico()->getDomicilio()->getMunicipio() }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -74,16 +66,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="box-generic bg-gray padding-none">
-                    <h5 class="innerAll border-bottom margin-none">Acciones</h5>
-                    <div id="acciones" class="btn-group btn-group btn-group-vertical btn-group-block innerAll">
-                        <a href="" class="btn btn-default"><i class="fa fa-edit"></i> Editar datos personales</a>
-                        <a href="" class="btn btn-default"><i class="fa fa-minus-circle"></i> Registrar baja</a>
-                        <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> Registrar promoción</a>
-                        <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> Registrar cambio de adscripción</a>
-                    </div>
+            <div class="col-sm-5 col-lg-4">
+                <h5 class="innerAll border-top border-right border-left margin-none bg-gray">MOVIMIENTOS</h5>
+                <div id="acciones" class="btn-group btn-group btn-group-vertical btn-group-block">
+                    <a href="" class="btn btn-default"><i class="fa fa-edit"></i> Editar datos personales</a>
+                    <a href="" class="btn btn-default"><i class="fa fa-minus-circle"></i> Registrar baja</a>
+                    <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> Registrar promoción</a>
+                    <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> Registrar cambio de adscripción</a>
                 </div>
+
                 <div class="separator"></div>
                 <div class="box-generic margin-none padding-none">
                     <h5 class="innerAll border-bottom">Estatus del servidor público</h5>

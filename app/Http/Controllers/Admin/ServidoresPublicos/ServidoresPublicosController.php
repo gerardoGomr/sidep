@@ -44,11 +44,13 @@ class ServidoresPublicosController extends Controller
 
     /**
      * mostrar view principal
+     * obtener los últimos 50 encargos generados
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        return view('admin.servidores_publicos.servidores_publicos');
+        $encargos = $this->encargosRepositorio->obtenerTodos();
+        return view('admin.servidores_publicos.servidores_publicos', compact('encargos'));
     }
 
     /**
@@ -76,19 +78,38 @@ class ServidoresPublicosController extends Controller
     {
         $datoBusqueda = str_replace(' ', '', $request->get('dato'));
         $encargos     = $this->encargosRepositorio->obtenerEncargos($datoBusqueda);
+        $origen       = $request->get('origen');
         $respuesta    = [];
 
-        if ($encargos === null) {
-            $respuesta['resultado'] = 'fail';
-        } else {
-            $respuesta['resultado'] = 'OK';
-            $respuesta['contenido'] = view('admin.servidores_publicos.servidores_publicos_encargo_resultados',
-                compact('encargos'))->render();
+        $encargos === null ? $respuesta['resultado'] = 'fail' : $respuesta['resultado'] = 'OK';
+
+        switch ($origen) {
+            case 'alta':
+                $vista = view('admin.servidores_publicos.servidores_publicos_encargo_resultados',
+                    compact('encargos'))->render();
+                break;
+
+            case 'index':
+                $vista = view('admin.servidores_publicos.servidores_publicos_resultado_busqueda',
+                    compact('encargos'))->render();
+                break;
         }
+
+        $respuesta['contenido'] = $vista;
 
         return response()->json($respuesta);
     }
 
+    /**
+     * registrar un nuevo encargo en el sistema
+     * @param FormAltaRequest $request
+     * @param DependenciasRepositorio $dependenciasRepositorio
+     * @param PuestosRepositorio $puestosRepositorio
+     * @param ServidoresPublicosRepositorio $servidoresRepositorio
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Sidep\Dominio\Excepciones\NoEsDeclaracionInicialException
+     * @throws \Sidep\Dominio\Excepciones\NoEsMovimientoDeAltaException
+     */
     public function registrarEncargo(FormAltaRequest $request, DependenciasRepositorio $dependenciasRepositorio, PuestosRepositorio $puestosRepositorio, ServidoresPublicosRepositorio $servidoresRepositorio)
     {
         // transformar a mayúsculas
@@ -114,16 +135,15 @@ class ServidoresPublicosController extends Controller
         }
 
         // obtener puesto por id
-        $puesto = $puestosRepositorio->obtenerPorId($idPuesto);
+        $puesto      = $puestosRepositorio->obtenerPorId($idPuesto);
         // obtener dependencia por id
         $dependencia = $dependenciasRepositorio->obtenerPorId($idDependencia);
         // **********************************************************************
-        $encargo = new Encargo($servidor, $request->get('adscripcion'), new CuentaAcceso(), $puesto, $dependencia, new ColeccionArray(), new ColeccionArray());
-
+        $encargo     = new Encargo($servidor, $request->get('adscripcion'), new CuentaAcceso(), $puesto, $dependencia, new ColeccionArray(), new ColeccionArray());
         $declaracion = new Declaracion(DeclaracionTipo::INICIAL, new DateTime());
         $declaracion->generarFechaDeCumplimiento();
 
-        $movimiento = new Movimiento(MovimientoTipo::ALTA, new DateTime());
+        $movimiento = new Movimiento(MovimientoTipo::ALTA, new DateTime(), $encargo);
         $movimiento->generarComentario();
         $encargo->alta($exento, $movimiento, $declaracion);
         // **********************************************************************
@@ -133,6 +153,24 @@ class ServidoresPublicosController extends Controller
         if (!$this->encargosRepositorio->guardar($encargo)) {
             $respuesta['resultado'] = 'fail';
         }
+
+        return response()->json($respuesta);
+    }
+
+    /**
+     * ver la informacion completa de un encargo en base a su id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function detalle(Request $request)
+    {
+        $id        = (int)base64_decode($request->get('id'));
+        $respuesta = [];
+        $encargo   = $this->encargosRepositorio->obtenerPorId($id);
+
+        $respuesta['contenido'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
 
         return response()->json($respuesta);
     }

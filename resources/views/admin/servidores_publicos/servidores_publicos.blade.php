@@ -8,22 +8,24 @@
 
                 <div class="innerAll bg-gray">
                     <p class="text-muted strong">
-                        Para buscar a servidores públicos, ingrese nombre, RFC, CURP o dependencia a la que pertenece y presione ENTER.
+                        INGRESE NOMBRES, CURP, RFC O DEPENDENCIA Y PRESIONE ENTER
                     </p>
-                    <form id="formBusqueda" action="{{ url('buscar') }}">
+                    <form id="formBusqueda" action="{{ route('servidores-busqueda') }}">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <input type="text" name="servidor" id="servidor" class="form-control" placeholder="Ingrese nombres, RFC, CURP o dependencia">
+                            <input type="text" name="dato" id="dato" class="form-control">
                         </div>
+                        <input type="hidden" name="origen" value="index">
                     </form>
                 </div>
                 <div class="col-table">
                     <div class="col-table-row">
                         <div class="col-app col-unscrollable">
                             <div class="col-app">
-                                <span id="busquedaServidores" style="display:none;" class="innerAll"><i class="fa fa-spinner fa-spin"></i></span>
-                                <ul id="servidoresPublicos" class="list-group list-group-1 borders-none">
+                                <span id="busquedaServidores" class="hide innerAll"><i class="fa fa-spinner fa-spin fa-2x"></i></span>
+                                <div id="resultadoBusquedaServidores" data-url="{{ route('servidores-detalle') }}">
                                     @include('admin.servidores_publicos.servidores_publicos_resultado_busqueda')
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -37,9 +39,9 @@
                     <div class="col-table-row">
                         <div class="col-app col-unscrollable">
                             <div class="col-app">
-                                <span id="fichaTecnicaLoading" style="display:none;" class="innerAll"><i class="fa fa-spinner fa-spin"></i></span>
-                                <div id="fichaTecnica" style="display:none;">
-                                    @include('admin.servidores_publicos.servidores_publicos_ficha')
+                                <span id="fichaTecnicaLoading" class="hide innerAll"><i class="fa fa-spinner fa-spin"></i></span>
+                                <div id="fichaTecnica" class="hide">
+
                                 </div>
                             </div>
                         </div>
