@@ -6,9 +6,9 @@
                     <div class="media-body innerT half">
                         <p class="strong margin-none padding-none text-primary">{{ $encargo->servidorPublico()->nombreCompleto() }}</p>
                         <ul class="text-small list-unstyled">
-                            <li><i class="fa fa-building-o"></i> Centro Estatal de Control de Confianza</li>
-                            <li><i class="fa fa-envelope"></i> gerardo@gmail.com</li>
-                            <li><i class="fa fa-phone"></i> 9611930080</li>
+                            <li><i class="fa fa-building-o"></i> {{ !is_null($encargo->getDependencia()) ? $encargo->getDependencia()->getDependencia() : '' }}</li>
+                            <li><i class="fa fa-envelope"></i> {{ strlen($encargo->servidorPublico()->getEmail()) > 0 ? $encargo->servidorPublico()->getEmail() : '-' }}</li>
+                            <li><i class="fa fa-phone"></i> {{ strlen($encargo->servidorPublico()->getTelefono()) > 0 ? $encargo->servidorPublico()->getTelefono() : '-' }}</li>
                         </ul>
                     </div>
                 </div>

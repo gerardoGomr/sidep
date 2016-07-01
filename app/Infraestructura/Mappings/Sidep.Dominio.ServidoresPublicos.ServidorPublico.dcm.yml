@@ -32,6 +32,25 @@ Sidep\Dominio\ServidoresPublicos\ServidorPublico:
       length: 15
       nullable: false
       column: rfc
+    estadoCivil:
+      type: integer
+      length: 1
+      nullable: false
+      column: estado_civil
+    telefono:
+      type: string
+      length: 50
+      nullable: false
+      column: telefono
+    email:
+      type: string
+      length: 100
+      nullable: false
+      column: email
+    fechaNacimiento:
+      type: date
+      nullable: false
+      column: fecha_nacimiento
   oneToOne:
     domicilio:
       targetEntity: Domicilio

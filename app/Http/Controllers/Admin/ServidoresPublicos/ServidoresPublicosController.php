@@ -19,6 +19,7 @@ use Sidep\Dominio\ServidoresPublicos\Repositorios\ServidoresPublicosRepositorio;
 use Sidep\Dominio\ServidoresPublicos\ServidorPublico;
 use Sidep\Http\Controllers\Controller;
 use Sidep\Http\Requests\FormAltaRequest;
+use Sidep\Http\Requests\FormEditarServidorPublico;
 
 /**
  * Class ServidoresPublicosController
@@ -125,8 +126,27 @@ class ServidoresPublicosController extends Controller
         // **********************************************************************
         if ($servidorRegistrado === 0) {
             // crear objeto servidor
-            $servidor = new ServidorPublico($request->get('nombre'), $request->get('paterno'), $request->get('materno'), $request->get('rfc'));
-            $servidor->registrar($request->get('curp'), DateTime::createFromFormat('d/m/Y', $request->get('fechaNacimiento')), new Domicilio($request->get('calle'), $request->get('noExterior'), $request->get('noInterior'), $request->get('coloniaLocalidad'), $request->get('cp'), $request->get('municipio')));
+            $servidor = new ServidorPublico();
+
+            $servidor->registrar(
+                $request->get('nombre'),
+                $request->get('paterno'),
+                $request->get('materno'),
+                $request->get('rfc'),
+                $request->get('curp'),
+                DateTime::createFromFormat('d/m/Y', $request->get('fechaNacimiento')),
+                new Domicilio(
+                    $request->get('calle'),
+                    $request->get('noExterior'),
+                    $request->get('noInterior'),
+                    $request->get('coloniaLocalidad'),
+                    $request->get('cp'),
+                    $request->get('municipio')
+                ),
+                (int)$request->get('estadoCivil'),
+                $request->get('telefono'),
+                $request->get('email')
+            );
 
         } else {
             $idServidorPublico = (int)$request->get('idServidorPublico');
@@ -140,12 +160,15 @@ class ServidoresPublicosController extends Controller
         $dependencia = $dependenciasRepositorio->obtenerPorId($idDependencia);
         // **********************************************************************
         $encargo     = new Encargo($servidor, $request->get('adscripcion'), new CuentaAcceso(), $puesto, $dependencia, new ColeccionArray(), new ColeccionArray());
-        $declaracion = new Declaracion(DeclaracionTipo::INICIAL, new DateTime());
-        $declaracion->generarFechaDeCumplimiento();
+        // generar declaracion
+        $declaracion = new Declaracion(DeclaracionTipo::INICIAL, new DateTime(), $encargo);
 
+        // generar movimiento
         $movimiento = new Movimiento(MovimientoTipo::ALTA, new DateTime(), $encargo);
-        $movimiento->generarComentario();
-        $encargo->alta($exento, $movimiento, $declaracion);
+
+        // generar alta
+        $encargo->alta($exento, $movimiento, $declaracion, $request->get('fechaIngreso'));
+
         // **********************************************************************
         // persistir encargo
         $respuesta['resultado'] = 'OK';
@@ -171,6 +194,56 @@ class ServidoresPublicosController extends Controller
         $encargo   = $this->encargosRepositorio->obtenerPorId($id);
 
         $respuesta['contenido'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
+
+        return response()->json($respuesta);
+    }
+
+    /**
+     * ver la pantalla de editar datos personales de servidor público
+     * @param int $id
+     * @param ServidoresPublicosRepositorio $servidoresRepositorio
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function editarDatos($id, ServidoresPublicosRepositorio $servidoresRepositorio)
+    {
+        $id       = (int) $id;
+        $servidor = $servidoresRepositorio->obtenerPorId($id);
+
+        return view('admin.servidores_publicos.servidores_publicos_editar', compact('servidor'));
+    }
+
+    public function actualizar(FormEditarServidorPublico $request, ServidoresPublicosRepositorio $servidoresRepositorio)
+    {
+        $respuesta = [];
+        $servidor  = $servidoresRepositorio->obtenerPorId((int)$request->get('idServidorPublico'));
+
+        // actualizar datos
+        $servidor->registrar(
+            $request->get('nombre'),
+            $request->get('paterno'),
+            $request->get('materno'),
+            $request->get('rfc'),
+            $request->get('curp'),
+            DateTime::createFromFormat('d/m/Y', $request->get('fechaNacimiento')),
+            new Domicilio(
+                $request->get('calle'),
+                $request->get('noExterior'),
+                $request->get('noInterior'),
+                $request->get('coloniaLocalidad'),
+                $request->get('cp'),
+                $request->get('municipio')
+            ),
+            (int)$request->get('estadoCivil'),
+            $request->get('telefono'),
+            $request->get('email')
+        );
+
+        $respuesta['resultado'] = 'OK';
+
+        // persistir cambios
+        if (!$servidoresRepositorio->actualizar($servidor)) {
+            $respuesta['resultado'] = 'fail';
+        }
 
         return response()->json($respuesta);
     }

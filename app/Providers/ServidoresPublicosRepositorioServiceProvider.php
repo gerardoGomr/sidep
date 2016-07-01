@@ -4,6 +4,8 @@ namespace Sidep\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Sidep\Infraestructura\ServidoresPublicos\DoctrineServidoresPublicosRepositorio;
+use Doctrine\ORM\EntityManagerInterface;
+use App;
 
 class ServidoresPublicosRepositorioServiceProvider extends ServiceProvider
 {
@@ -25,7 +27,7 @@ class ServidoresPublicosRepositorioServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('Sidep\Dominio\ServidoresPublicos\Repositorios\ServidoresPublicosRepositorio', function() {
-            return new DoctrineServidoresPublicosRepositorio();
+            return new DoctrineServidoresPublicosRepositorio(App::make('Doctrine\ORM\EntityManagerInterface'));
         });
     }
 }

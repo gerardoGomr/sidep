@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
     var $formAltaEncargo     = $('#formAltaEncargo'),
         $campoOtroPuesto     = $('#campoOtroPuesto'),
         $otroPuesto          = $('#otroPuesto'),
-        $servidor            = $('#servidor'),
+        $datoServidor        = $('#datoServidor'),
         $loadingBusqueda     = $('#loadingBusqueda'),
         $rutaBusqueda        = $('#rutaBusqueda'),
         $servidorRegistrado  = $('#servidorRegistrado'),
@@ -12,7 +12,7 @@ jQuery(document).ready(function ($) {
 
     // focus
     setTimeout(function () {
-        $('#servidor').focus();
+        $datoServidor.focus();
     }, 500);
 
     // iniciar validaciones
@@ -20,6 +20,7 @@ jQuery(document).ready(function ($) {
 
     // validar form
     $formAltaEncargo.validate();
+
     agregaValidacionesElementos($formAltaEncargo);
 
     // datepicker
@@ -33,13 +34,13 @@ jQuery(document).ready(function ($) {
     $('#puesto').select2();
 
     // buscar servidores públicos.- prevenir submit
-    $servidor.on('keypress', function (event) {
+    $datoServidor.on('keypress', function (event) {
         if (event === 13 || event.which === 13) {
             return false;
         }
     });
 
-    $servidor.on('keyup', function (event) {
+    $datoServidor.on('keyup', function (event) {
         if (event === 13 || event.which === 13) {
             buscarServidorPublico($(this).val());
         }
@@ -47,33 +48,44 @@ jQuery(document).ready(function ($) {
 
     $('#buscarServidor').on('click', function(event) {
         event.preventDefault();
-        buscarServidorPublico($servidor.val());
+        buscarServidorPublico($datoServidor.val());
     });
     // ***************************************************************************
 
-    // click en tabla
+    // click en tabla de resultado de servidor público
     $resultadosBusqueda.on('click', 'tr.resultados', function () {
-        var id = $(this).data('id');
-        bootbox.confirm('¿Usar a este servidor público?', function (event) {
+        var id       = $(this).data('id'),
+            elemento = $(this);
+
+        bootbox.confirm('SE REGISTRARÁ UNA NUEVA ALTA DE ENCARGO A ' + $(this).children('td.nombre').text() + ', ¿DESEA CONTINUAR?', function (event) {
             if (event === true) {
-                $('#busquedaServidores').addClass('hide');
-                $('#contenedorDatosServidor').removeClass('hide').addClass('pull-left');
-                $('#contenedorFormPrincipal').removeClass('hide').addClass('pull-left');
+
+                setearDatosDeServidorAContenedor(elemento);
+
+                $('#contenedorBusquedaServidorPublico').addClass('hide');
+
+                $('#contenedorServidorPublico').removeClass('hide');
+                $('#presentaDatosPersonales').removeClass('hide');
                 $servidorRegistrado.val('1');
+                $('#busquedaServidor').val('1');
                 $idServidorPublico.val(id);
+                $('#cerrrModal').click();
             }
         });
     });
 
-    // click en botón nuevo servidor
-    $('#nuevoServidor').on('click', function () {
-        nuevoServidor();
+    // cambiar servidor
+    $('#cambiarServidor').on('click', function () {
+        $('#contenedorBusquedaServidorPublico').removeClass('hide');
+
+        $('#contenedorServidorPublico').addClass('hide');
+        $('#presentaDatosPersonales').addClass('hide');
     });
 
     // click en exento
     $('#exento').on('click', function () {
         if ($(this).attr('checked') === 'checked') {
-            bootbox.alert('Al elegir esta opción, NO se generará una declaración inicial', function () {
+            bootbox.alert('AL ELEGIR EXENTO, NO SE GENERARÁ LA DECLARACIÓN INICIAL A ESTE ENCARGO DE SERVIDOR PÚBLICO.', function () {
                 $('#textoExento').removeClass('hide');
             });
         } else {
@@ -84,6 +96,13 @@ jQuery(document).ready(function ($) {
     // click en guardar
     $('#guardar').on('click', function () {
         if ($formAltaEncargo.valid() === true) {
+
+            if ($('#busquedaServidor').val() === '0') {
+                bootbox.alert('POR FAVOR, BUSQUE Y SELECCIONE A UN SERVIDOR PÚBLICO DEL CATÁLOGO O AGREGUE SUS DATOS EN CASO DE QUE NO EXISTA.');
+                $datoServidor.focus();
+                return false;
+            }
+
             $.ajax({
                 url:      $formAltaEncargo.attr('action'),
                 type:     'post',
@@ -96,18 +115,18 @@ jQuery(document).ready(function ($) {
             .done(function (respuesta) {
                 $('#loadingGuardar').addClass('hide');
                 if (respuesta.resultado === 'fail') {
-                    bootbox.alert('Ocurrió un error al generar el alta del encargo del servidor público. Por favor, intente de nuevo.');
+                    bootbox.alert('OCURRIÓ UN ERROR AL GUARDAR EL ENCARGO DEL SERVIDOR PÚBLICO. INTENTE DE NUEVO.');
                     return false;
                 }
 
-                bootbox.alert('Alta de encargo de servidor público generada con éxito.', function () {
+                bootbox.alert('ALTA DE ENCARGO DE SERVIDOR PÚBLICO GUARDADA CON ÉXITO.', function () {
                     window.location.href = $('#rutaBase').val();
                 });
             })
             .fail(function (jQxr, textStatus, errorThrown) {
                 $('#loadingGuardar').addClass('hide');
                 console.log(textStatus + ': ' + errorThrown);
-                bootbox.alert('Ocurrió un error al realizar la operación solicitada. Intente de nuevo.');
+                bootbox.alert('OCURRIÓ UN ERROR AL GUARDAR EL ENCARGO DEL SERVIDOR PÚBLICO. INTENTE DE NUEVO.');
             });
         }
     });
@@ -128,12 +147,24 @@ jQuery(document).ready(function ($) {
     $('#cancelar').on('click', function (event) {
         event.preventDefault();
 
-        bootbox.confirm('¿Desea cancelar el registro de alta del servidor público?', function (e) {
+        bootbox.confirm('¿DESEA CANCELAR EL REGISTRO DE ALTA DE ENCARGO DE SERVIDOR PÚBLICO?', function (e) {
             if (e === true) {
                 window.location.href = $('#cancelar').attr('href');
             }
         });
     });
+
+    function setearDatosDeServidorAContenedor(elementoConDatos)
+    {
+        $('#presentaNombre').text(elementoConDatos.children('td.nombre').text());
+        $('#presentaFechaNacimiento').text(elementoConDatos.children('td.otrosDatos').children('input.fechaNacimiento').val());
+        $('#presentaCurp').text(elementoConDatos.children('td.curp').text());
+        $('#presentaRfc').text(elementoConDatos.children('td.rfc').text());
+        $('#presentaTelefono').text(elementoConDatos.children('td.otrosDatos').children('input.telefono').val());
+        $('#presentaEmail').text(elementoConDatos.children('td.otrosDatos').children('input.email').val());
+        $('#presentaEstadoCivil').text(elementoConDatos.children('td.otrosDatos').children('input.estadoCivil').val());
+        $('#presentaDomicilio').text(elementoConDatos.children('td.domicilio').text());
+    }
 
     /**
      * agregar las validaciones pertinentes al formulario de captura
@@ -181,7 +212,7 @@ jQuery(document).ready(function ($) {
         .done(function (respuesta) {
             $loadingBusqueda.addClass('hide');
             if (respuesta.resultado === 'fail') {
-                bootbox.alert('No se encontraron coincidencias.', function () {
+                bootbox.alert('NO SE ENCONTRARON COINCIDENCIAS CON EL DATO DE BÚSQUEDA. POR FAVOR, CAPTURE LOS DATOS DEL SERVIDOR PÚBLICO.', function () {
                     $resultadosBusqueda.html('');
                     $servidorRegistrado.val('0');
                     nuevoServidor();
@@ -190,6 +221,8 @@ jQuery(document).ready(function ($) {
             }
 
             $resultadosBusqueda.html(respuesta.contenido);
+            $('#abrirModal').click();
+            //$('#resultadoServidor').modal('show');
         })
         .fail(function (jQxr, textStatus, errorThrown) {
             $loadingBusqueda.addClass('hide');
@@ -203,20 +236,24 @@ jQuery(document).ready(function ($) {
      */
     function nuevoServidor()
     {
-        bootbox.confirm('Ingrese los datos del servidor público para agregarlo al padrón.', function (event) {
-            if (event === true) {
-                $('#busquedaServidores').addClass('hide');
-                $('#contenedorFormServidor').removeClass('hide').addClass('pull-left');
-                $('#contenedorFormPrincipal').removeClass('hide').addClass('pull-left');
+        //bootbox.confirm('Ingrese los datos del servidor público para agregarlo al padrón.', function (event) {
+           // if (event === true) {
+        $('#contenedorBusquedaServidorPublico').addClass('hide');
 
-                // validaciones
-                agregarValidacionesCamposServidorPublico();
+        $('#contenedorServidorPublico').removeClass('hide');
+        $('#capturaDatosPersonales').removeClass('hide');
+        $('#capturaDatosDomicilio').removeClass('hide');
 
-                // focus
-                setTimeout(function () {
-                    $('#nombre').focus();
-                }, 500);
-            }
-        });
+        // validaciones
+        agregarValidacionesCamposServidorPublico();
+
+        $('#busquedaServidor').val('1');
+
+        // focus
+        setTimeout(function () {
+            $('#nombre').focus();
+        }, 500);
+            //}
+        //});
     }
 });

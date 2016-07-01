@@ -12,6 +12,11 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
       length: 80
       nullable: false
       column: adscripcion
+    fechaAlta:
+      type: string
+      length: 15
+      nullable: false
+      column: fecha_alta
   oneToOne:
     servidorPublico:
       targetEntity: ServidorPublico
@@ -43,3 +48,7 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
      targetEntity: Movimiento
      mappedBy: encargo
      cascade: ["persist", "refresh"]
+    declaraciones:
+      targetEntity: Declaracion
+      mappedBy: encargo
+      cascade: ["persist", "refresh"]

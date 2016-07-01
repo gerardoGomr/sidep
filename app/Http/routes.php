@@ -34,6 +34,12 @@ Route::group(['prefix' => 'admin'], function() {
             'as'   => 'servidores-detalle',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@detalle'
         ]);
+
+        Route::get('servidores/editar/{id?}', 'Admin\ServidoresPublicos\ServidoresPublicosController@editarDatos');
+        Route::post('servidores/editar', [
+            'as'   => 'servidores-editar',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@actualizar'
+        ]);
     });
 
     // login

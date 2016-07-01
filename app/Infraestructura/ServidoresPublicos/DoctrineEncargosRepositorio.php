@@ -59,7 +59,7 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
     {
         // TODO: Implement obtenerEncargos() method.
         try {
-            $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE s.curp = :curp OR s.rfc = :rfc OR CONCAT(s.nombre, s.paterno, s.materno) LIKE :nombres OR CONCAT(s.paterno, s.materno, s.nombre) LIKE :nombres')
+            $query   = $this->entityManager->createQuery('SELECT e, c, p, s FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s WHERE s.curp = :curp OR s.rfc = :rfc OR CONCAT(s.nombre, s.paterno, s.materno) LIKE :nombres OR CONCAT(s.paterno, s.materno, s.nombre) LIKE :nombres ORDER BY e.id DESC')
                 ->setParameter('curp', $parametro)
                 ->setParameter('rfc', $parametro)
                 ->setParameter('nombres', "%$parametro%")

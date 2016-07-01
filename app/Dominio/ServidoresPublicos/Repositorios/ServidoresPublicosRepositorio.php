@@ -2,6 +2,7 @@
 namespace Sidep\Dominio\ServidoresPublicos\Repositorios;
 
 use Sidep\Dominio\Repositorios\Repositorio;
+use Sidep\Dominio\ServidoresPublicos\ServidorPublico;
 
 /**
  * Interface ServidoresPublicoRepositorio
@@ -11,5 +12,10 @@ use Sidep\Dominio\Repositorios\Repositorio;
  */
 interface ServidoresPublicosRepositorio extends Repositorio
 {
-
+	/**
+	 * guardar cambios en BD
+	 * @param  ServidorPublico $servidor
+	 * @return bool
+	 */
+	public function actualizar(ServidorPublico $servidor);
 }

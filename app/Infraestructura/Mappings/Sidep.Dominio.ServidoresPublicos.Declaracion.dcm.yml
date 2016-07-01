@@ -1,0 +1,73 @@
+Sidep\Dominio\ServidoresPublicos\Declaracion:
+  type: entity
+  table: declaracion
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    declaracionTipo:
+      type: integer
+      nullable: false
+      column: declaracion_tipo
+    fechaGeneracion:
+      type: date
+      length: 10
+      nullable: false
+      column: fecha_generacion
+    fechaPlazo:
+      type: date
+      length: 10
+      nullable: false
+      column: fecha_plazo
+    realizada:
+      type: boolean
+      nullable: false
+      column: realizada
+    observacion:
+      type: string
+      length: 255
+      nullable: false
+      column: observacion
+    tieneRequerimiento:
+      type: boolean
+      nullable: true
+      column: tiene_requerimiento
+    numeroRequerimiento:
+      type: string
+      length: 50
+      nullable: true
+      column: numero_requerimiento
+    fechaGeneracionRequerimiento:
+      type: date
+      length: 10
+      nullable: true
+      column: fecha_generacion_requerimiento
+    fechaRecepcionRequerimiento:
+      type: date
+      length: 10
+      nullable: true
+      column: fecha_recepcion_requerimiento
+    fechaPlazoCumplimiento:
+      type: date
+      length: 10
+      nullable: true
+      column: fecha_nuevo_plazo
+    sancionada:
+      type: boolean
+      nullable: true
+      column: sancionada
+    fechaEnvioFuncionPublica:
+      type: date
+      length: 10
+      nullable: true
+      column: fecha_envio_fp
+  manyToOne:
+    encargo:
+      targetEntity: Encargo
+      inversedBy: declaraciones
+      joinColumn:
+        name: encargo_id
+        referencedColumnName: id
+      cascade: ["persist", "refresh"]

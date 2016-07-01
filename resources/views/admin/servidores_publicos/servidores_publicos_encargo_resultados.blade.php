@@ -1,22 +1,31 @@
 @if (isset($encargos) && !is_null($encargos))
-    <table id="tablaResultados" class="table table-hover">
+    <table id="tablaResultados" class="table table-hover text-small">
         <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>CURP</th>
-            <th>RFC</th>
-        </tr>
+            <tr class="bg-primary">
+                <th role="columnheader">NOMBRE</th>
+                <th role="columnheader">CURP</th>
+                <th role="columnheader">RFC</th>
+                <th role="columnheader">DOMICILIO</th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
             @foreach ($encargos as $encargo)
                 <tr class="resultados" data-id="{{ $encargo->getServidorPublico()->getId() }}">
-                    <td>{{ $encargo->getServidorPublico()->nombreCompleto() }}</td>
-                    <td>{{ $encargo->getServidorPublico()->getCurp() }}</td>
-                    <td>{{ $encargo->getServidorPublico()->getRfc() }}</td>
+                    <td class="nombre">{{ $encargo->getServidorPublico()->nombreCompleto() }}</td>
+                    <td class="curp">{{ $encargo->getServidorPublico()->getCurp() }}</td>
+                    <td class="rfc">{{ $encargo->getServidorPublico()->getRfc() }}</td>
+                    <td class="domicilio">{{ $encargo->getServidorPublico()->getDomicilio()->direccionCompleta() }}</td>
+                    <td class="otrosDatos">
+                        <input type="hidden" class="fechaNacimiento" value="{{ $encargo->getServidorPublico()->getFechaNacimiento()->format('d/m/Y') }}">
+                        <input type="hidden" class="telefono" value="{{ $encargo->getServidorPublico()->getTelefono() }}">
+                        <input type="hidden" class="email" value="{{ $encargo->getServidorPublico()->getEmail() }}">
+                        <input type="hidden" class="estadoCivil" value="{{ $encargo->getServidorPublico()->estadoCivil() }}">
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 @else
-    <h5>No se encontraron resultados.</h5>
+    <h5 class="center">NO SE ENCONTRARON COINCIDENCIAS CON EL DATO DE BÚSQUEDA. POR FAVOR, CAPTURE LOS DATOS DEL SERVIDOR PÚBLICO</h5>
 @endif

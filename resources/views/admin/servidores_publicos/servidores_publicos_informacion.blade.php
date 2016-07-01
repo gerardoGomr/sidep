@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-sm-12 col-lg-6">
                         <div class="box-generic padding-none margin-none">
-                            <h5 class="innerAll border-bottom margin-none">DATOS DEL ENCARGO</h5>
+                            <h5 class="innerAll border-bottom margin-none bg-gray">DATOS DEL ENCARGO</h5>
                             <div class="innerAll">
                                 <table class="table table-hover margin-none">
                                     <tbody>
@@ -19,7 +19,7 @@
                                     </tr>
                                     <tr>
                                         <td class="strong">FECHA DE ALTA:</td>
-                                        <td></td>
+                                        <td>{{ !is_null($encargo->getFechaAlta()) ? \Sidep\Aplicacion\Fecha::fechaDeHoy($encargo->getFechaAlta()) : '' }}</td>
                                     </tr>
                                     <tr>
                                         <td class="strong">ACTIVO:</td>
@@ -37,8 +37,8 @@
 
                     <div class="col-sm-12 col-lg-6">
                         <div class="box-generic padding-none margin-none">
-                            <h5 class="innerAll border-bottom margin-none">DATOS DEL SERVIDOR PÚBLICO</h5>
-                            <table class="table table-striped margin-none">
+                            <h5 class="innerAll border-bottom margin-none bg-gray">DATOS DEL SERVIDOR PÚBLICO</h5>
+                            <table class="table table-hover margin-none">
                                 <tbody>
                                 <tr>
                                     <td class="border-top-none strong">CURP:</td>
@@ -50,7 +50,7 @@
                                 </tr>
                                 <tr>
                                     <td class="strong">EDO. CIVIL:</td>
-                                    <td>Unión libre</td>
+                                    <td>{{ $encargo->servidorPublico()->estadoCivil() }}</td>
                                 </tr>
                                 <tr>
                                     <td class="strong">DOMICILIO:</td>
@@ -67,28 +67,28 @@
                 </div>
             </div>
             <div class="col-sm-5 col-lg-4">
-                <h5 class="innerAll border-top border-right border-left margin-none bg-gray">MOVIMIENTOS</h5>
+                <h5 class="innerAll border-top border-right border-left margin-none bg-gray">ACCIONES</h5>
                 <div id="acciones" class="btn-group btn-group btn-group-vertical btn-group-block">
-                    <a href="" class="btn btn-default"><i class="fa fa-edit"></i> Editar datos personales</a>
-                    <a href="" class="btn btn-default"><i class="fa fa-minus-circle"></i> Registrar baja</a>
-                    <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> Registrar promoción</a>
-                    <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> Registrar cambio de adscripción</a>
+                    <a href="{{ url('admin/servidores/editar/'. $encargo->servidorPublico()->getId()) }}" class="btn btn-default"><i class="fa fa-edit"></i> EDITAR DATOS PERSONALES</a>
+                    <a href="" class="btn btn-default"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</a>
+                    <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> REGISTRAR PROMOCIÓN</a>
+                    <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> REGISTRAR CAMBIO DE ADSCRIPCIÓN</a>
                 </div>
 
                 <div class="separator"></div>
                 <div class="box-generic margin-none padding-none">
-                    <h5 class="innerAll border-bottom">Estatus del servidor público</h5>
+                    <h5 class="innerAll border-bottom bg-gray">ESTATUS DEL ENCARGO</h5>
                     <div class="form-group innerAll">
                         <div class="checkbox">
                             <label class="checkbox-custom">
                                 <input type="checkbox" name="estatus">
-                                <i class="fa fa-circle-o"></i> Exento
+                                <i class="fa fa-circle-o"></i> EXENTO
                             </label>
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-custom">
                                 <input type="checkbox" name="estatus">
-                                <i class="fa fa-circle-o"></i> Proceso
+                                <i class="fa fa-circle-o"></i> PROCESO
                             </label>
                         </div>
                     </div>

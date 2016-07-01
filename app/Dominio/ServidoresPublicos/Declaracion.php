@@ -47,7 +47,7 @@ class Declaracion
     private $tieneRequerimiento;
 
     /**
-     * @var
+     * @var string
      */
     private $numeroRequerimiento;
 
@@ -77,16 +77,23 @@ class Declaracion
     private $fechaEnvioFuncionPublica;
 
     /**
+     * @var Encargo
+     */
+    private $encargo;
+
+    /**
      * Declaracion constructor.
      * @param int $tipo
      * @param DateTime $fecha
+     * @param Encargo $encargo
      * @param int|null $id
      */
-    public function __construct($tipo, DateTime $fecha, $id = null)
+    public function __construct($tipo, DateTime $fecha, Encargo $encargo, $id = null)
     {
         $this->id              = $id;
         $this->declaracionTipo = $tipo;
         $this->fechaGeneracion = $fecha;
+        $this->encargo         = $encargo;
     }
 
     /**
@@ -102,7 +109,7 @@ class Declaracion
      */
     public function getFechaGeneracion()
     {
-        return $this->fechaGeneracion;
+        return $this->fechaGeneracion->format('d/m/Y');
     }
 
     /**
@@ -138,7 +145,7 @@ class Declaracion
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getNumeroRequerimiento()
     {
@@ -194,11 +201,45 @@ class Declaracion
     }
 
     /**
-     * calcula la fecha de cumplimiento de la declaracion en base al tipo
-     * @return void
+     * devuelve en cadena el tipo de declaración
+     * @return string
      */
-    public function generarFechaDeCumplimiento()
+    public function declaracionTipo()
     {
+        $tipo = '';
+        switch ($this->declaracionTipo) {
+            case DeclaracionTipo::INICIAL:
+                $tipo = 'INICIAL';
+                break;
+
+            case DeclaracionTipo::MODIFICACION:
+                $tipo = 'MODIFICACIÓN';
+                break;
+
+            case DeclaracionTipo::CONCLUSION:
+                $tipo = 'CONCLUSIÓN';
+                break;
+        }
+
+        return $tipo;
+    }
+
+    /**
+     * @return Encargo
+     */
+    public function getEncargo()
+    {
+        return $this->encargo;
+    }
+
+    /**
+     * calcula la fecha de cumplimiento de la declaracion en base al tipo
+     * @param DateTime $fecha
+     */
+    public function generarFechaDeCumplimiento(DateTime $fecha)
+    {
+        $this->fechaPlazo = $fecha;
+
         switch ($this->declaracionTipo) {
             case DeclaracionTipo::INICIAL:
                 // 60 días
@@ -206,12 +247,16 @@ class Declaracion
                 break;
 
             case DeclaracionTipo::MODIFICACION:
+                // 31 días
+                $dias = new \DateInterval('P31D');
+                break;
+
             case DeclaracionTipo::CONCLUSION:
                 // 30 días
                 $dias = new \DateInterval('P30D');
                 break;
         }
 
-        $this->fechaPlazo = $this->fechaGeneracion->add($dias);
+        $this->fechaPlazo->add($dias);
     }
 }

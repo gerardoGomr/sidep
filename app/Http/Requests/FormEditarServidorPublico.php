@@ -4,7 +4,7 @@ namespace Sidep\Http\Requests;
 
 use Sidep\Http\Requests\Request;
 
-class FormAltaRequest extends Request
+class FormEditarServidorPublico extends Request
 {
     protected $rules = [
         'nombre'           => 'required',
@@ -13,15 +13,14 @@ class FormAltaRequest extends Request
         'fechaNacimiento'  => 'date_format:d/m/Y',
         'curp'             => 'required|max:18|min:18',
         'rfc'              => 'required|max:13|min:10',
+        'email'            => 'email',
+        'estadoCivil'      => 'required',
         'calle'            => 'required',
         'noExterior'       => 'required',
         'coloniaLocalidad' => 'required',
         'municipio'        => 'required',
-        'dependencia'      => 'required',
-        'puesto'           => 'required',
-        'adscripcion'      => 'required',
-        'fechaIngreso'     => 'required|date_format:d/m/Y'
     ];
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -39,24 +38,7 @@ class FormAltaRequest extends Request
      */
     public function rules()
     {
-        $servidorRegistrado = (int)$this->get('servidorRegistrado');
-        $rules = $this->rules;
-
-        if ($servidorRegistrado === 1) {
-            // quitar la validación a elementos pertenecientes a servidor público
-            $rules['nombre']           = '';
-            $rules['paterno']          = '';
-            $rules['materno']          = '';
-            $rules['fechaNacimiento']  = '';
-            $rules['curp']             = '';
-            $rules['rfc']              = '';
-            $rules['calle']            = '';
-            $rules['noExterior']       = '';
-            $rules['coloniaLocalidad'] = '';
-            $rules['municipio']        = '';
-        }
-
-        return $rules;
+        return $this->rules;
     }
 
     public function response(array $errors)

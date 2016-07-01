@@ -25,6 +25,7 @@ function init()
 	// inicializar mensajes
 	$.validator.messages.digits   = 'Ingrese solo números';
 	$.validator.messages.required = 'Campo obligatorio';
+	$.validator.messages.email    = 'Ingrese un email válido';
 
 	// inicializar metodos
 	$.validator.addMethod("numeros", function(value,element){
@@ -159,6 +160,12 @@ function agregaValidacionesElementos($form)
 	$form.find('.imagenJpg').each(function() {
 		$(this).rules('add', {
 			extension: 'jpg'
+		});
+	});
+
+	$form.find('.email').each(function() {
+		$(this).rules('add', {
+			email: true
 		});
 	});
 

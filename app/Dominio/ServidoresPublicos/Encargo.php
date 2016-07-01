@@ -39,6 +39,11 @@ class Encargo
     private $puesto;
 
     /**
+     * @var string
+     */
+    private $fechaAlta;
+
+    /**
      * @var Dependencia
      */
     private $dependencia;
@@ -115,6 +120,14 @@ class Encargo
     }
 
     /**
+     * @return string
+     */
+    public function getFechaAlta()
+    {
+        return $this->fechaAlta;
+    }
+
+    /**
      * @param string $password
      * @return bool
      */
@@ -181,11 +194,15 @@ class Encargo
      * @param bool $exento
      * @param Movimiento $movimiento
      * @param Declaracion $declaracion
+     * @param string $fechaAlta
      * @throws NoEsDeclaracionInicialException
      * @throws NoEsMovimientoDeAltaException
      */
-    public function alta($exento, Movimiento $movimiento, Declaracion $declaracion)
+    public function alta($exento, Movimiento $movimiento, Declaracion $declaracion, $fechaAlta)
     {
+        // fecha de alta
+        $this->fechaAlta = $fechaAlta;
+
         // generar cuenta de acceso
         $this->generarCuentaDeAcceso();
 
@@ -194,6 +211,7 @@ class Encargo
             throw new NoEsMovimientoDeAltaException('Se esperaba un movimiento de alta');
         }
 
+        $movimiento->generarComentario();
         $this->movimientos->add($movimiento);
 
         // generar declaración inicial si no está marcado como exento
@@ -201,6 +219,8 @@ class Encargo
             if ($declaracion->getDeclaracionTipo() !== DeclaracionTipo::INICIAL) {
                 throw new NoEsDeclaracionInicialException('Se esperaba una declaración inicial');
             }
+
+            $declaracion->generarFechaDeCumplimiento(new \DateTime());
             $this->declaraciones->add($declaracion);
         }
     }

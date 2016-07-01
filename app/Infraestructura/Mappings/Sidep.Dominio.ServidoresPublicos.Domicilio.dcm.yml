@@ -27,6 +27,11 @@ Sidep\Dominio\ServidoresPublicos\Domicilio:
       length: 80
       nullable: false
       column: localidad_colonia
+    codigoPostal:
+      type: string
+      length: 6
+      nullable: false
+      column: codigo_postal
     municipio:
       type: string
       length: 80
