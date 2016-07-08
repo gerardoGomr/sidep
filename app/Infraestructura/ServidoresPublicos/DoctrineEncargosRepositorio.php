@@ -2,6 +2,8 @@
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
 //use Sidep\Dominio\Listas\Coleccion;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;

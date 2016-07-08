@@ -1,6 +1,8 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\Puesto;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\PuestosRepositorio;
 use Doctrine\ORM\EntityManager;
