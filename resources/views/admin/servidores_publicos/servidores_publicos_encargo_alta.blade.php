@@ -331,6 +331,8 @@ use Sidep\Dominio\ServidoresPublicos\EstadoCivil;
                                 </div>
                                 <input type="hidden" id="rutaBase" value="{{ url('admin/servidores') }}">
                                 <input type="hidden" id="rutaBusqueda" value="{{ route('servidores-busqueda') }}">
+                                <input type="hidden" id="rutaCartaCompromiso" value="{{ url('admin/servidores/carta-compromiso') }}">
+                                <input type="hidden" id="rutaComprobanteCuentaAcceso" value="{{ url('admin/servidores/comprobante-cuenta-acceso') }}">
                             </div>
 
                             <div class="innerAll">

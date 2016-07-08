@@ -64,10 +64,10 @@ class CuentaAcceso extends \Sidep\Dominio\ServidoresPublicos\CuentaAcceso implem
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'username', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'password', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'letrasAAsignar'];
+            return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'username', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'password', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'primerPassword', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'letrasAAsignar'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'username', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'password', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'letrasAAsignar'];
+        return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'username', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'password', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'primerPassword', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\CuentaAcceso' . "\0" . 'letrasAAsignar'];
     }
 
     /**
@@ -208,6 +208,17 @@ class CuentaAcceso extends \Sidep\Dominio\ServidoresPublicos\CuentaAcceso implem
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPassword', []);
 
         return parent::getPassword();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPrimerPassword()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPrimerPassword', []);
+
+        return parent::getPrimerPassword();
     }
 
     /**

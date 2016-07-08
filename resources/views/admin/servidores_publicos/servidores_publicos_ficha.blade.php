@@ -14,7 +14,7 @@
             <li class="active"><a href="#informacion" data-toggle="tab"><i class="fa fa-user"></i> INFORMACIÓN</a></li>
             <li class=""><a href="#movimientos" data-toggle="tab"><i class="fa fa-refresh"></i> MOVIMIENTOS</a></li>
             <li class=""><a href="#declaraciones" data-toggle="tab"><i class="fa fa-list-ol"></i> DECLARACIONES</a></li>
-            <li class=""><a href="#anotaciones" data-toggle="tab"><i class="fa fa-edit"></i> ANOTACIONES</a></li>
+            {{--<li class=""><a href="#anotaciones" data-toggle="tab"><i class="fa fa-edit"></i> ANOTACIONES</a></li>--}}
         </ul>
     </div>
     <div class="widget-body">
@@ -22,7 +22,7 @@
             @include('admin.servidores_publicos.servidores_publicos_informacion')
             @include('admin.servidores_publicos.servidores_publicos_movimientos')
             @include('admin.servidores_publicos.servidores_publicos_declaraciones')
-            @include('admin.servidores_publicos.servidores_publicos_anotaciones')
+            
         </div>
     </div>
 </div>

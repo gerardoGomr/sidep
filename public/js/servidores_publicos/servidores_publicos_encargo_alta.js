@@ -114,14 +114,22 @@ jQuery(document).ready(function ($) {
             })
             .done(function (respuesta) {
                 $('#loadingGuardar').addClass('hide');
-                if (respuesta.resultado === 'fail') {
-                    bootbox.alert('OCURRIÓ UN ERROR AL GUARDAR EL ENCARGO DEL SERVIDOR PÚBLICO. INTENTE DE NUEVO.');
-                    return false;
+                if (respuesta.estatus === 'fail') {
+                    bootbox.alert("OCURRIÓ UN ERROR AL GUARDAR EL ENCARGO DEL SERVIDOR PÚBLICO. INTENTE DE NUEVO.\n" + respuesta.error);
                 }
 
-                bootbox.alert('ALTA DE ENCARGO DE SERVIDOR PÚBLICO GUARDADA CON ÉXITO.', function () {
-                    window.location.href = $('#rutaBase').val();
-                });
+                if (respuesta.estatus === 'OK') {
+                    bootbox.alert('ALTA DE ENCARGO DE SERVIDOR PÚBLICO GUARDADA CON ÉXITO.', function () {
+                        // abrir carta compromiso
+                        window.open($('#rutaCartaCompromiso').val() + '/' + respuesta.id, '_blank');
+
+                        // abrir comprobante cuenta acceso
+                        window.open($('#rutaComprobanteCuentaAcceso').val() + '/' + respuesta.id + '/' + btoa(respuesta.pass), '_blank');
+
+                        // redireccionar a vista de administración de usuarios
+                        window.location.href = $('#rutaBase').val();
+                    });
+                }
             })
             .fail(function (jQxr, textStatus, errorThrown) {
                 $('#loadingGuardar').addClass('hide');

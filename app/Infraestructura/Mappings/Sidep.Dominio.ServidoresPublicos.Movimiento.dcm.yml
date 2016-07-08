@@ -22,6 +22,11 @@ Sidep\Dominio\ServidoresPublicos\Movimiento:
       length: 1
       nullable: false
       column: movimiento_tipo
+    movimientoMotivo:
+      type: integer
+      length: 1
+      nullable: true
+      column: movimiento_motivo
   manyToOne:
     encargo:
       targetEntity: Encargo

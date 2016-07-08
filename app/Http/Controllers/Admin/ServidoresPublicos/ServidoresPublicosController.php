@@ -3,6 +3,9 @@ namespace Sidep\Http\Controllers\Admin\ServidoresPublicos;
 
 use \DateTime;
 use Sidep\Aplicacion\ColeccionArray;
+use Sidep\Aplicacion\Reporte;
+use Sidep\Aplicacion\Reportes\CartaCompromisoCrystalReports;
+use Sidep\Aplicacion\Reportes\ComprobanteCuentaAccesoCrystalReports;
 use Sidep\Aplicacion\TransformadorMayusculas;
 use Sidep\Dominio\ServidoresPublicos\CuentaAcceso;
 use Sidep\Dominio\ServidoresPublicos\Declaracion;
@@ -177,6 +180,9 @@ class ServidoresPublicosController extends Controller
             $respuesta['resultado'] = 'fail';
         }
 
+        $respuesta['id']   = $encargo->getId();
+        $respuesta['pass'] = $encargo->getCuentaAcceso()->getPrimerPassword();
+
         return response()->json($respuesta);
     }
 
@@ -212,6 +218,12 @@ class ServidoresPublicosController extends Controller
         return view('admin.servidores_publicos.servidores_publicos_editar', compact('servidor'));
     }
 
+    /**
+     * actualizar datos del servidor público
+     * @param FormEditarServidorPublico $request
+     * @param ServidoresPublicosRepositorio $servidoresRepositorio
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function actualizar(FormEditarServidorPublico $request, ServidoresPublicosRepositorio $servidoresRepositorio)
     {
         $respuesta = [];
@@ -245,6 +257,112 @@ class ServidoresPublicosController extends Controller
             $respuesta['resultado'] = 'fail';
         }
 
+        return response()->json($respuesta);
+    }
+
+    /**
+     * generar y mostrar en pantalla la carta compromiso del servidor público
+     *
+     * si el id de encargo no existe, no se genera reporte y se muestra una vista
+     * de error a usuario
+     *
+     * @param string $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function cartaCompromiso($id)
+    {
+        $id                = (int)$id;
+        $existenciaEncargo = $this->encargosRepositorio->existeEncargo($id);
+
+        if (!$existenciaEncargo) {
+            return view('errors.general');
+        }
+
+        $reporte = new Reporte(new CartaCompromisoCrystalReports($id));
+
+        if ($reporte->existe()) {
+            return response()->file($reporte->ruta());
+        }
+
+        if ($reporte->generar()) {
+            return response()->file($reporte->ruta());
+        }
+    }
+
+    /**
+     * generar y mostrar en pantalla el comprobante de cuenta de acceso del encargo
+     * del servidor público
+     *
+     * si el id de encargo no existe, no se genera reporte y se muestra una vista
+     * de error a usuario
+     *
+     * @param string $id
+     * @param string $password
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function comprobanteCuentaAcceso($id, $password)
+    {
+        $id       = (int)$id;
+        $password = base64_decode($password);
+
+        $existenciaEncargo = $this->encargosRepositorio->existeEncargo($id);
+
+        if (!$existenciaEncargo) {
+            return view('errors.general');
+        }
+
+        $reporte = new Reporte(new ComprobanteCuentaAccesoCrystalReports($id, $password));
+
+        if ($reporte->existe()) {
+            return response()->file($reporte->ruta());
+        }
+
+        if ($reporte->generar()) {
+            return response()->file($reporte->ruta());
+        }
+    }
+
+    /**
+     * registrar la baja de encargo del servidor público
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function bajaEncargo(Request $request)
+    {
+        // validar, se hace desde controller debido a que solamente se espera un campo
+        $this->validate($request, [
+            'motivo'    => 'required',
+            'fechaBaja' => 'required|date_format:d/m/Y'
+        ]);
+
+        $respuesta = [];
+        $encargoId = (int)$request->get('encargoId');
+        $motivo    = $request->get('motivo');
+        $fechaBaja = $request->get('fechaBaja');
+
+        $encargo = $this->encargosRepositorio->obtenerPorId($encargoId);
+
+        // generar declaracion
+        $declaracion = new Declaracion(DeclaracionTipo::CONCLUSION, new DateTime(), $encargo);
+
+        // generar movimiento
+        $movimiento = new Movimiento(MovimientoTipo::BAJA, DateTime::createFromFormat('d/m/Y', $fechaBaja), $encargo, $motivo);
+
+        $encargo->baja($movimiento, $declaracion);
+
+        // **********************************************************************
+        // persistir encargo
+        $respuesta['estatus'] = 'OK';
+
+        if (!$this->encargosRepositorio->actualizar($encargo)) {
+            $respuesta['estatus'] = 'fail';
+
+            return response()->json($respuesta);
+        }
+
+        $respuesta['html'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
         return response()->json($respuesta);
     }
 }

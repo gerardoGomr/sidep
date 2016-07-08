@@ -64,10 +64,10 @@ class ServidorPublico extends \Sidep\Dominio\ServidoresPublicos\ServidorPublico 
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'curp', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'rfc', 'nombre', 'paterno', 'materno', 'sexo', 'telefono', 'celular', 'email'];
+            return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'curp', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'rfc', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'fechaNacimiento', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'domicilio', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'estadoCivil', 'nombre', 'paterno', 'materno', 'sexo', 'telefono', 'celular', 'email'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'curp', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'rfc', 'nombre', 'paterno', 'materno', 'sexo', 'telefono', 'celular', 'email'];
+        return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'curp', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'rfc', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'fechaNacimiento', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'domicilio', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\ServidorPublico' . "\0" . 'estadoCivil', 'nombre', 'paterno', 'materno', 'sexo', 'telefono', 'celular', 'email'];
     }
 
     /**
@@ -208,6 +208,61 @@ class ServidorPublico extends \Sidep\Dominio\ServidoresPublicos\ServidorPublico 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getRfc', []);
 
         return parent::getRfc();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFechaNacimiento()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getFechaNacimiento', []);
+
+        return parent::getFechaNacimiento();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDomicilio()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDomicilio', []);
+
+        return parent::getDomicilio();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getEstadoCivil()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getEstadoCivil', []);
+
+        return parent::getEstadoCivil();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function estadoCivil()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'estadoCivil', []);
+
+        return parent::estadoCivil();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function registrar($nombre = '', $paterno = '', $materno = '', $rfc = '', $curp, \DateTime $fechaNacimiento, \Sidep\Dominio\ServidoresPublicos\Domicilio $domicilio, $estadoCivil = 2, $telefono = '', $email = '')
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'registrar', [$nombre, $paterno, $materno, $rfc, $curp, $fechaNacimiento, $domicilio, $estadoCivil, $telefono, $email]);
+
+        return parent::registrar($nombre, $paterno, $materno, $rfc, $curp, $fechaNacimiento, $domicilio, $estadoCivil, $telefono, $email);
     }
 
     /**

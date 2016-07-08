@@ -17,6 +17,14 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
       length: 15
       nullable: false
       column: fecha_alta
+    exento:
+      type: boolean
+      nullable: true
+      column: exento
+    activo:
+      type: boolean
+      nullable: true,
+      column: activo
   oneToOne:
     servidorPublico:
       targetEntity: ServidorPublico

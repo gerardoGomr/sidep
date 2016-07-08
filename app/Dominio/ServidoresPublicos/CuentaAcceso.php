@@ -25,6 +25,11 @@ class CuentaAcceso
     private $password;
 
     /**
+     * @var string
+     */
+    private $primerPassword;
+
+    /**
      * @var array
      */
     private $letrasAAsignar = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -62,6 +67,14 @@ class CuentaAcceso
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrimerPassword()
+    {
+        return $this->primerPassword;
     }
 
     /**
@@ -108,7 +121,10 @@ class CuentaAcceso
         $caracter2 = $this->letrasAAsignar[rand(0, 25)];
         $caracter3 = $this->letrasAAsignar[rand(0, 25)];
 
+        // primer password
+        $this->primerPassword = $caracter1 . $caracter2 . $caracter3 . $digito1 . $digito2 . $digito3;
+
         // password
-        $this->password = self::generarHash($caracter1 . $caracter2 . $caracter3 . $digito1 . $digito2 . $digito3);
+        $this->password = self::generarHash($this->primerPassword);
     }
 }

@@ -9,26 +9,26 @@
                             <div class="innerAll">
                                 <table class="table table-hover margin-none">
                                     <tbody>
-                                    <tr>
-                                        <td class="border-top-none strong">DEPENDENCIA:</td>
-                                        <td class="border-top-none">{{ $encargo->getDependencia()->getDependencia() }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="strong">ADSCRIPCIÓN:</td>
-                                        <td>{{ $encargo->getAdscripcion() }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="strong">FECHA DE ALTA:</td>
-                                        <td>{{ !is_null($encargo->getFechaAlta()) ? \Sidep\Aplicacion\Fecha::fechaDeHoy($encargo->getFechaAlta()) : '' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="strong">ACTIVO:</td>
-                                        <td>Si</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="strong">PROCESO:</td>
-                                        <td>No</td>
-                                    </tr>
+                                        <tr>
+                                            <td class="border-top-none strong">DEPENDENCIA:</td>
+                                            <td class="border-top-none">{{ $encargo->getDependencia()->getDependencia() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="strong">ADSCRIPCIÓN:</td>
+                                            <td>{{ $encargo->getAdscripcion() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="strong">FECHA DE ALTA:</td>
+                                            <td>{{ !is_null($encargo->getFechaAlta()) ? \Sidep\Aplicacion\Fecha::fechaDeHoy($encargo->getFechaAlta()) : '' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="strong">ESTATUS:</td>
+                                            <td>{{ $encargo->getActivo() }}</td>
+                                        </tr>
+                                        {{--<tr>--}}
+                                            {{--<td class="strong">PROCESO:</td>--}}
+                                            {{--<td>No</td>--}}
+                                        {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </div>
@@ -70,29 +70,17 @@
                 <h5 class="innerAll border-top border-right border-left margin-none bg-gray">ACCIONES</h5>
                 <div id="acciones" class="btn-group btn-group btn-group-vertical btn-group-block">
                     <a href="{{ url('admin/servidores/editar/'. $encargo->servidorPublico()->getId()) }}" class="btn btn-default"><i class="fa fa-edit"></i> EDITAR DATOS PERSONALES</a>
-                    <a href="" class="btn btn-default"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</a>
+                    @if($encargo->estaActivo())
+                        <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-default"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</button>
+                    @else
+                        <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-default"><i class="fa fa-plus-circle"></i> REGISTRAR ALTA</button>
+                    @endif
                     <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> REGISTRAR PROMOCIÓN</a>
                     <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> REGISTRAR CAMBIO DE ADSCRIPCIÓN</a>
                 </div>
 
                 <div class="separator"></div>
-                <div class="box-generic margin-none padding-none">
-                    <h5 class="innerAll border-bottom bg-gray">ESTATUS DEL ENCARGO</h5>
-                    <div class="form-group innerAll">
-                        <div class="checkbox">
-                            <label class="checkbox-custom">
-                                <input type="checkbox" name="estatus">
-                                <i class="fa fa-circle-o"></i> EXENTO
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label class="checkbox-custom">
-                                <input type="checkbox" name="estatus">
-                                <i class="fa fa-circle-o"></i> PROCESO
-                            </label>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>

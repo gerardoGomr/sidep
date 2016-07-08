@@ -130,10 +130,6 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
                 return null;
             }
 
-            /*foreach ( $encargo as $encargo ) {
-                $encargos->agregar($encargo);
-            }*/
-
             return $encargo[0];
 
         } catch(\PDOException $e) {
@@ -141,6 +137,51 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
             $pdoLogger->log($e);
 
             return null;
+        }
+    }
+
+    /**
+     * verificar que el encargo exista
+     * @param int $id
+     * @return bool
+     */
+    public function existeEncargo($id)
+    {
+        // TODO: Implement existeEncargo() method.
+        try {
+            $query   = $this->entityManager->createQuery('SELECT e FROM ServidoresPublicos:Encargo e WHERE e.id = :id')
+                ->setParameter('id', $id);
+            $encargo = $query->getResult();
+
+            if (count($encargo) === 0) {
+                return false;
+            }
+
+            return true;
+
+        } catch(\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+
+            return false;
+        }
+    }
+
+    /**
+     * guardar cambios en BD
+     * @param Encargo $encargo
+     * @return bool
+     */
+    public function actualizar(Encargo $encargo)
+    {
+        try {
+            $this->entityManager->flush();
+            return true;
+
+        } catch (\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+            return false;
         }
     }
 }

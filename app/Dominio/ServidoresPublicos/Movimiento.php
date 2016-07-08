@@ -22,6 +22,11 @@ class Movimiento
     private $movimientoTipo;
 
     /**
+     * @var int
+     */
+    private $movimientoMotivo;
+
+    /**
      * @var DateTime
      */
     private $fecha;
@@ -38,19 +43,21 @@ class Movimiento
 
     /**
      * Movimiento constructor.
-     * @param int|string $movimientoTipo
+     * @param string $movimientoTipo
      * @param DateTime $fecha
      * @param Encargo $encargo
+     * @param null $movimientoMotivo
      * @param string $comentario
      * @param int $id
      */
-    public function __construct($movimientoTipo = MovimientoTipo::ALTA, DateTime $fecha = null, Encargo $encargo, $comentario = '', $id = 0)
+    public function __construct($movimientoTipo = MovimientoTipo::ALTA, DateTime $fecha = null, Encargo $encargo, $movimientoMotivo = null, $comentario = '', $id = 0)
     {
-        $this->id             = $id;
-        $this->movimientoTipo = $movimientoTipo;
-        $this->encargo        = $encargo;
-        $this->fecha          = $fecha;
-        $this->comentario     = $comentario;
+        $this->id               = $id;
+        $this->movimientoTipo   = $movimientoTipo;
+        $this->encargo          = $encargo;
+        $this->fecha            = $fecha;
+        $this->comentario       = $comentario;
+        $this->movimientoMotivo = $movimientoMotivo;
     }
 
     /**
@@ -62,11 +69,19 @@ class Movimiento
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getMovimientoTipo()
     {
         return $this->movimientoTipo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMovimientoMotivo()
+    {
+        return $this->movimientoMotivo;
     }
 
     /**
@@ -107,7 +122,9 @@ class Movimiento
     {
         if ($this->movimientoTipo == MovimientoTipo::ALTA) {
             $this->comentario = 'SE GENERÓ UNA ALTA EL DÍA ' . $this->getFecha();
-        } else {
+        }
+
+        if ($this->movimientoTipo == MovimientoTipo::BAJA) {
             $this->comentario = 'SE GENERÓ UNA BAJA EL DÍA ' . $this->getFecha();
         }
     }

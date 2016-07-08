@@ -13,6 +13,26 @@ jQuery(document).ready(function($) {
         $dato.focus();
     }, 500);
 
+    $('#fechaBaja').datepicker({
+        autoclose: true,
+        format: 'dd/mm/yyyy',
+        language: 'es'
+    }).on('show', function() {
+        // Obtener valores actuales z-index de cada elemento
+        var zIndexModal = $('#modalMotivoBaja').css('z-index'),
+            zIndexFecha = $('.datepicker').css('z-index');
+
+        $('.datepicker').css('z-index', zIndexModal + 1);
+    });
+
+    // iniciar validaciones
+    init();
+
+    // validar form
+    $('#formBaja').validate();
+
+    agregaValidacionesElementos($('#formBaja'));
+
     // evento de búsqueda de encargos de servidores públicos
     $dato.on('keypress', function (event) {
         if (event === 13 || event.which === 13) {
@@ -71,6 +91,54 @@ jQuery(document).ready(function($) {
             $fichaTecnicaLoading.addClass('hide');
             console.log(textStatus + ': ' + errorThrown);
             bootbox.alert('Imposible realizar la operación solicitada')
+        });
+    });
+
+    // click para dar de baja a servidor público
+    $fichaTecnica.on('click', 'button.baja', function () {
+        // setear el id del encargo
+        $('#encargoId').val($(this).data('id'));
+
+        $('#modalMotivoBaja').modal('show');
+    });
+
+    // click para confirmar la baja
+    $('#confirmarBaja').on('click', function () {
+        if (!$('#formBaja').valid()) {
+            return false;
+        }
+
+        bootbox.confirm('SE PROCEDERÁ A REALIZAR LA BAJA DE ENCARGO DE ESTE SERVIDOR PÚBLICO, ¿DESEA CONTINUAR?', function(e) {
+            if (e) {
+                $.ajax({
+                    url:      $('#formBaja').attr('action'),
+                    type:     'post',
+                    dataType: 'json',
+                    data:     $('#formBaja').serialize(),
+                    beforeSend: function () {
+                        $('#loadingGuardar').modal('show');
+                    }
+                })
+                .done(function (resultado){
+                    $('#loadingGuardar').modal('hide');
+
+                    if (resultado.estatus === 'fail') {
+                        bootbox.alert("OCURRIÓ UN ERROR AL REALIZAR LA BAJA DE ENCARGO DEL SERVIDOR PÚBLICO.\n" + resultado.error);
+                    }
+
+                    if (resultado.estatus === 'OK') {
+                        $fichaTecnica.html(resultado.html);
+                        bootbox.alert("SE REGISTRÓ LA BAJA DE ENCARGO DEL SERVIDOR PÚBLICO DE MANERA EXITOSA.", function () {
+                            $('#modalMotivoBaja').modal('hide');
+                        });
+                    }
+                })
+                .fail(function (a, textStatus, errorThrown) {
+                    $('#loadingGuardar').modal('hide');
+                    console.log(textStatus + ': ' + errorThrown);
+                    bootbox.alert('OCURRIÓ UN ERROR AL REALIZAR LA BAJA DE ENCARGO DEL SERVIDOR PÚBLICO.');
+                });
+            }
         });
     });
 });
