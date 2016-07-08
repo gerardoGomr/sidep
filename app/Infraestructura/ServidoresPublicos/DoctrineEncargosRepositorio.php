@@ -5,6 +5,7 @@ namespace Sidep\Infraestructura\ServidoresPublicos;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;
+use Sidep\Exceptions\PDO\PDOLogger;
 
 /**
  * Class DoctrineEncargosRepositorio

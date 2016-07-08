@@ -4,6 +4,7 @@ namespace Sidep\Infraestructura\ServidoresPublicos;
 use Sidep\Dominio\ServidoresPublicos\ServidorPublico;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\ServidoresPublicosRepositorio;
 use Doctrine\ORM\EntityManager;
+use Sidep\Exceptions\PDO\PDOLogger;
 
 /**
  * Class DoctrineServidoresPublicosRepositorio

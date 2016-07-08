@@ -4,6 +4,7 @@ namespace Sidep\Infraestructura\ServidoresPublicos;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\Puesto;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\PuestosRepositorio;
 use Doctrine\ORM\EntityManager;
+use Sidep\Exceptions\PDO\PDOLogger;
 
 /**
  * Class DoctrinePuestosRepositorio
@@ -44,8 +45,9 @@ class DoctrinePuestosRepositorio implements PuestosRepositorio
             $puestos = $query->getResult();
 
             return $puestos;
-        } catch (\Exception $e) {
-            echo $e->getMessage();
+        } catch (\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
             return null;
         }
     }
@@ -64,8 +66,9 @@ class DoctrinePuestosRepositorio implements PuestosRepositorio
 
             return $puestos[0];
 
-        } catch (\Exception $e) {
-            echo $e->getMessage();
+        } catch (\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
             return null;
         }
     }

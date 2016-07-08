@@ -22,7 +22,7 @@
             @include('admin.servidores_publicos.servidores_publicos_informacion')
             @include('admin.servidores_publicos.servidores_publicos_movimientos')
             @include('admin.servidores_publicos.servidores_publicos_declaraciones')
-            
+
         </div>
     </div>
 </div>
