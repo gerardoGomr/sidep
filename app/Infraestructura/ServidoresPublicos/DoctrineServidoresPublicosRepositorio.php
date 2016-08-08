@@ -32,7 +32,7 @@ class DoctrineServidoresPublicosRepositorio implements ServidoresPublicosReposit
 
     /**
      * @param int $id
-     * @return ServidorPublico
+     * @return ServidorPublico|null
      */
     public function obtenerPorId($id)
     {
@@ -42,12 +42,16 @@ class DoctrineServidoresPublicosRepositorio implements ServidoresPublicosReposit
             $query->setParameter(':id', $id);
             $servidores = $query->getResult();
 
+            if (count($servidores) === 0) {
+                return null;
+            }
+
             return $servidores[0];
 
         } catch (\PDOException $e) {
             $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
-            return false;
+            return null;
         }
     }
 

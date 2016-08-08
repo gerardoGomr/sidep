@@ -105,12 +105,42 @@ class Movimiento
      */
     public function movimientoTipo()
     {
+        $motivo = '';
+
+        if (!is_null($this->movimientoMotivo)) {
+            switch ($this->movimientoMotivo) {
+                case MovimientoMotivo::TERMINO_ENCARGO:
+                    $motivo = ' POR TÉRMINO DE ENCARGO';
+                    break;
+
+                case MovimientoMotivo::FALLECIMIENTO:
+                    $motivo = ' POR FALLECIMIENTO';
+                    break;
+
+                case MovimientoMotivo::PROCESO:
+                    $motivo = ' POR PROCESO PENAL O ADMINISTRATIVO';
+                    break;
+
+                case MovimientoMotivo::RECLUSION:
+                    $motivo = ' POR RECLUSIÓN';
+                    break;
+
+                case MovimientoMotivo::PROMOCION:
+                    $motivo = ' POR PROMOCIÓN';
+                    break;
+            }
+        }
+
         if ($this->movimientoTipo == MovimientoTipo::ALTA) {
-            return 'ALTA';
+            return 'ALTA' . $motivo;
         }
 
         if ($this->movimientoTipo == MovimientoTipo::BAJA) {
-            return 'BAJA';
+            return 'BAJA' . $motivo;
+        }
+
+        if ($this->movimientoTipo == MovimientoTipo::CAMBIO_ADSCRIPCION) {
+            return 'CAMBIO DE ADSCRIPCIÓN';
         }
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace Sidep\Aplicacion\Reportes;
 
+use \COM;
 use Sidep\Dominio\Reportes\IReporte;
 
 /**
@@ -34,8 +35,8 @@ class CartaCompromisoCrystalReports implements IReporte
     {
         $this->id = $id;
         //$this->rutaReporte = resource_path() . '/reports/carta_compromiso.rpt';
-        $this->rutaReporte = "C:\\wamp\\www\\sidep\\resources\\reports\\carta_compromiso.rpt";
-        $this->rutaPdf     = "C:\\wamp\\www\\sidep\\storage\\app\\public\\reports\\cartas_compromisos\\encargo_" . $this->id . '.pdf';
+        $this->rutaReporte = "C:\\Apache24\\htdocs\\sidep\\resources\\reports\\carta_compromiso.rpt";
+        $this->rutaPdf     = "C:\\Apache24\\htdocs\\sidep\\storage\\app\\public\\reports\\cartas_compromisos\\encargo_" . $this->id . '.pdf';
     }
 
     /**
@@ -64,19 +65,23 @@ class CartaCompromisoCrystalReports implements IReporte
         // TODO: Implement generar() method.
         try
         {
-            $ObjectFactory = new \COM("CrystalReports.ObjectFactory");
+            $object = new COM('CrystalRuntime.Application.11');//com_print_typeinfo($ObjectFactory);exit;
             // Creo una instancia del Componente de Diseñador de Crystal Reports
-            try
+            /*try
             {
-                $crapp = $ObjectFactory->CreateObject("CrystalDesignRuntime.Application");
+                $crapp = $ObjectFactory->CreateObject('CrystalRuntime.Application');//com_print_typeinfo($crapp);exit;
+                dd($crapp->OpenReport($this->rutaReporte, 1));
                 // Mando abrir mi reporte
                 $creport = $crapp->OpenReport($this->rutaReporte, 1);
             }
             catch(\Exception $e)
             {
                 echo $e->getMessage()."<br />";
-                print_r($e->getTrace());
-            }
+                print_r($e->getTraceAsString());
+                return false;
+            }*/
+            com_load_typelib('CrystalDesignRunTime.Application.11');
+            $creport = $object->OpenReport($this->rutaReporte, 1);
 
             // DB Connection
             $creport->Database->Tables(1)->SetLogOnInfo(config('database.connections.sqlsrv.host'), config('database.connections.sqlsrv.database'), config('database.connections.sqlsrv.username'), config('database.connections.sqlsrv.password'));
@@ -86,7 +91,7 @@ class CartaCompromisoCrystalReports implements IReporte
 
             //limpiar caché
             $creport->DiscardSavedData;
-            // $creport->ReadRecords();
+            $creport->ReadRecords();
 
             //obetener la lista de parámetros necesarios para la apertura del cristal report
             $param = $creport->ParameterFields;
@@ -108,7 +113,7 @@ class CartaCompromisoCrystalReports implements IReporte
         catch (\Exception $e)
         {
             echo $e->getMessage()."<br />";
-            print_r($e->getTrace());
+            print_r($e->getTraceAsString());
 
             return false;
         }

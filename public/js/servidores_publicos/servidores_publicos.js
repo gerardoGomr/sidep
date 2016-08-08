@@ -28,10 +28,17 @@ jQuery(document).ready(function($) {
     // iniciar validaciones
     init();
 
-    // validar form
+    // validar forms
     $('#formBaja').validate();
-
+    $('#formCambioAdscripcion').validate();
+    $('#formPromocion').validate();
+    // validar el formulario
     agregaValidacionesElementos($('#formBaja'));
+    agregaValidacionesElementos($('#formCambioAdscripcion'));
+    agregaValidacionesElementos($('#formPromocion'));
+
+    // select 2
+    $('#puesto').select2();
 
     // evento de búsqueda de encargos de servidores públicos
     $dato.on('keypress', function (event) {
@@ -48,15 +55,14 @@ jQuery(document).ready(function($) {
                 dataType: 'json',
                 data:     $formBusqueda.serialize(),
                 beforeSend: function () {
-                    $busquedaServidores.removeClass('hide');
+                    $('#loadingGuardar').modal('show');
                 }
-            })
-            .done(function(resultado) {
-                $busquedaServidores.addClass('hide');
+            }).done(function(resultado) {
+                $('#loadingGuardar').modal('hide');
                 $resultadoBusquedaServidores.html(resultado.contenido);
-            })
-            .fail(function(XMLHttpRequest, textStatus, errorThrown) {
-                $busquedaServidores.addClass('hide')
+
+            }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#loadingGuardar').modal('hide');
                 console.log(textStatus + ': ' + errorThrown);
                 bootbox.alert('Imposible realizar la operación solicitada')
             });
@@ -79,16 +85,15 @@ jQuery(document).ready(function($) {
             dataType: 'json',
             data:     {id: id, _token: _token},
             beforeSend: function () {
-                $fichaTecnicaLoading.removeClass('hide');
+                $('#loadingGuardar').modal('show');
             }
-        })
-        .done(function (resultado){
-            $fichaTecnicaLoading.addClass('hide');
+        }).done(function (resultado){
+            $('#loadingGuardar').modal('hide');
             $fichaTecnica.removeClass('hide');
             $fichaTecnica.html(resultado.contenido);
-        })
-        .fail(function (a, textStatus, errorThrown) {
-            $fichaTecnicaLoading.addClass('hide');
+
+        }).fail(function (a, textStatus, errorThrown) {
+            $('#loadingGuardar').modal('hide');
             console.log(textStatus + ': ' + errorThrown);
             bootbox.alert('Imposible realizar la operación solicitada')
         });
@@ -97,8 +102,7 @@ jQuery(document).ready(function($) {
     // click para dar de baja a servidor público
     $fichaTecnica.on('click', 'button.baja', function () {
         // setear el id del encargo
-        $('#encargoId').val($(this).data('id'));
-
+        $('#formBajaformBaja').find('input.encargoId').val($(this).data('id'));
         $('#modalMotivoBaja').modal('show');
     });
 
@@ -118,8 +122,8 @@ jQuery(document).ready(function($) {
                     beforeSend: function () {
                         $('#loadingGuardar').modal('show');
                     }
-                })
-                .done(function (resultado){
+
+                }).done(function (resultado){
                     $('#loadingGuardar').modal('hide');
 
                     if (resultado.estatus === 'fail') {
@@ -132,13 +136,102 @@ jQuery(document).ready(function($) {
                             $('#modalMotivoBaja').modal('hide');
                         });
                     }
-                })
-                .fail(function (a, textStatus, errorThrown) {
+
+                }).fail(function (a, textStatus, errorThrown) {
                     $('#loadingGuardar').modal('hide');
                     console.log(textStatus + ': ' + errorThrown);
                     bootbox.alert('OCURRIÓ UN ERROR AL REALIZAR LA BAJA DE ENCARGO DEL SERVIDOR PÚBLICO.');
                 });
             }
+        });
+    });
+
+    // click para abrir modal de cambio de adscripción
+    $fichaTecnica.on('click', 'button.cambioAdscripcion', function() {
+        $('#formCambioAdscripcion').find('input.encargoId').val($(this).data('id'));
+        $('#adscripcionActual').text($(this).data('adscripcion'));
+        $('#modalCambioAdscripcion').modal('show');
+    });
+
+    // click para realizar el cambio de adscripción
+    $('#actualizarAdscripcion').on('click', function() {
+        if (!$('#formCambioAdscripcion').valid()) {
+            return false;
+        }
+
+        $.ajax({
+            url:      $('#formCambioAdscripcion').attr('action'),
+            type:     'post',
+            dataType: 'json',
+            data:     $('#formCambioAdscripcion').serialize(),
+            beforeSend: function () {
+                $('#loadingGuardar').modal('show');
+            }
+
+        }).done(function (resultado){
+            $('#loadingGuardar').modal('hide');
+
+            if (resultado.estatus === 'fail') {
+                var error = resultado.error !== '' ? resultado.error : '';
+                bootbox.alert("OCURRIÓ UN ERROR AL REALIZAR EL CAMBIO DE ADSCRIPCIÓN AL ENCARGO DEL SERVIDOR PÚBLICO.\n" + error);
+            }
+
+            if (resultado.estatus === 'OK') {
+                $fichaTecnica.html(resultado.html);
+                bootbox.alert("SE REGISTRÓ EL CAMBIO DE ADSCRIPCIÓN DEL ENCARGO DEL SERVIDOR PÚBLICO DE MANERA EXITOSA.", function () {
+                    $('#modalCambioAdscripcion').modal('hide');
+                });
+            }
+
+        }).fail(function (a, textStatus, errorThrown) {
+            $('#loadingGuardar').modal('hide');
+            console.log(textStatus + ': ' + errorThrown);
+            bootbox.alert('OCURRIÓ UN ERROR AL REALIZAR EL CAMBIO DE ADSCRIPCIÓN AL ENCARGO DEL SERVIDOR PÚBLICO.');
+        });
+    });
+
+    // click para abrir modal de promoción
+    $fichaTecnica.on('click', 'button.promocion', function() {
+        $('#formPromocion').find('input.encargoId').val($(this).data('id'));
+        $('#formPromocion').find('input.adscripcion').val($(this).data('adscripcion'));
+        $('#modalPromocion').modal('show');
+    });
+
+    // registrar la promoción
+    $('#realizarPromocion').on('click', function() {
+        if (!$('#formPromocion').valid()) {
+            return false;
+        }
+
+        $.ajax({
+            url:      $('#formPromocion').attr('action'),
+            type:     'post',
+            dataType: 'json',
+            data:     $('#formPromocion').serialize(),
+            beforeSend: function () {
+                $('#loadingGuardar').modal('show');
+            }
+
+        }).done(function (resultado){
+            $('#loadingGuardar').modal('hide');
+
+            if (resultado.estatus === 'fail') {
+                var error = resultado.error !== '' ? resultado.error : '';
+                bootbox.alert("OCURRIÓ UN ERROR AL REALIZAR LA PROMOCIÓN DEL ENCARGO DEL SERVIDOR PÚBLICO.\n" + error);
+            }
+
+            if (resultado.estatus === 'OK') {
+                $fichaTecnica.html(resultado.html);
+                bootbox.alert("SE REGISTRÓ LA PROMOCIÓN DEL ENCARGO DEL SERVIDOR PÚBLICO DE MANERA EXITOSA.", function () {
+                    window.open($('#rutaCartaCompromiso').val() + '/' + resultado.id, '_blank');
+                    $('#modalPromocion').modal('hide');
+                });
+            }
+
+        }).fail(function (a, textStatus, errorThrown) {
+            $('#loadingGuardar').modal('hide');
+            console.log(textStatus + ': ' + errorThrown);
+            bootbox.alert('OCURRIÓ UN ERROR AL REALIZAR LA PROMOCIÓN DEL ENCARGO DEL SERVIDOR PÚBLICO.');
         });
     });
 });

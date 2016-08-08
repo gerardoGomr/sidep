@@ -13,4 +13,5 @@ abstract class MovimientoMotivo
     const FALLECIMIENTO   = 2;
     const PROCESO         = 3;
     const RECLUSION       = 4;
+    const PROMOCION       = 5;
 }

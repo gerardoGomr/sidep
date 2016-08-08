@@ -25,10 +25,6 @@
                                             <td class="strong">ESTATUS:</td>
                                             <td>{{ $encargo->getActivo() }}</td>
                                         </tr>
-                                        {{--<tr>--}}
-                                            {{--<td class="strong">PROCESO:</td>--}}
-                                            {{--<td>No</td>--}}
-                                        {{--</tr>--}}
                                     </tbody>
                                 </table>
                             </div>
@@ -67,18 +63,19 @@
                 </div>
             </div>
             <div class="col-sm-5 col-lg-4">
-                <h5 class="innerAll border-top border-right border-left margin-none bg-gray">ACCIONES</h5>
-                <div id="acciones" class="btn-group btn-group btn-group-vertical btn-group-block">
-                    <a href="{{ url('admin/servidores/editar/'. $encargo->servidorPublico()->getId()) }}" class="btn btn-default"><i class="fa fa-edit"></i> EDITAR DATOS PERSONALES</a>
-                    @if($encargo->estaActivo())
-                        <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-default"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</button>
-                    @else
-                        <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-default"><i class="fa fa-plus-circle"></i> REGISTRAR ALTA</button>
-                    @endif
-                    <a href="" class="btn btn-default"><i class="fa fa-thumbs-up"></i> REGISTRAR PROMOCIÓN</a>
-                    <a href="" class="btn btn-default"><i class="fa fa-share-square"></i> REGISTRAR CAMBIO DE ADSCRIPCIÓN</a>
+                <div class="box-generic padding-none">
+                    <h5 class="innerAll border-bottom margin-none bg-gray">ACCIONES</h5>
+                    <div class="innerAll">
+                        <a href="{{ url('admin/servidores/editar/'. $encargo->servidorPublico()->getId()) }}" class="btn btn-default btn-stroke btn-block"><i class="fa fa-edit"></i> EDITAR DATOS PERSONALES</a>
+                        @if($encargo->estaActivo())
+                            <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-default btn-stroke btn-block"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</button>
+                            <button type="button" data-id="{{ $encargo->getId() }}" data-adscripcion="{{ $encargo->getAdscripcion() }}" class="promocion btn btn-default btn-stroke btn-block"><i class="fa fa-thumbs-up"></i> REGISTRAR PROMOCIÓN</button>
+                            <button type="button" data-id="{{ $encargo->getId() }}" data-adscripcion="{{ $encargo->getAdscripcion() }}" class="cambioAdscripcion btn btn-default btn-stroke btn-block"><i class="fa fa-share-square"></i> REGISTRAR CAMBIO DE ADSCRIPCIÓN</button>
+                        @else
+                            <button data-id="{{ $encargo->getId() }}" type="button" class="alta btn btn-default btn-stroke btn-block"><i class="fa fa-plus-circle"></i> REGISTRAR ALTA</button>
+                        @endif
+                    </div>
                 </div>
-
                 <div class="separator"></div>
 
             </div>

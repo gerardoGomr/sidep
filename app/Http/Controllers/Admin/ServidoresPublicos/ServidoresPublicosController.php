@@ -13,6 +13,7 @@ use Sidep\Dominio\ServidoresPublicos\DeclaracionTipo;
 use Sidep\Dominio\ServidoresPublicos\Domicilio;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
 use Sidep\Dominio\ServidoresPublicos\Movimiento;
+use Sidep\Dominio\ServidoresPublicos\MovimientoMotivo;
 use Sidep\Dominio\ServidoresPublicos\MovimientoTipo;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\DependenciasRepositorio;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
@@ -23,6 +24,7 @@ use Sidep\Dominio\ServidoresPublicos\ServidorPublico;
 use Sidep\Http\Controllers\Controller;
 use Sidep\Http\Requests\FormAltaRequest;
 use Sidep\Http\Requests\FormEditarServidorPublico;
+use Sidep\Aplicacion\LaravelMailer;
 
 /**
  * Class ServidoresPublicosController
@@ -49,12 +51,14 @@ class ServidoresPublicosController extends Controller
     /**
      * mostrar view principal
      * obtener los últimos 50 encargos generados
+     * @param PuestosRepositorio $puestosRepositorio
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(PuestosRepositorio $puestosRepositorio)
     {
         $encargos = $this->encargosRepositorio->obtenerTodos();
-        return view('admin.servidores_publicos.servidores_publicos', compact('encargos'));
+        $puestos  = $puestosRepositorio->obtenerTodos();
+        return view('admin.servidores_publicos.servidores_publicos', compact('encargos', 'puestos'));
     }
 
     /**
@@ -85,7 +89,7 @@ class ServidoresPublicosController extends Controller
         $origen       = $request->get('origen');
         $respuesta    = [];
 
-        $encargos === null ? $respuesta['resultado'] = 'fail' : $respuesta['resultado'] = 'OK';
+        $encargos === null ? $respuesta['estatus'] = 'fail' : $respuesta['estatus'] = 'OK';
 
         switch ($origen) {
             case 'alta':
@@ -128,6 +132,17 @@ class ServidoresPublicosController extends Controller
         $respuesta          = [];
         // **********************************************************************
         if ($servidorRegistrado === 0) {
+            // validar que el servidor público efectivamente no exista
+            $servidor = $servidoresRepositorio->obtenerPorCurp($request->get('curp'));
+
+            if (!is_null($servidor)) {
+                $respuesta['estatus'] = 'fail';
+                $respuesta['error']     = 'EL SERVIDOR PÚBLICO ESPECIFICADO YA ESTÁ REGISTRADO.';
+
+                return response()->json($respuesta);
+            }
+            // ==================================================================================
+
             // crear objeto servidor
             $servidor = new ServidorPublico();
 
@@ -174,11 +189,16 @@ class ServidoresPublicosController extends Controller
 
         // **********************************************************************
         // persistir encargo
-        $respuesta['resultado'] = 'OK';
+        $respuesta['estatus'] = 'OK';
 
         if (!$this->encargosRepositorio->guardar($encargo)) {
-            $respuesta['resultado'] = 'fail';
+            $respuesta['estatus'] = 'fail';
         }
+
+        // enviar correo al servidor público si tiene
+        $mailer = new LaravelMailer('mails.encargo_alta', $encargo, 'ALTA DE ENCARGO');
+        $mailer->enviar();
+        // ================================================================================
 
         $respuesta['id']   = $encargo->getId();
         $respuesta['pass'] = $encargo->getCuentaAcceso()->getPrimerPassword();
@@ -215,6 +235,11 @@ class ServidoresPublicosController extends Controller
         $id       = (int) $id;
         $servidor = $servidoresRepositorio->obtenerPorId($id);
 
+        if (is_null($servidor)) {
+            $error = 'EL SERVIDOR PÚBLICO SOLICITADO AÚN NO ESTÁ REGISTRADO';
+            return view('admin.errors.404', compact('error'));
+        }
+
         return view('admin.servidores_publicos.servidores_publicos_editar', compact('servidor'));
     }
 
@@ -228,6 +253,11 @@ class ServidoresPublicosController extends Controller
     {
         $respuesta = [];
         $servidor  = $servidoresRepositorio->obtenerPorId((int)$request->get('idServidorPublico'));
+
+        if (is_null($servidor)) {
+            $error = 'EL SERVIDOR PÚBLICO SOLICITADO AÚN NO ESTÁ REGISTRADO';
+            return redirect('admin.error')->with(['error' => $error]);
+        }
 
         // actualizar datos
         $servidor->registrar(
@@ -250,11 +280,11 @@ class ServidoresPublicosController extends Controller
             $request->get('email')
         );
 
-        $respuesta['resultado'] = 'OK';
+        $respuesta['estatus'] = 'OK';
 
         // persistir cambios
         if (!$servidoresRepositorio->actualizar($servidor)) {
-            $respuesta['resultado'] = 'fail';
+            $respuesta['estatus'] = 'fail';
         }
 
         return response()->json($respuesta);
@@ -362,7 +392,91 @@ class ServidoresPublicosController extends Controller
             return response()->json($respuesta);
         }
 
+        // enviar correo al servidor público si tiene
+        $mailer = new LaravelMailer(view('mails.encargo_baja'), 'BAJA DE ENCARGO');
+        $mailer->enviar($encargo);
+        // ================================================================================
+
         $respuesta['html'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
+        return response()->json($respuesta);
+    }
+
+    /**
+     * realizar el cambio de adscripción del encargo
+     * se genera un nuevo movimiento de tipo cambio de adscripción
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function cambioAdscripcion(Request $request)
+    {
+        $encargoId   = (int)$request->get('encargoId');
+        $adscripcion = $request->get('adscripcion');
+        $respuesta   = [];
+
+        $encargo = $this->encargosRepositorio->obtenerPorId($encargoId);
+
+        // generar movimiento de cambio de adscripción
+        $movimiento = new Movimiento(MovimientoTipo::CAMBIO_ADSCRIPCION, new DateTime(), $encargo);
+
+        if(!$encargo->cambiarAdscripcion($adscripcion, $movimiento)) {
+            $respuesta['estatus'] = 'fail';
+            $respuesta['error']     = 'LA ADSCRIPCIÓN ESPECIFICADA DEBE SER DIFERENTE A LA ACTUAL.';
+
+            return response()->json($respuesta);
+        }
+
+        $respuesta['estatus'] = 'OK';
+
+        if (!$this->encargosRepositorio->actualizar($encargo)) {
+            $respuesta['estatus'] = 'fail';
+
+            return response()->json($respuesta);
+        }
+
+        $respuesta['html'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
+        return response()->json($respuesta);
+    }
+
+    /**
+     * registrar una promoción al encargo del servidor público
+     * @param Request $request
+     * @param PuestosRepositorio $puestosRepositorio
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function promocion(Request $request, PuestosRepositorio $puestosRepositorio)
+    {
+        $encargoId   = (int)$request->get('encargoId');
+        $puestoId    = (int)$request->get('puesto');
+        $adscripcion = $request->get('adscripcion');
+        $respuesta   = [];
+
+        $encargo = $this->encargosRepositorio->obtenerPorId($encargoId);
+        $puesto  = $puestosRepositorio->obtenerPorId($puestoId);
+
+        // generar movimiento de cambio de adscripción
+        $movimientoBaja = new Movimiento(MovimientoTipo::BAJA, new DateTime(), $encargo, MovimientoMotivo::PROMOCION);
+        $movimientoAlta = new Movimiento(MovimientoTipo::ALTA, new DateTime(), $encargo, MovimientoMotivo::PROMOCION);
+
+        // generar declaracion
+        $declaracionConclusion = new Declaracion(DeclaracionTipo::CONCLUSION, new DateTime(), $encargo);
+        $declaracionInicial    = new Declaracion(DeclaracionTipo::INICIAL, new DateTime(), $encargo);
+
+        if(!$encargo->recibirPromocion($puesto, $adscripcion, $movimientoBaja, $movimientoAlta, $declaracionConclusion, $declaracionInicial)) {
+            $respuesta['estatus'] = 'fail';
+            return response()->json($respuesta);
+        }
+
+        if(!$this->encargosRepositorio->actualizar($encargo)) {
+            $respuesta['estatus'] = 'fail';
+            return response()->json($respuesta);
+        }
+
+        $respuesta['id']      = $encargo->getId();
+        $respuesta['estatus'] = 'OK';
+        $respuesta['html']    = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
+
         return response()->json($respuesta);
     }
 }

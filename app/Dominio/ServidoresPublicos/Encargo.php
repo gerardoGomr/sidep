@@ -1,8 +1,12 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos;
 
+use Sidep\Dominio\Excepciones\NoEsDeclaracionConclusionException;
 use Sidep\Dominio\Excepciones\NoEsMovimientoDeAltaException;
 use Sidep\Dominio\Excepciones\NoEsDeclaracionInicialException;
+use Sidep\Dominio\Excepciones\NoEsMovimientoDeBajaException;
+use Sidep\Dominio\Excepciones\NoEsMovimientoDeCambioAdscripciónException;
+use Sidep\Dominio\Excepciones\NoEsMovimientoPorPromocionException;
 use Sidep\Dominio\Listas\IColeccion;
 
 /**
@@ -192,7 +196,7 @@ class Encargo
     }
 
     /**
-     * @return Coleccion
+     * @return IColeccion
      */
     public function getMovimientos()
     {
@@ -200,7 +204,7 @@ class Encargo
     }
 
     /**
-     * @return Coleccion
+     * @return IColeccion
      */
     public function getDeclaraciones()
     {
@@ -314,5 +318,107 @@ class Encargo
                 $this->declaraciones->add($declaracion);
             }
         }
+    }
+
+    /**
+     * verifica si el servidor público tiene un email
+     * @return bool
+     */
+    public function tieneEmail()
+    {
+        return !is_null($this->servidorPublico->getEmail());
+    }
+
+    /**
+     * asigna una nueva adscripción al encargo
+     *
+     * valida que la nueva adscripción no sea la misma
+     *
+     * @param string $nuevaAdscripcion
+     * @param Movimiento $movimiento
+     * @return bool
+     * @throws NoEsMovimientoDeCambioAdscripciónException
+     */
+    public function cambiarAdscripcion($nuevaAdscripcion, Movimiento $movimiento)
+    {
+        if ($this->adscripcion === $nuevaAdscripcion) {
+            return false;
+        }
+
+        $this->adscripcion = $nuevaAdscripcion;
+
+        // generar movimiento de cambio de adscripción
+        if ($movimiento->getMovimientoTipo() !== MovimientoTipo::CAMBIO_ADSCRIPCION) {
+            throw new NoEsMovimientoDeCambioAdscripciónException('SE ESPERABA UN MOVIMIENTO DE CAMBIO DE ADSCRIPCIÓN.');
+        }
+
+        $movimiento->generarComentario();
+        $this->movimientos->add($movimiento);
+
+        return true;
+    }
+
+    /**
+     * @param Puesto $puesto
+     * @param string $adscripcion
+     * @param Movimiento $movimientoBaja
+     * @param Movimiento $movimientoAlta
+     * @param Declaracion $conclusion
+     * @param Declaracion $inicial
+     * @return bool
+     * @throws NoEsDeclaracionConclusionException
+     * @throws NoEsDeclaracionInicialException
+     * @throws NoEsMovimientoDeAltaException
+     * @throws NoEsMovimientoDeBajaException
+     * @throws NoEsMovimientoPorPromocionException
+     */
+    public function recibirPromocion(Puesto $puesto, $adscripcion, Movimiento $movimientoBaja, Movimiento $movimientoAlta, Declaracion $conclusion, Declaracion $inicial)
+    {
+        if ($this->puesto->getId() === $puesto->getId()) {
+            return false;
+        }
+
+        // validar los movimientos
+        if ($movimientoBaja->getMovimientoTipo() !== MovimientoTipo::BAJA) {
+            throw new NoEsMovimientoDeBajaException('SE ESPERABA UN MOVIMIENTO DE BAJA.');
+        }
+
+        if ($movimientoAlta->getMovimientoTipo() !== MovimientoTipo::ALTA) {
+            throw new NoEsMovimientoDeAltaException('SE ESPERABA UN MOVIMIENTO DE ALTA.');
+        }
+
+        // validar los motivos para que sean de tipo promoción
+        if ($movimientoBaja->getMovimientoMotivo() !== MovimientoMotivo::PROMOCION && $movimientoAlta !== MovimientoMotivo::PROMOCION) {
+            throw new NoEsMovimientoPorPromocionException('SE ESPERABA QUE LOS MOTIVOS DE MOVIMIENTOS FUERAN DE TIPO PROMOCIÓN');
+        }
+
+        if (!$this->exento) {
+            // validar las declaraciones
+            if ($conclusion->getDeclaracionTipo() !== DeclaracionTipo::CONCLUSION) {
+                throw new NoEsDeclaracionConclusionException('SE ESPERABA UNA DECLARACIÓN DE CONCLUSIÓN');
+            }
+
+            if ($inicial->getDeclaracionTipo() !== DeclaracionTipo::INICIAL) {
+                throw new NoEsDeclaracionInicialException('SE ESPERABA UNA DECLARACIÓN INICIAL');
+            }
+
+            // fechas de cumplimiento
+            $conclusion->generarFechaDeCumplimiento(new \DateTime());
+            $inicial->generarFechaDeCumplimiento(new \DateTime());
+
+            $this->declaraciones->add($conclusion);
+            $this->declaraciones->add($inicial);
+        }
+
+        $this->puesto      = $puesto;
+        $this->adscripcion = $adscripcion;
+
+        $movimientoBaja->generarComentario();
+        $movimientoAlta->generarComentario();
+
+        $this->movimientos->add($movimientoBaja);
+        $this->movimientos->add($movimientoAlta);
+
+        return true;
     }
 }

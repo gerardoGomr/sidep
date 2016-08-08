@@ -86,6 +86,22 @@ Route::group(['prefix' => 'admin'], function() {
             'as'   => 'encargo-baja',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@bajaEncargo'
         ]);
+
+        /**
+         * ruta para actualizar la adscripción del servidor público
+         */
+        Route::post('servidores/encargo/cambio-adscripcion', [
+            'as'   => 'encargo-cambio-adscripcion',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@cambioAdscripcion'
+        ]);
+
+        /**
+         * ruta para realizar una promoción
+         */
+        Route::post('servidores/encargo/promocio', [
+            'as'   => 'encargo-promocion',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@promocion'
+        ]);
     });
 
     /**

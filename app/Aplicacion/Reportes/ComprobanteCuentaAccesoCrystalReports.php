@@ -41,8 +41,8 @@ class ComprobanteCuentaAccesoCrystalReports implements IReporte
         $this->id             = $id;
         $this->primerPassword = $primerPassword;
         //$this->rutaReporte = resource_path() . '/reports/carta_compromiso.rpt';
-        $this->rutaReporte = "C:\\wamp\\www\\sidep\\resources\\reports\\comprobante_cuenta_acceso.rpt";
-        $this->rutaPdf     = "C:\\wamp\\www\\sidep\\storage\\app\\public\\reports\\comprobantes_cuentas\\encargo_" . $this->id . '.pdf';
+        $this->rutaReporte = "C:\\Apache24\\htdocs\\sidep\\resources\\reports\\comprobante_cuenta_acceso.rpt";
+        $this->rutaPdf     = "C:\\Apache24\\htdocs\\sidep\\storage\\app\\public\\reports\\comprobantes_cuentas\\encargo_" . $this->id . '.pdf';
     }
 
     /**
