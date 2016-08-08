@@ -102,7 +102,7 @@ jQuery(document).ready(function($) {
     // click para dar de baja a servidor público
     $fichaTecnica.on('click', 'button.baja', function () {
         // setear el id del encargo
-        $('#formBajaformBaja').find('input.encargoId').val($(this).data('id'));
+        $('#formBaja').find('input.encargoId').val($(this).data('id'));
         $('#modalMotivoBaja').modal('show');
     });
 

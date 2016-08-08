@@ -393,7 +393,7 @@ class ServidoresPublicosController extends Controller
         }
 
         // enviar correo al servidor público si tiene
-        $mailer = new LaravelMailer(view('mails.encargo_baja'), 'BAJA DE ENCARGO');
+        $mailer = new LaravelMailer('mails.encargo_baja', $encargo, 'BAJA DE ENCARGO');
         $mailer->enviar($encargo);
         // ================================================================================
 
