@@ -56,6 +56,33 @@ class DoctrineServidoresPublicosRepositorio implements ServidoresPublicosReposit
     }
 
     /**
+     * obtener por curp
+     * @param  string $curp
+     * @return ServidorPublico
+     */
+    public function obtenerPorCurp($curp)
+    {
+        // TODO: Implement obtenerPorId() method.
+        try {
+            $query = $this->entityManager->createQuery('SELECT s FROM ServidoresPublicos:ServidorPublico s WHERE s.curp = :curp')
+                ->setParameter(':curp', $curp);
+
+            $servidores = $query->getResult();
+
+            if (count($servidores) === 0) {
+                return null;
+            }
+
+            return $servidores[0];
+
+        } catch (\PDOException $e) {
+            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+            return null;
+        }
+    }
+
+    /**
      * @return array
      */
     public function obtenerTodos()

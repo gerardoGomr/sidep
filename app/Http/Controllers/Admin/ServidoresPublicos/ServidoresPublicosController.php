@@ -196,8 +196,8 @@ class ServidoresPublicosController extends Controller
         }
 
         // enviar correo al servidor público si tiene
-        $mailer = new LaravelMailer('mails.encargo_alta', $encargo, 'ALTA DE ENCARGO');
-        $mailer->enviar();
+        /*$mailer = new LaravelMailer('mails.encargo_alta', $encargo, 'ALTA DE ENCARGO');
+        $mailer->enviar();*/
         // ================================================================================
 
         $respuesta['id']   = $encargo->getId();
@@ -393,8 +393,8 @@ class ServidoresPublicosController extends Controller
         }
 
         // enviar correo al servidor público si tiene
-        $mailer = new LaravelMailer('mails.encargo_baja', $encargo, 'BAJA DE ENCARGO');
-        $mailer->enviar($encargo);
+        /*$mailer = new LaravelMailer('mails.encargo_baja', $encargo, 'BAJA DE ENCARGO');
+        $mailer->enviar($encargo);*/
         // ================================================================================
 
         $respuesta['html'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();

@@ -18,4 +18,11 @@ interface ServidoresPublicosRepositorio extends Repositorio
 	 * @return bool
 	 */
 	public function actualizar(ServidorPublico $servidor);
+
+	/**
+	 * obtener por curp
+	 * @param  string $curp
+	 * @return ServidorPublico
+	 */
+	public function obtenerPorCurp($curp);
 }

@@ -109,11 +109,12 @@ jQuery(document).ready(function ($) {
                 dataType: 'json',
                 data:     $formAltaEncargo.serialize(),
                 beforeSend: function () {
-                    $('#loadingGuardar').removeClass('hide');
+                    $('#loadingGuardar').modal('show');
                 }
             })
             .done(function (respuesta) {
-                $('#loadingGuardar').addClass('hide');
+                $('#loadingGuardar').modal('hide');
+
                 if (respuesta.estatus === 'fail') {
                     bootbox.alert("OCURRIÓ UN ERROR AL GUARDAR EL ENCARGO DEL SERVIDOR PÚBLICO. INTENTE DE NUEVO.\n" + respuesta.error);
                 }
@@ -132,7 +133,7 @@ jQuery(document).ready(function ($) {
                 }
             })
             .fail(function (jQxr, textStatus, errorThrown) {
-                $('#loadingGuardar').addClass('hide');
+                $('#loadingGuardar').modal('hide');
                 console.log(textStatus + ': ' + errorThrown);
                 bootbox.alert('OCURRIÓ UN ERROR AL GUARDAR EL ENCARGO DEL SERVIDOR PÚBLICO. INTENTE DE NUEVO.');
             });
@@ -214,28 +215,28 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             data:     {dato: dato, _token: $formAltaEncargo.find('input[name="_token"]').val(), origen: 'alta'},
             beforeSend: function () {
-                $loadingBusqueda.removeClass('hide');
+                $('#loadingGuardar').modal('show');
             }
         })
         .done(function (respuesta) {
-            $loadingBusqueda.addClass('hide');
-            if (respuesta.resultado === 'fail') {
+            $('#loadingGuardar').modal('hide');
+            if (respuesta.estatus === 'fail') {
                 bootbox.alert('NO SE ENCONTRARON COINCIDENCIAS CON EL DATO DE BÚSQUEDA. POR FAVOR, CAPTURE LOS DATOS DEL SERVIDOR PÚBLICO.', function () {
                     $resultadosBusqueda.html('');
                     $servidorRegistrado.val('0');
                     nuevoServidor();
-                })
-                return false;
+                });
             }
 
-            $resultadosBusqueda.html(respuesta.contenido);
-            $('#abrirModal').click();
-            //$('#resultadoServidor').modal('show');
+            if (respuesta.estatus === 'OK') {
+                $('#resultadosServidor').modal('show');
+                $resultadosBusqueda.html(respuesta.contenido);
+            }
         })
         .fail(function (jQxr, textStatus, errorThrown) {
-            $loadingBusqueda.addClass('hide');
+            $('#loadingGuardar').modal('hide');
             console.log(textStatus + ': ' + errorThrown);
-            bootbox.alert('Ocurrió un error al realizar la operación solicitada. Intente de nuevo.')
+            bootbox.alert('Ocurrió un error al realizar la operación solicitada. Intente de nuevo.');
         });
     }
 
@@ -261,7 +262,5 @@ jQuery(document).ready(function ($) {
         setTimeout(function () {
             $('#nombre').focus();
         }, 500);
-            //}
-        //});
     }
 });

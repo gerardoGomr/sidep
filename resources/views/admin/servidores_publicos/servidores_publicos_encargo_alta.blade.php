@@ -363,15 +363,7 @@ use Sidep\Dominio\ServidoresPublicos\EstadoCivil;
         </div>
     </div>
 
-    <div id="loadingGuardar" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <span><i class="fa fa-spinner fa-spin fa-2x"></i> REGISTRANDO DATOS DEL ENCARGO; POR FAVOR, ESPERE...</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('admin.loading')
 @stop
 
 @section('js')
