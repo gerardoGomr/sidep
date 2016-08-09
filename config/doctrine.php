@@ -23,8 +23,8 @@ return [
     'managers'                  => [
         'default' => [
             'dev'        => env('APP_DEBUG'),
-            'meta'       => env('DOCTRINE_METADATA', 'yaml'),
-            'connection' => env('DB_CONNECTION', 'sqlsrv'),
+            'meta'       => env('DOCTRINE_METADATA'),
+            'connection' => env('DB_CONNECTION'),
             'namespaces' => [
                 'ServidoresPublicos' => 'Sidep\Dominio\ServidoresPublicos'
             ],
@@ -36,7 +36,7 @@ return [
             'proxies'    => [
                 'namespace'     => false,
                 'path'          => storage_path('proxies'),
-                'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', 'AUTOGENERATE_FILE_NOT_EXISTS')
+                'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE')
             ],
             /*
             |--------------------------------------------------------------------------
