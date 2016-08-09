@@ -1,6 +1,8 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos;
 
+use DateTime;
+use DateInterval;
 use Sidep\Dominio\Excepciones\NoEsDeclaracionConclusionException;
 use Sidep\Dominio\Excepciones\NoEsMovimientoDeAltaException;
 use Sidep\Dominio\Excepciones\NoEsDeclaracionInicialException;
@@ -277,7 +279,7 @@ class Encargo
                 throw new NoEsDeclaracionInicialException('SE ESPERABA UNA DECLARACIÓN INICIAL');
             }
 
-            $declaracion->generarFechaDeCumplimiento(new \DateTime());
+            $declaracion->generarFechaDeCumplimiento();
             $this->declaraciones->add($declaracion);
         }
     }
@@ -313,8 +315,8 @@ class Encargo
 
             // validar que el movmiento sea solo por término de encargo
             // si es reclusión, proceso (penal o admivo) o fallecimiento, no generará declaración
-            if ($movimiento->getMovimientoMotivo() === MovimientoMotivo::TERMINO_ENCARGO) {
-                $declaracion->generarFechaDeCumplimiento(new \DateTime());
+            if ($movimiento->getMovimientoMotivo() === MovimientoMotivo::RENUNCIA_VOLUNTARIA) {
+                $declaracion->generarFechaDeCumplimiento();
                 $this->declaraciones->add($declaracion);
             }
         }
@@ -375,7 +377,7 @@ class Encargo
     public function recibirPromocion(Puesto $puesto, $adscripcion, Movimiento $movimientoBaja, Movimiento $movimientoAlta, Declaracion $conclusion, Declaracion $inicial)
     {
         if ($this->puesto->getId() === $puesto->getId()) {
-            return false;
+            throw new \InvalidArgumentException('EL PUESTO NO DEBE SER EL MISMO');
         }
 
         // validar los movimientos
@@ -403,8 +405,8 @@ class Encargo
             }
 
             // fechas de cumplimiento
-            $conclusion->generarFechaDeCumplimiento(new \DateTime());
-            $inicial->generarFechaDeCumplimiento(new \DateTime());
+            $conclusion->generarFechaDeCumplimiento(); // a partir de la fecha de generación
+            $inicial->generarFechaDeCumplimiento();
 
             $this->declaraciones->add($conclusion);
             $this->declaraciones->add($inicial);
@@ -418,7 +420,17 @@ class Encargo
 
         $this->movimientos->add($movimientoBaja);
         $this->movimientos->add($movimientoAlta);
+    }
 
-        return true;
+    /**
+     * obtener la fecha de un día antes
+     * @param  DateTime $fecha
+     * @return DateTime
+     */
+    public function obtenerFechaAnteriorAPromocion(DateTime $fecha)
+    {
+        // nueva fecha con el mismo valor que la fecha enviada
+        $nuevaFecha = DateTime::createFromFormat('d/m/Y', $fecha->format('d/m/Y'));
+        return $nuevaFecha->sub(new DateInterval('P1D'))->format('d/m/Y');
     }
 }

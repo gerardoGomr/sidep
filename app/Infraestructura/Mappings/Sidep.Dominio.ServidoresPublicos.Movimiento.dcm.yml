@@ -9,7 +9,6 @@ Sidep\Dominio\ServidoresPublicos\Movimiento:
   fields:
     fecha:
       type: date
-      length: 10
       nullable: false
       column: fecha
     comentario:

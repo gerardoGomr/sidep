@@ -2,6 +2,7 @@
 namespace Sidep\Dominio\ServidoresPublicos;
 
 use DateTime;
+use DateInterval;
 
 /**
  * Class Declaracion
@@ -236,24 +237,24 @@ class Declaracion
      * calcula la fecha de cumplimiento de la declaracion en base al tipo
      * @param DateTime $fecha
      */
-    public function generarFechaDeCumplimiento(DateTime $fecha)
+    public function generarFechaDeCumplimiento()
     {
-        $this->fechaPlazo = $fecha;
+        $this->fechaPlazo = DateTime::createFromFormat('d/m/Y', $this->fechaGeneracion->format('d/m/Y'));
 
         switch ($this->declaracionTipo) {
             case DeclaracionTipo::INICIAL:
                 // 60 días
-                $dias = new \DateInterval('P60D');
+                $dias = new DateInterval('P60D');
                 break;
 
             case DeclaracionTipo::MODIFICACION:
                 // 31 días
-                $dias = new \DateInterval('P31D');
+                $dias = new DateInterval('P31D');
                 break;
 
             case DeclaracionTipo::CONCLUSION:
                 // 30 días
-                $dias = new \DateInterval('P30D');
+                $dias = new DateInterval('P30D');
                 break;
         }
 

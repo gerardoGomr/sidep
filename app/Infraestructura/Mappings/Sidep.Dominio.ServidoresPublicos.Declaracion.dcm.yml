@@ -13,7 +13,6 @@ Sidep\Dominio\ServidoresPublicos\Declaracion:
       column: declaracion_tipo
     fechaGeneracion:
       type: date
-      length: 10
       nullable: false
       column: fecha_generacion
     fechaPlazo:

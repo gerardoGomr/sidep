@@ -369,13 +369,13 @@ class ServidoresPublicosController extends Controller
 
         $respuesta = [];
         $encargoId = (int)$request->get('encargoId');
-        $motivo    = $request->get('motivo');
+        $motivo    = (int)$request->get('motivo');
         $fechaBaja = $request->get('fechaBaja');
 
         $encargo = $this->encargosRepositorio->obtenerPorId($encargoId);
 
         // generar declaracion
-        $declaracion = new Declaracion(DeclaracionTipo::CONCLUSION, new DateTime(), $encargo);
+        $declaracion = new Declaracion(DeclaracionTipo::CONCLUSION, DateTime::createFromFormat('d/m/Y', $fechaBaja), $encargo);
 
         // generar movimiento
         $movimiento = new Movimiento(MovimientoTipo::BAJA, DateTime::createFromFormat('d/m/Y', $fechaBaja), $encargo, $motivo);
@@ -422,7 +422,7 @@ class ServidoresPublicosController extends Controller
 
         if(!$encargo->cambiarAdscripcion($adscripcion, $movimiento)) {
             $respuesta['estatus'] = 'fail';
-            $respuesta['error']     = 'LA ADSCRIPCIÓN ESPECIFICADA DEBE SER DIFERENTE A LA ACTUAL.';
+            $respuesta['error']   = 'LA ADSCRIPCIÓN ESPECIFICADA DEBE SER DIFERENTE A LA ACTUAL.';
 
             return response()->json($respuesta);
         }
@@ -447,24 +447,34 @@ class ServidoresPublicosController extends Controller
      */
     public function promocion(Request $request, PuestosRepositorio $puestosRepositorio)
     {
-        $encargoId   = (int)$request->get('encargoId');
-        $puestoId    = (int)$request->get('puesto');
-        $adscripcion = $request->get('adscripcion');
-        $respuesta   = [];
+        $encargoId       = (int)$request->get('encargoId');
+        $puestoId        = (int)$request->get('puesto');
+        $adscripcion     = $request->get('adscripcion');
+        $fechaMovimiento = $request->get('fechaMovimiento');
+        $respuesta       = [];
 
         $encargo = $this->encargosRepositorio->obtenerPorId($encargoId);
         $puesto  = $puestosRepositorio->obtenerPorId($puestoId);
+        $fecha   = DateTime::createFromFormat('d/m/Y', $fechaMovimiento);
 
-        // generar movimiento de cambio de adscripción
-        $movimientoBaja = new Movimiento(MovimientoTipo::BAJA, new DateTime(), $encargo, MovimientoMotivo::PROMOCION);
-        $movimientoAlta = new Movimiento(MovimientoTipo::ALTA, new DateTime(), $encargo, MovimientoMotivo::PROMOCION);
+        // generar movimiento de alta y declaración inicial con la fecha enviada
+        $movimientoAlta     = new Movimiento(MovimientoTipo::ALTA, $fecha, $encargo, MovimientoMotivo::PROMOCION);
+        $declaracionInicial = new Declaracion(DeclaracionTipo::INICIAL, $fecha, $encargo);
+        // fecha anterior 1 día menos - cadena
+        $fechaAnterior = $encargo->obtenerFechaAnteriorAPromocion($fecha);
 
-        // generar declaracion
-        $declaracionConclusion = new Declaracion(DeclaracionTipo::CONCLUSION, new DateTime(), $encargo);
-        $declaracionInicial    = new Declaracion(DeclaracionTipo::INICIAL, new DateTime(), $encargo);
+        // generar movimiento de baja y declaracion de conclusión con fecha 1 dia menos
+        $movimientoBaja        = new Movimiento(MovimientoTipo::BAJA, DateTime::createFromFormat('d/m/Y', $fechaAnterior), $encargo, MovimientoMotivo::PROMOCION);
+        $declaracionConclusion = new Declaracion(DeclaracionTipo::CONCLUSION, DateTime::createFromFormat('d/m/Y', $fechaAnterior), $encargo);
 
-        if(!$encargo->recibirPromocion($puesto, $adscripcion, $movimientoBaja, $movimientoAlta, $declaracionConclusion, $declaracionInicial)) {
+        // generar la promoción
+        try {
+            $encargo->recibirPromocion($puesto, $adscripcion, $movimientoBaja, $movimientoAlta, $declaracionConclusion, $declaracionInicial);
+
+        } catch(\Exception $e) {
             $respuesta['estatus'] = 'fail';
+            $respuesta['error']   = $e->getMessage();
+
             return response()->json($respuesta);
         }
 

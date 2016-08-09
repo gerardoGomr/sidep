@@ -16,7 +16,7 @@ use Sidep\Dominio\ServidoresPublicos\MovimientoMotivo;
                         <div class="col-md-8">
                             <select name="motivo" id="motivo" class="required form-control">
                                 <option value="">SELECCIONE</option>
-                                <option value="{{ MovimientoMotivo::TERMINO_ENCARGO }}">TERMINO DEL ENCARGO</option>
+                                <option value="{{ MovimientoMotivo::RENUNCIA_VOLUNTARIA }}">RENUNCIA VOLUNTARIA</option>
                                 <option value="{{ MovimientoMotivo::FALLECIMIENTO }}">FALLECIMIENTO</option>
                                 <option value="{{ MovimientoMotivo::PROCESO }}">PROCESO</option>
                                 <option value="{{ MovimientoMotivo::RECLUSION }}">RECLUSIÓN</option>
@@ -27,7 +27,7 @@ use Sidep\Dominio\ServidoresPublicos\MovimientoMotivo;
                     <div class="form-group">
                         <label for="fechaBaja" class="control-label col-md-3">FECHA DE BAJA:</label>
                         <div class="col-md-2">
-                            <input type="text" name="fechaBaja" id="fechaBaja" class="form-control required" readonly="readonly" value="{{ (new DateTime())->format('d/m/Y')  }}">
+                            <input type="text" name="fechaBaja" id="fechaBaja" class="form-control required fecha" readonly="readonly" value="{{ (new DateTime())->format('d/m/Y')  }}">
                         </div>
                     </div>
 

@@ -93,6 +93,20 @@ jQuery(document).ready(function ($) {
         }
     });
 
+    // evento para calcular la fecha de nacimiento y el rfc
+    $('#curp').on('blur', function(event) {
+        var curp   = $(this).val(),
+            substr = curp.substr(4, 6),
+            anio   = substr.substr(0, 2),
+            mes    = substr.substr(2, 2),
+            dia    = substr.substr(4, 2),
+            rfc    = curp.substr(0, 10);
+
+        var fechaNacimiento = Number(anio < 99) ? dia + '/' + mes + '/19' + anio : dia + '/' + mes + '/20' + anio;
+        $('#fechaNacimiento').val(fechaNacimiento);
+        $('#rfc').val(rfc);
+    });
+
     // click en guardar
     $('#guardar').on('click', function () {
         if ($formAltaEncargo.valid() === true) {

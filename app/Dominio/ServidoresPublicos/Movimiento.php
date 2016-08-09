@@ -109,8 +109,8 @@ class Movimiento
 
         if (!is_null($this->movimientoMotivo)) {
             switch ($this->movimientoMotivo) {
-                case MovimientoMotivo::TERMINO_ENCARGO:
-                    $motivo = ' POR TÉRMINO DE ENCARGO';
+                case MovimientoMotivo::RENUNCIA_VOLUNTARIA:
+                    $motivo = ' POR RENUNCIA VOLUNTARIA';
                     break;
 
                 case MovimientoMotivo::FALLECIMIENTO:

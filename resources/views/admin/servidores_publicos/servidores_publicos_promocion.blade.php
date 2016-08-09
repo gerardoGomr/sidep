@@ -28,6 +28,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="fechaMovimiento" class="control-label col-md-3">FECHA DE MOVIMIENTO:</label>
+                        <div class="col-md-2">
+                            <input type="text" name="fechaMovimiento" id="fechaMovimiento" class="form-control required fecha" readonly="readonly" value="{{ (new DateTime())->format('d/m/Y')  }}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <div class="col-md-3 col-md-offset-3">
                             <input type="hidden" name="encargoId" class="encargoId">
                             <input type="hidden" id="rutaCartaCompromiso" value="{{ url('admin/servidores/carta-compromiso') }}">

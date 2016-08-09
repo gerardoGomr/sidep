@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
         $dato.focus();
     }, 500);
 
-    $('#fechaBaja').datepicker({
+    $('#fechaBaja, #fechaMovimiento').datepicker({
         autoclose: true,
         format: 'dd/mm/yyyy',
         language: 'es'

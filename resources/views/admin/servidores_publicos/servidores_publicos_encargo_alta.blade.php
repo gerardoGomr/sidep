@@ -67,16 +67,16 @@ use Sidep\Dominio\ServidoresPublicos\EstadoCivil;
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label for="fechaNacimiento" class="control-label col-md-3">F. NACIMIENTO:</label>
-                                                                <div class="col-md-2">
-                                                                    <input type="text" name="fechaNacimiento" id="fechaNacimiento" class="form-control fecha" readonly="readonly">
+                                                                <label for="curp" class="control-label col-md-3">CURP:</label>
+                                                                <div class="col-md-3 col-lg-4">
+                                                                    <input type="text" name="curp" id="curp" class="form-control" maxlength="18" placeholder="18 CARACTERES">
                                                                 </div>
                                                             </div>
 
                                                             <div class="form-group">
-                                                                <label for="curp" class="control-label col-md-3">CURP:</label>
-                                                                <div class="col-md-3 col-lg-4">
-                                                                    <input type="text" name="curp" id="curp" class="form-control" maxlength="18" placeholder="18 CARACTERES">
+                                                                <label for="fechaNacimiento" class="control-label col-md-3">F. NACIMIENTO:</label>
+                                                                <div class="col-md-2">
+                                                                    <input type="text" name="fechaNacimiento" id="fechaNacimiento" class="form-control fecha" readonly="readonly">
                                                                 </div>
                                                             </div>
 

@@ -9,9 +9,9 @@ namespace Sidep\Dominio\ServidoresPublicos;
  */
 abstract class MovimientoMotivo
 {
-    const TERMINO_ENCARGO = 1;
-    const FALLECIMIENTO   = 2;
-    const PROCESO         = 3;
-    const RECLUSION       = 4;
-    const PROMOCION       = 5;
+	const RENUNCIA_VOLUNTARIA = 1;
+	const FALLECIMIENTO       = 2;
+	const PROCESO             = 3;
+	const RECLUSION           = 4;
+	const PROMOCION           = 5;
 }
