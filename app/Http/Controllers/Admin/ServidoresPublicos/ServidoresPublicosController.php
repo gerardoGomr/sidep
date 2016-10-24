@@ -49,7 +49,7 @@ class ServidoresPublicosController extends Controller
     }
 
     /**
-     * mostrar view principal
+     * mostrar view de administración de servidores públicos
      * obtener los últimos 50 encargos generados
      * @param PuestosRepositorio $puestosRepositorio
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

@@ -1720,7 +1720,7 @@ div[class*="col-lg-"] {
 }
 .navbar .dropdown a.dropdown-toggle {
   font-size: 14px;
-  color: #424242;
+  color: #e2e2e2;
   font-weight: 400;
 }
 .navbar .dropdown a.dropdown-toggle .media .pull-left img {
@@ -1731,21 +1731,21 @@ div[class*="col-lg-"] {
 .navbar .dropdown a.dropdown-toggle:hover {
   text-decoration: none;
   background: none;
-  color: #424242;
+  color: #e2e2e2;
 }
 .navbar .dropdown a.dropdown-toggle:active,
 .navbar .dropdown a.dropdown-toggle:focus {
-  color: #B33636;
+  color: #e2e2e2;
   text-decoration: none;
   background: none;
 }
 .navbar .dropdown a.dropdown-toggle .caret {
   font-size: 13px;
-  border-top: 4px solid #424242;
+  border-top: 4px solid #e2e2e2;
 }
 .navbar .dropdown a.dropdown-toggle:active .caret,
 .navbar .dropdown a.dropdown-toggle:focus .caret {
-  border-top: 4px solid #424242;
+  border-top: 4px solid #e2e2e2;
 }
 .navbar .dropdown.dropdown-light > .dropdown-menu {
   top: 59px;
@@ -1767,7 +1767,7 @@ div[class*="col-lg-"] {
 .navbar .dropdown.dropdown-light > .dropdown-menu > li.active > a:hover,
 .navbar .dropdown.dropdown-light > .dropdown-menu > li.active > a:focus {
   color: #fff !important;
-  background: #B33636;
+  background: #e2e2e2;
 }
 .navbar .dropdown.dropdown-light > .dropdown-menu li > a:hover {
   font-weight: 600;
@@ -1800,7 +1800,7 @@ div[class*="col-lg-"] {
   border: 10px solid transparent;
   top: -11px;
   border-top-width: 0;
-  border-bottom-color: #B33636;
+  border-bottom-color: #e2e2e2;
   position: absolute;
   display: block;
   right: 3px;
@@ -1838,12 +1838,12 @@ div[class*="col-lg-"] {
 }
 .navbar .dropdown.username .dropdown-menu li.active a,
 .navbar .dropdown.dropdown-regular .dropdown-menu li.active a {
-  background-color: rgba(179, 54, 54, 0.2);
-  color: #651e1e;
+  background-color: rgba(226, 226, 226, 0.2);
+  color: #afafaf;
 }
 .navbar .dropdown.username .dropdown-menu li.active a.glyphicons i:before,
 .navbar .dropdown.dropdown-regular .dropdown-menu li.active a.glyphicons i:before {
-  color: #B33636;
+  color: #e2e2e2;
   font-size: 15px;
   top: 8px;
   left: 13px;

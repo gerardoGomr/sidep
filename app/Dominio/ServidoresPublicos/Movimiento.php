@@ -158,4 +158,12 @@ class Movimiento
             $this->comentario = 'SE GENERÓ UNA BAJA EL DÍA ' . $this->getFecha();
         }
     }
+
+    /**
+     * @return Encargo
+     */
+    public function getEncargo()
+    {
+        return $this->encargo;
+    }
 }

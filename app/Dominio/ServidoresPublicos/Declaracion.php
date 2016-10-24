@@ -3,6 +3,9 @@ namespace Sidep\Dominio\ServidoresPublicos;
 
 use DateTime;
 use DateInterval;
+use Sidep\Dominio\Declaraciones\OficioRequerimiento;
+use Sidep\Dominio\Excepciones\YaTieneMarcadoElRetornoDeRequerimientoException;
+use Sidep\Dominio\Folios\Folio;
 
 /**
  * Class Declaracion
@@ -21,6 +24,11 @@ class Declaracion
      * @var int
      */
     private $declaracionTipo;
+
+    /**
+     * @var int
+     */
+    private $estatus;
 
     /**
      * @var DateTime
@@ -48,24 +56,9 @@ class Declaracion
     private $tieneRequerimiento;
 
     /**
-     * @var string
+     * @var Requerimiento
      */
-    private $numeroRequerimiento;
-
-    /**
-     * @var DateTime
-     */
-    private $fechaGeneracionRequerimiento;
-
-    /**
-     * @var DateTime
-     */
-    private $fechaRecepcionRequerimiento;
-
-    /**
-     * @var DateTime
-     */
-    private $fechaPlazoCumplimiento;
+    private $requerimiento;
 
     /**
      * @var bool
@@ -78,12 +71,30 @@ class Declaracion
     private $fechaEnvioFuncionPublica;
 
     /**
+     * @var string
+     */
+    private $numeroOficioSancion;
+
+    /**
      * @var Encargo
      */
     private $encargo;
 
     /**
+     * @var OficioRequerimiento
+     */
+    private $oficioRequerimiento;
+
+    /**
+     * @var bool
+     */
+    private $requerimientoAbierto;
+
+    /**
      * Declaracion constructor.
+     *
+     * por default se le asigna el estatus de pendiente en tiempo
+     *
      * @param int $tipo
      * @param DateTime $fecha
      * @param Encargo $encargo
@@ -95,6 +106,7 @@ class Declaracion
         $this->declaracionTipo = $tipo;
         $this->fechaGeneracion = $fecha;
         $this->encargo         = $encargo;
+        $this->estatus         = DeclaracionEstatus::PENDIENTE_EN_TIEMPO;
     }
 
     /**
@@ -114,6 +126,34 @@ class Declaracion
     }
 
     /**
+     * evalua el estatus actual
+     * @return string
+     */
+    public function estatus()
+    {
+        $estatus = '';
+        switch ($this->estatus) {
+            case DeclaracionEstatus::PENDIENTE_EN_TIEMPO:
+                $estatus = 'PENDIENTE EN TIEMPO';
+                break;
+
+            case DeclaracionEstatus::PENDIENTE_EXTEMPORANEA:
+                $estatus = 'PENDIENTE EXTEMPORANEA';
+                break;
+
+            case DeclaracionEstatus::DECLARACION_EN_TIEMPO:
+                $estatus = 'DECLARACIÓN EN TIEMPO';
+                break;
+
+            case DeclaracionEstatus::DECLARACION_EXTEMPORANEA:
+                $estatus = 'DECLARACIÓN EXTEMPORANEA';
+                break;
+        }
+
+        return $estatus;
+    }
+
+    /**
      * @return DateTime
      */
     public function getFechaPlazo()
@@ -124,7 +164,7 @@ class Declaracion
     /**
      * @return boolean
      */
-    public function isRealizada()
+    public function realizada()
     {
         return $this->realizada;
     }
@@ -140,47 +180,24 @@ class Declaracion
     /**
      * @return boolean
      */
-    public function isTieneRequerimiento()
+    public function tieneRequerimiento()
     {
         return $this->tieneRequerimiento;
+        //return is_null($this->requerimiento);
     }
 
     /**
-     * @return string
+     * @return Requerimiento
      */
-    public function getNumeroRequerimiento()
+    public function getRequerimiento()
     {
-        return $this->numeroRequerimiento;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getFechaGeneracionRequerimiento()
-    {
-        return $this->fechaGeneracionRequerimiento;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getFechaRecepcionRequerimiento()
-    {
-        return $this->fechaRecepcionRequerimiento;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getFechaPlazoCumplimiento()
-    {
-        return $this->fechaPlazoCumplimiento;
+        return $this->requerimiento;
     }
 
     /**
      * @return boolean
      */
-    public function isSancionada()
+    public function sancionada()
     {
         return $this->sancionada;
     }
@@ -190,7 +207,7 @@ class Declaracion
      */
     public function getFechaEnvioFuncionPublica()
     {
-        return $this->fechaEnvioFuncionPublica;
+        return $this->fechaEnvioFuncionPublica->format('d/m/Y');
     }
 
     /**
@@ -234,8 +251,15 @@ class Declaracion
     }
 
     /**
+     * @return OficioRequerimiento
+     */
+    public function getOficioRequerimiento()
+    {
+        return $this->oficioRequerimiento;
+    }
+
+    /**
      * calcula la fecha de cumplimiento de la declaracion en base al tipo
-     * @param DateTime $fecha
      */
     public function generarFechaDeCumplimiento()
     {
@@ -259,5 +283,106 @@ class Declaracion
         }
 
         $this->fechaPlazo->add($dias);
+    }
+
+    /**
+     * se marca a la declaración actual como omiso - tiene requerimiento y fecha
+     * se actualiza el folio ocupado
+     * @param DateTime $fecha
+     * @param Folio $folio
+     */
+    public function marcarComoOmiso(DateTime $fecha, Folio $folio)
+    {
+        $this->tieneRequerimiento   = true;
+        $this->requerimientoAbierto = false;
+        $this->requerimiento        = new Requerimiento($folio, $fecha);
+
+        $folio->actualizar();
+    }
+
+    /**
+     * se marca el retorno de un requerimiento mediante un oficio.
+     * se asigna también el nuevo plazo de cumplimiento, que será de 7 días
+     * a partir del retorno
+     * @param OficioRequerimiento $oficio
+     */
+    public function marcarRetornoDeRequerimiento(OficioRequerimiento $oficio)
+    {
+        $this->oficioRequerimiento = $oficio;
+        $this->requerimiento->marcarRetornoDeRequerimiento($oficio);
+    }
+
+    /**
+     * se desmarca de estatus omiso a esta declaración
+     * @throws YaTieneMarcadoElRetornoDeRequerimientoException
+     */
+    public function desmarcarOmiso()
+    {
+        if ($this->seHaRegresadoElRequerimiento()) {
+            throw new YaTieneMarcadoElRetornoDeRequerimientoException('NO SE PUEDE DESMARCAR A ESTA DECLARACIÓN COMO OMISO PORQUE YA SE MARCÓ EL RETORNO DEL REQUERIMIENTO.');
+        }
+
+        $this->tieneRequerimiento   = false;
+        $this->requerimientoAbierto = null;
+        $this->requerimiento->desmarcarOmiso();
+    }
+
+    /**
+     * verifica si existe
+     * @return bool
+     */
+    public function seHaRegresadoElRequerimiento()
+    {
+        return !is_null($this->oficioRequerimiento);
+    }
+
+    /**
+     * se desmarca el estatus de recepción de requerimiento
+     */
+    public function desmarcarRecepcionRequerimiento()
+    {
+        $this->oficioRequerimiento = null;
+        $this->requerimiento->desmarcarRecepcionRequerimiento();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function requerimientoAbierto()
+    {
+        return $this->requerimientoAbierto;
+    }
+
+    /**
+     * marcar que ya se abrio el pdf cuando el usuario le da click
+     */
+    public function seAbrioElRequerimiento()
+    {
+        if(!$this->requerimientoAbierto) {
+            $this->requerimientoAbierto = true;
+        }
+    }
+
+    /**
+     * se marca la declaración como sancionada
+     * @param DateTime $fecha
+     * @param Folio $folio
+     */
+    public function marcarEnvioASFP(DateTime $fecha, Folio $folio)
+    {
+        $this->sancionada               = true;
+        $this->fechaEnvioFuncionPublica = $fecha;
+        $this->numeroOficioSancion      = $folio->folio();
+
+        $folio->actualizar();
+    }
+
+    /**
+     * remover la sanción de la declaración
+     */
+    public function removerSancion()
+    {
+        $this->sancionada               = false;
+        $this->fechaEnvioFuncionPublica = null;
     }
 }

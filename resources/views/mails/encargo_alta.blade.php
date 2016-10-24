@@ -1,4 +1,4 @@
-@extends('app_iframe')
+@extends('declarantes.app_iframe')
 
 @section('contenido')
     <div class="row row-app">

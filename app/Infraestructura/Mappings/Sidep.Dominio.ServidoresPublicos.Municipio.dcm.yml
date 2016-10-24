@@ -1,14 +1,14 @@
 Sidep\Dominio\ServidoresPublicos\Municipio:
   type: entity
-    table: municipio
+  table: municipio
+  id:
     id:
-      id:
-        type: integer
-        generator:
-          strategy: AUTO
-    fields:
-      municipio:
-        type: string
-        length: 80
-        nullable: false
-        column: municipio
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    municipio:
+      type: string
+      length: 80
+      nullable: false
+      column: municipio

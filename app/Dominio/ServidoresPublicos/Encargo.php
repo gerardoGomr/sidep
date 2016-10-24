@@ -60,12 +60,12 @@ class Encargo
     private $dependencia;
 
     /**
-     * @var Coleccion
+     * @var IColeccion
      */
     private $movimientos;
 
     /**
-     * @var Coleccion
+     * @var IColeccion
      */
     private $declaraciones;
 

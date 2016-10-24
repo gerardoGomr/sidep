@@ -1,13 +1,13 @@
 <?php
 namespace Sidep\Infraestructura\ServidoresPublicos;
 
-//use Sidep\Dominio\Listas\Coleccion;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use PDOException;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Doctrine\ORM\EntityManager;
-use Sidep\Exceptions\PDO\PDOLogger;
+use Sidep\Exceptions\SidepLogger;
 
 /**
  * Class DoctrineEncargosRepositorio
@@ -47,8 +47,8 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
 
             return $encargo[0];
 
-        } catch (\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return null;
         }
@@ -68,20 +68,16 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
                 ->setParameter('nombres', "%$parametro%")
                 ->setMaxResults(50);
 
-            $encargo = $query->getResult();
+            $encargos = $query->getResult();
 
-            if (count($encargo) === 0) {
+            if (count($encargos) === 0) {
                 return null;
             }
 
-            /*foreach ( $encargo as $encargo ) {
-                $encargos->agregar($encargo);
-            }*/
+            return $encargos;
 
-            return $encargo;
-
-        } catch(\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch(PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
 
             return null;
@@ -101,8 +97,8 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
             $this->entityManager->flush();
             return true;
 
-        } catch (\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return false;
         }
@@ -135,8 +131,8 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
 
             return $encargo[0];
 
-        } catch(\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch(PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
 
             return null;
@@ -162,8 +158,8 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
 
             return true;
 
-        } catch(\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch(PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
 
             return false;
@@ -181,10 +177,49 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
             $this->entityManager->flush();
             return true;
 
-        } catch (\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return false;
+        }
+    }
+
+    /**
+     * obtener una lista de encargos por los parametros
+     * @param array $parametros
+     * @return array|null
+     */
+    public function obtenerEncargosPor(array $parametros)
+    {
+        // TODO: Implement obtenerEncargosPor() method.
+        try {
+
+            $where = '';
+
+            if (!is_null($parametros['dependencia'])) {
+                $where = ' AND d.id = :dependencia';
+            }
+            $query   = $this->entityManager->createQuery("SELECT e, c, p, s, d, m FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s JOIN e.dependencia d JOIN e.movimientos m WHERE m.fecha BETWEEN :fecha1 AND :fecha2 $where ORDER BY e.id DESC")
+                ->setParameter('fecha1', $parametros['fecha1'])
+                ->setParameter('fecha2', $parametros['fecha2']);
+
+            $encargo = $query->getResult();
+
+            if (count($encargo) === 0) {
+                return null;
+            }
+
+            /*foreach ( $encargo as $encargo ) {
+                $encargos->agregar($encargo);
+            }*/
+
+            return $encargo;
+
+        } catch(PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+
+            return null;
         }
     }
 }

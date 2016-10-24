@@ -1,0 +1,15 @@
+Sidep\Dominio\Declaraciones\OficioRequerimiento:
+  type: entity
+  table: oficio_requerimiento
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    folio:
+      type: string
+      column: folio
+    fecha:
+      type: date
+      column: fecha

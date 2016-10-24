@@ -1,4 +1,4 @@
-@extends('app')
+@extends('declarantes.app')
 
 @section('contenido')
     <div class="row error">

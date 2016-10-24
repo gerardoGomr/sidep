@@ -1,5 +1,9 @@
 Sidep\Dominio\ServidoresPublicos\Declaracion:
   type: entity
+  embedded:
+    requerimiento:
+      class: Requerimiento
+      columnPrefix: false
   table: declaracion
   id:
     id:
@@ -11,6 +15,9 @@ Sidep\Dominio\ServidoresPublicos\Declaracion:
       type: integer
       nullable: false
       column: declaracion_tipo
+    estatus:
+      type: integer
+      column: estatus
     fechaGeneracion:
       type: date
       nullable: false
@@ -33,26 +40,6 @@ Sidep\Dominio\ServidoresPublicos\Declaracion:
       type: boolean
       nullable: true
       column: tiene_requerimiento
-    numeroRequerimiento:
-      type: string
-      length: 50
-      nullable: true
-      column: numero_requerimiento
-    fechaGeneracionRequerimiento:
-      type: date
-      length: 10
-      nullable: true
-      column: fecha_generacion_requerimiento
-    fechaRecepcionRequerimiento:
-      type: date
-      length: 10
-      nullable: true
-      column: fecha_recepcion_requerimiento
-    fechaPlazoCumplimiento:
-      type: date
-      length: 10
-      nullable: true
-      column: fecha_nuevo_plazo
     sancionada:
       type: boolean
       nullable: true
@@ -62,6 +49,12 @@ Sidep\Dominio\ServidoresPublicos\Declaracion:
       length: 10
       nullable: true
       column: fecha_envio_fp
+    numeroOficioSancion:
+      type: string
+      column: numero_oficio_sancion
+    requerimientoAbierto:
+      type: boolean
+      column: requerimiento_abierto
   manyToOne:
     encargo:
       targetEntity: Encargo
@@ -69,4 +62,10 @@ Sidep\Dominio\ServidoresPublicos\Declaracion:
       joinColumn:
         name: encargo_id
         referencedColumnName: id
-      cascade: ["persist", "refresh"]
+      cascade: [persist, refresh]
+    oficioRequerimiento:
+      targetEntity: Sidep\Dominio\Declaraciones\OficioRequerimiento
+      joinColumn:
+        name: oficio_requerimiento_id
+        referencedColumnName: id
+      cascade: [persist]

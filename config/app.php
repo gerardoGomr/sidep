@@ -149,7 +149,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -161,7 +161,10 @@ return [
         Sidep\Providers\EncargosRepositorioServiceProvider::class,
         Sidep\Providers\DependenciasRepositorioServiceProvider::class,
         Sidep\Providers\PuestosRepositorioServiceProvider::class,
-        Sidep\Providers\ServidoresPublicosRepositorioServiceProvider::class
+        Sidep\Providers\ServidoresPublicosRepositorioServiceProvider::class,
+        Sidep\Providers\MovimientosRepositorioServiceProvider::class,
+        Sidep\Providers\DeclaracionesRepositorioServiceProvider::class,
+        Sidep\Providers\FoliosRepositorioServiceProvider::class
     ],
 
     /*
@@ -210,6 +213,7 @@ return [
         'EntityManager' => LaravelDoctrine\ORM\Facades\EntityManager::class,
         'Registry'      => LaravelDoctrine\ORM\Facades\Registry::class,
         'Doctrine'      => LaravelDoctrine\ORM\Facades\Doctrine::class,
+        'Excel'         => Maatwebsite\Excel\Facades\Excel::class
     ],
 
 ];

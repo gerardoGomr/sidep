@@ -9,7 +9,7 @@ namespace Sidep\Dominio\ServidoresPublicos;
  */
 abstract class MovimientoTipo
 {
-    const ALTA               = 1;
-    const BAJA               = 2;
+    const ALTA                 = 1;
+    const BAJA                 = 2;
     const CAMBIO_ADSCRIPCION = 3;
 }

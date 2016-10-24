@@ -1,0 +1,15 @@
+Sidep\Dominio\ServidoresPublicos\Requerimiento:
+  type: embeddable
+  fields:
+    numeroRequerimiento:
+      type: string
+      column: numero_requerimiento
+    fechaGeneracionRequerimiento:
+      type: date
+      column: fecha_generacion_requerimiento
+    fechaRecepcionRequerimiento:
+      type: date
+      column: fecha_recepcion_requerimiento
+    fechaPlazoCumplimiento:
+      type: date
+      column: fecha_nuevo_plazo

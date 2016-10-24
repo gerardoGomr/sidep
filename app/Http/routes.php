@@ -11,7 +11,7 @@
 */
 
 /**
- * colección de rutas del sistema
+ * colección de rutas para la administración
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
@@ -98,10 +98,235 @@ Route::group(['prefix' => 'admin'], function() {
         /**
          * ruta para realizar una promoción
          */
-        Route::post('servidores/encargo/promocio', [
+        Route::post('servidores/encargo/promocion', [
             'as'   => 'encargo-promocion',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@promocion'
         ]);
+
+        /**
+         * ruta para visualizar el historial de movimientos
+         */
+        Route::get('consultas/reporte-del-dia', 'Admin\Consultas\ConsultasController@reporteDelDia');
+
+        /**
+         * ruta para buscar dentro del historial
+         */
+        Route::post('consultas/reporte-del-dia/buscar', [
+            'as'   => 'reporte-del-dia-buscar',
+            'uses' => 'Admin\Consultas\ConsultasController@buscarMovimientosDia'
+        ]);
+
+        /**
+         * ruta para exportar historial
+         */
+        Route::post('consultas/reporte-del-dia/exportar', [
+            'as'   => 'reporte-del-dia-exportar',
+            'uses' => 'Admin\Consultas\ConsultasController@exportarMovimientosDia'
+        ]);
+
+        /**
+         * ruta para mostrar las declaraciones que no se han realizado
+         */
+        Route::get('consultas/declaraciones/no-realizadas', 'Admin\Consultas\ConsultasController@declaracionesNoRealizadas');
+
+        /**
+         * ruta para buscar declaraciones no realizadas
+         */
+        Route::post('consultas/declaraciones/no-realizadas/buscar', [
+            'as'   => 'declaraciones-no-realizadas-buscar',
+            'uses' => 'Admin\Consultas\ConsultasController@buscarDeclaracionesNoRealizadas'
+        ]);
+
+        /**
+         * ruta para exportar las declaraciones no realizadas
+         */
+        Route::post('consultas/declaraciones/no-realizadas/exportar', [
+            'as'   => 'declaraciones-no-realizadas-exportar',
+            'uses' => 'Admin\Consultas\ConsultasController@exportarDeclaracionesNoRealizadas'
+        ]);
+
+        /**
+         * ruta para mostrar las declaraciones que ya se han realizado
+         */
+        Route::get('consultas/declaraciones/realizadas', 'Admin\Consultas\ConsultasController@declaracionesRealizadas');
+
+        /**
+         * ruta para buscar declaraciones realizadas
+         */
+        Route::post('consultas/declaraciones/realizadas/buscar', [
+            'as'   => 'declaraciones-realizadas-buscar',
+            'uses' => 'Admin\Consultas\ConsultasController@declaracionesRealizadasBuscar'
+        ]);
+
+        /**
+         * ruta para exportar declaraciones realizadas
+         */
+        Route::post('consultas/declaraciones/realizadas/exportar', [
+            'as'   => 'declaraciones-realizadas-exportar',
+            'uses' => 'Admin\Consultas\ConsultasController@declaracionesRealizadasExportar'
+        ]);
+
+        /**
+         * ruta para generar la vista de los omisos
+         */
+        Route::get('consultas/declaraciones/omisos', 'Admin\Consultas\ConsultasController@omisos');
+
+        /**
+         * ruta para generar la vista de desmarcar omisos
+         */
+        Route::get('consultas/declaraciones/omisos-desmarcar', 'Admin\Consultas\ConsultasController@desmarcarOmisosMostrar');
+
+        /**
+         * ruta para buscar a omisos con requerimientos activados
+         */
+        Route::post('consultas/declaraciones/omisos-desmarcar/buscar', [
+            'as'   => 'omisos-desmarcar-buscar',
+            'uses' => 'Admin\Consultas\ConsultasController@desmarcarOmisosBuscar'
+        ]);
+
+        /**
+         * ruta para buscar omisos
+         */
+        Route::post('consultas/declaraciones/omisos/buscar', [
+            'as'   => 'omisos-buscar',
+            'uses' => 'Admin\Consultas\ConsultasController@buscarOmisos'
+        ]);
+
+        /**
+         * ruta para marcar a los omisos
+         */
+        Route::post('consultas/declaraciones/omisos/marcar', [
+            'as'   => 'omisos-marcar',
+            'uses' => 'Admin\Consultas\ConsultasController@marcarOmisos'
+        ]);
+
+        /**
+         * ruta para desmarcar a los omisos marcados
+         */
+        Route::post('consultas/declaraciones/omisos-desmarcar', [
+            'as'   => 'omisos-desmarcar',
+            'uses' => 'Admin\Consultas\ConsultasController@desmarcarOmisos'
+        ]);
+
+        /**
+         * ruta para generar la vista de los requerimientos
+         */
+        Route::get('declaraciones/requerimientos', 'Admin\Declaraciones\DeclaracionesController@requerimientos');
+
+        /**
+         * ruta para generar el pdf de los requerimientos
+         */
+        Route::get('declaraciones/requerimientos/pdf/{declaracionId}', 'Admin\Declaraciones\DeclaracionesController@requerimientoPdf');
+
+        /**
+         * ruta para buscar requerimientos
+         */
+        Route::post('declaraciones/requerimientos/buscar', [
+            'as'   => 'requerimientos-buscar',
+            'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientosBuscar'
+        ]);
+
+        /**
+         * ruta para eliminar el requerimiento
+         */
+        Route::post('declaraciones/requerimientos', [
+            'as'   => 'requerimiento-eliminar',
+            'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientoEliminar'
+        ]);
+
+        /**
+         * ruta para generar la vista del retorno de requerimientos
+         */
+        Route::get('declaraciones/requerimientos/retorno', 'Admin\Declaraciones\DeclaracionesController@retornoRequerimientos');
+
+        /**
+         * ruta para buscar a las declaraciones que tienen requerimientos activos
+         */
+        Route::post('declaraciones/requerimientos/retorno/buscar', [
+            'as'   => 'requerimientos-retorno-buscar',
+            'uses' => 'Admin\Declaraciones\DeclaracionesController@retornoRequerimientosBuscar'
+        ]);
+
+        /**
+         * ruta para marcar el retorno de las declaraciones que tiene requerimientos activos
+         */
+        Route::post('declaraciones/requerimientos/retorno/marcar', [
+            'as'   => 'requerimientos-retorno-marcar',
+            'uses' => 'Admin\Declaraciones\DeclaracionesController@retornoRequerimientosMarcar'
+        ]);
+
+        /**
+         * ruta para generar la vista de la desmarcación de retorno de requerimientos
+         */
+        Route::get('declaraciones/requerimientos/desmarcar', 'Admin\Declaraciones\DeclaracionesController@requerimientosDesmarcarMostrar');
+
+        /**
+         * ruta para buscar a declaraciones que tienen requerimientos marcados de retorno
+         */
+        Route::post('declaraciones/requerimientos/desmarcar/buscar', [
+            'as'   => 'requerimientos-desmarcar-buscar',
+            'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientosDesmarcarBuscar'
+        ]);
+
+        /**
+         * ruta para desmarcar la recepción de requerimientos
+         */
+        Route::post('declaraciones/requerimientos/desmarcar', [
+            'as'   => 'requerimientos-desmarcar',
+            'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientosDesmarcar'
+        ]);
+
+        /**
+         * ruta para mostrar la vista de envíos a SFP
+         */
+        Route::get('declaraciones/envios-sfp/marcar', 'Admin\Declaraciones\DeclaracionesController@mostrarMarcarEnviosSFP');
+
+        /**
+         * ruta para buscar enviados a sfp
+         */
+        Route::post('declaraciones/envios-sfp/marcar-buscar', [
+            'as'   => 'envios-sfp-marcar-buscar',
+            'uses' => 'Admin\Declaraciones\DeclaracionesController@enviosSFPBuscar'
+        ]);
+
+        /**
+         * ruta para marcar a las declaraciones como enviadas a SFP
+         */
+        Route::post('declaraciones/envios-sfp/marcar', [
+            'as'   => 'enviados-sfp-marcar',
+            'uses' => 'Admin\Declaraciones\DeclaracionesController@marcarEnviosSFP'
+        ]);
+
+        /**
+         * ruta para mostrar la vista de los que ya fueron enviados a SFP
+         */
+        Route::get('declaraciones/enviados-sfp', 'Admin\Declaraciones\DeclaracionesController@mostrarEnviadosASFP');
+
+        /**
+         * ruta para buscar enviados a sfp
+         */
+        Route::post('declaraciones/enviados-sfp/marcar-buscar', [
+            'as'   => 'enviados-sfp-marcar-buscar',
+            'uses' => 'Admin\Declaraciones\DeclaracionesController@enviadosSFPBuscar'
+        ]);
+
+        /**
+         * ruta para eliminar la sanción
+         */
+        Route::post('declaraciones/enviados-sfp/sancion-eliminar', [
+            'as'   => 'sancion-eliminar',
+            'uses' => 'Admin\Declaraciones\DeclaracionesController@enviadosSFPEliminar'
+        ]);
+
+        /**
+         * ruta para generar la sanción en PDF
+         */
+        Route::get('declaraciones/enviados-sfp/pdf/{declaracionId}', 'Admin\Declaraciones\Declaracionescontroller@envioSancionPDF');
+
+        /**
+         * ruta para generar la vista de reportes de modificacion
+         */
+        Route::get('reportes/reporte-modificacion', 'Admin\Reportes\ReportesController@reporteModificacion');
     });
 
     /**
@@ -120,6 +345,16 @@ Route::group(['prefix' => 'admin'], function() {
      * ruta para cerrar la sesión de usuario
      */
     Route::get('logout', 'LoginController@logout');
+});
+
+/**
+ * Colección de rutas para los declarantes
+ * @version 1.0
+ */
+Route::group(['prefix' => 'declarantes'], function() {
+    Route::get('/', function () {
+        return view('declarantes.principal');
+    });
 });
 
 // login

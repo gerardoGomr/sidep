@@ -72,7 +72,7 @@
 		&.pull-left { padding-top: 7px; }		
 		a.dropdown-toggle {
 			font-size: 14px;
-			color: @inverseColor;
+			color: @defaultColor;
 			font-weight: 400;
 			.media .pull-left img {
 				width: 30px;
@@ -80,13 +80,13 @@
 				top: -5px;
 			}
 			
-			&:hover { text-decoration:none; background: none; color:@inverseColor;}
-			&:active, &:focus { color: @primaryColor; text-decoration:none; background: none;} 
+			&:hover { text-decoration:none; background: none; color:@defaultColor;}
+			&:active, &:focus { color: @defaultColor; text-decoration:none; background: none;}
 			.caret {
 				font-size: 13px;
-				border-top: 4px solid @inverseColor;
+				border-top: 4px solid @defaultColor;
 			}
-			&:active .caret, &:focus .caret { border-top: 4px solid @inverseColor;}
+			&:active .caret, &:focus .caret { border-top: 4px solid @defaultColor;}
 		}
 
 		&.dropdown-light {
@@ -104,7 +104,7 @@
 						i:before { color: #fff; }
 
 						&:hover,
-						&:focus { color: #fff !important; background: @primaryColor; }
+						&:focus { color: #fff !important; background: @defaultColor; }
 					}
 				}
 				li > a:hover { font-weight: 600; }
@@ -134,7 +134,7 @@
 					border: 10px solid transparent;
 					top: -11px;
 					border-top-width: 0;
-					border-bottom-color: @primaryColor;
+					border-bottom-color: @defaultColor;
 					position: absolute;
 					display: block;
 					right: 3px;
@@ -162,9 +162,9 @@
 		          		}
 		          	}
 					&.active a {
-						background-color: fade(@primaryColor, 20%);
-						color: darken(@primaryColor,20%);
-					  	&.glyphicons,  { i:before {color:@primaryColor; font-size:15px; top:8px; left:13px;}}
+						background-color: fade(@defaultColor, 20%);
+						color: darken(@defaultColor,20%);
+					  	&.glyphicons,  { i:before {color:@defaultColor; font-size:15px; top:8px; left:13px;}}
 					}
 	          	}
 			}

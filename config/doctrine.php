@@ -26,7 +26,9 @@ return [
             'meta'       => env('DOCTRINE_METADATA'),
             'connection' => env('DB_CONNECTION'),
             'namespaces' => [
-                'ServidoresPublicos' => 'Sidep\Dominio\ServidoresPublicos'
+                'ServidoresPublicos' => 'Sidep\Dominio\ServidoresPublicos',
+                'Folios'             => 'Sidep\Dominio\Folios',
+                'Declaraciones'      => 'Sidep\Dominio\Declaraciones'
             ],
             'paths'      => [
                 base_path('app/Dominio/ServidoresPublicos'),

@@ -1,5 +1,6 @@
 <?php
 namespace Sidep\Aplicacion;
+use Sidep\Aplicacion\Reportes\AbstractReporteCrystalReports;
 
 /**
  * Class Reporte
@@ -10,13 +11,13 @@ namespace Sidep\Aplicacion;
 class Reporte
 {
     /**
-     * @var IReporte
+     * @var AbstractReporteCrystalReports
      */
     protected $reporte;
 
     /**
      * Reporte constructor.
-     * @param IReporte $reporte
+     * @param AbstractReporteCrystalReports $reporte
      */
     public function __construct($reporte)
     {
@@ -24,7 +25,7 @@ class Reporte
     }
 
     /**
-     * @return IReporte
+     * @return AbstractReporteCrystalReports
      */
     public function getReporte()
     {

@@ -27,6 +27,13 @@ interface EncargosRepositorio extends Repositorio
     public function obtenerEncargos($parametro = '');
 
     /**
+     * obtener una lista de encargos por los parametros
+     * @param array $parametros
+     * @return array|null
+     */
+    public function obtenerEncargosPor(array $parametros);
+
+    /**
      * verificar que el encargo exista
      * @param int $id
      * @return bool
