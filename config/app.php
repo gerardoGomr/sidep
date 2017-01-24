@@ -164,7 +164,8 @@ return [
         Sidep\Providers\ServidoresPublicosRepositorioServiceProvider::class,
         Sidep\Providers\MovimientosRepositorioServiceProvider::class,
         Sidep\Providers\DeclaracionesRepositorioServiceProvider::class,
-        Sidep\Providers\FoliosRepositorioServiceProvider::class
+        Sidep\Providers\FoliosRepositorioServiceProvider::class,
+        Sidep\Providers\ModulosRepositorioServiceProvider::class
     ],
 
     /*

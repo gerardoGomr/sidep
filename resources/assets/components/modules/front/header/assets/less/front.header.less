@@ -3,16 +3,16 @@
 	height: 350px;
 	margin: 0;
 	text-align: center;
-	color: @defaultColor;
-	background: #373737;
+	color: @inverseColor;
+	background: url(../img/principal.jpg);
 	.fishes {
 		padding: 30px 0;
 		position: relative;
 		height: 350px;
-		background: url('../../images/front/fishes-background.jpg') left bottom repeat-x;
+		background: url('../img/main.jpg') left bottom;
 	
-	  	-moz-animation: swim 80s linear 0s infinite;
-		-webkit-animation: swim 80s linear 0s infinite;
+	  	//-moz-animation: swim 80s linear 0s infinite;
+		//-webkit-animation: swim 80s linear 0s infinite;
 			
 		@-moz-keyframes swim {
 		    from { background-position: 200% 100%, 0 100%; }
@@ -25,7 +25,7 @@
 	}
 	.title {
 		margin:15px 0 10px;
-		color: #fff;	
+		color: @inverseColor;
 		font-weight: 300;
 		font-size: 60px;
 		span {

@@ -16,7 +16,7 @@
  * @version 1.0
  */
 Route::group(['prefix' => 'admin'], function() {
-    Route::group(['middleware' => ['usuarioC3Autenticado']], function() {
+    Route::group(['middleware' => ['usuarioC3Autenticado', 'menu']], function() {
 
         /**
          * ruta para mostrar la vista principal
@@ -36,11 +36,24 @@ Route::group(['prefix' => 'admin'], function() {
         Route::get('servidores/alta', 'Admin\ServidoresPublicos\ServidoresPublicosController@alta');
 
         /**
+         * ruta para mostrar la vista de alta de encargo de servidor público
+         */
+        Route::get('servidores/alta/importar', 'Admin\ServidoresPublicos\ServidoresPublicosController@altaImportar');
+
+        /**
          * ruta para buscar a servidores públicos
          */
         Route::post('servidores/busqueda',[
             'as'   => 'servidores-busqueda',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@busqueda'
+        ]);
+
+        /**
+         * ruta para guardar encargos alta mediante excel
+         */
+        Route::post('servidores/alta/excel', [
+            'as'   => 'servidores-encargo-alta-excel',
+            'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@registrarEncargoExcel'
         ]);
 
         /**
@@ -51,6 +64,9 @@ Route::group(['prefix' => 'admin'], function() {
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@registrarEncargo'
         ]);
 
+        /**
+         * ruta para ver el detalle
+         */
         Route::post('servidores/detalle', [
             'as'   => 'servidores-detalle',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@detalle'
@@ -327,6 +343,31 @@ Route::group(['prefix' => 'admin'], function() {
          * ruta para generar la vista de reportes de modificacion
          */
         Route::get('reportes/reporte-modificacion', 'Admin\Reportes\ReportesController@reporteModificacion');
+
+        /**
+         * ruta para generar la vista de usuarios
+         */
+        Route::get('usuarios', 'Admin\Usuarios\UsuariosController@index');
+
+        /**
+         * ruta para generar usuario
+         */
+        Route::post('usuarios/nuevo', 'Admin\Usuarios\UsuariosController@generar');
+
+        /**
+         * ruta para generar la vista de usuarios
+         */
+        Route::post('usuarios', 'Admin\Usuarios\UsuariosController@buscar');
+
+        /**
+         * ruta para generar el form de privilegios
+         */
+        Route::post('usuarios/privilegios/editar', 'Admin\Usuarios\UsuariosController@generarVistaPrivilegios');
+
+        /**
+         * ruta para asignar privilegios
+         */
+        Route::post('usuarios/privilegios', 'Admin\Usuarios\UsuariosController@asignarPrivilegios');
     });
 
     /**
@@ -354,6 +395,10 @@ Route::group(['prefix' => 'admin'], function() {
 Route::group(['prefix' => 'declarantes'], function() {
     Route::get('/', function () {
         return view('declarantes.principal');
+    });
+
+    Route::get('cuenta/nueva-contrasenia', function() {
+        return view('declarantes.cuentas.recuperar_contrasenia');
     });
 });
 

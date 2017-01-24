@@ -12,37 +12,37 @@ $(function()
 		
 		$(this).bootstrapWizard(
 		{
-			onNext: function(tab, navigation, index) 
-			{
-				if(index==1)
-				{
-					// Make sure we entered the title
-					if(!wiz.find('#inputTitle').val()) {
-						alert('You must enter the product title');
-						wiz.find('#inputTitle').focus();
-						return false;
-					}
-				}
-			}, 
-			onLast: function(tab, navigation, index) 
-			{
-				// Make sure we entered the title
-				if(!wiz.find('#inputTitle').val()) {
-					alert('You must enter the product title');
-					wiz.find('#inputTitle').focus();
-					return false;
-				}
-			}, 
-			onTabClick: function(tab, navigation, index) 
-			{
-				// Make sure we entered the title
-				if(!wiz.find('#inputTitle').val()) {
-					alert('You must enter the product title');
-					wiz.find('#inputTitle').focus();
-					return false;
-				}
-			},
-			onTabShow: function(tab, navigation, index) 
+			// onNext: function(tab, navigation, index)
+			// {
+			// 	if(index==1)
+			// 	{
+			// 		// Make sure we entered the title
+			// 		if(!wiz.find('#inputTitle').val()) {
+			// 			alert('You must enter the product title');
+			// 			wiz.find('#inputTitle').focus();
+			// 			return false;
+			// 		}
+			// 	}
+			// },
+			// onLast: function(tab, navigation, index)
+			// {
+			// 	// Make sure we entered the title
+			// 	if(!wiz.find('#inputTitle').val()) {
+			// 		alert('You must enter the product title');
+			// 		wiz.find('#inputTitle').focus();
+			// 		return false;
+			// 	}
+			// },
+			// onTabClick: function(tab, navigation, index)
+			// {
+			// 	// Make sure we entered the title
+			// 	if(!wiz.find('#inputTitle').val()) {
+			// 		alert('You must enter the product title');
+			// 		wiz.find('#inputTitle').focus();
+			// 		return false;
+			// 	}
+			// },
+			onTabShow: function(tab, navigation, index)
 			{
 				var $total = navigation.find('li:not(.status)').length;
 				var $current = index+1;
@@ -83,10 +83,10 @@ $(function()
 			lastSelector: '.last'
 		});
 
-		wiz.find('.finish').click(function() 
+		/*wiz.find('.finish').click(function()
 		{
 			alert('Finished!, Starting over!');
 			wiz.find("a[data-toggle*='tab']:first").trigger('click');
-		});
+		});*/
 	});
 });

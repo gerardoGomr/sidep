@@ -1,5 +1,6 @@
 <?php
 namespace Sidep\Dominio\Repositorios;
+use Sidep\Dominio\Listas\IColeccion;
 
 /**
  * Interface Repositorio
@@ -10,7 +11,7 @@ namespace Sidep\Dominio\Repositorios;
 interface Repositorio
 {
     /**
-     * @return array
+     * @return IColeccion
      */
     public function obtenerTodos();
 

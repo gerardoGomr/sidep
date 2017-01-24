@@ -58,10 +58,10 @@ class LaravelMailer
      */
     public function __construct($vista, Encargo $encargo, $asunto, $adjuntos = null)
     {
-        $this->vista           = $vista;
+        $this->vista    = $vista;
         $this->encargo  = $encargo;
-        $this->asunto          = $asunto;
-        $this->adjuntos        = $adjuntos;
+        $this->asunto   = $asunto;
+        $this->adjuntos = $adjuntos;
     }
 
     /**
@@ -70,30 +70,27 @@ class LaravelMailer
      */
     public function enviar()
     {
-        try {
-            if (!$this->encargo->tieneEmail()) {
-                throw new ServidorPublicoDoesntHaveAnEmailException('EL SERVIDOR PÚBLICO' . $encargo->getServidorPublico()->nombreCompleto() . ' NO CUENTA CON EMAIL PARA EL ENVÍO DE NOTIFICACIÓN.');
-            }
 
-            $this->datos = [
-                'encargo' => $this->encargo
-            ];
-
-            Mail::send($this->vista, $this->datos, function ($message) {
-                $message->from($this->remitente);
-                $message->subject($this->asunto);
-                $message->to($this->encargo->getServidorPublico()->getEmail());
-
-                // si tiene adjunto, incluírlo
-                if (!is_null($this->adjuntos)) {
-                    $message->attach($this->adjuntos);
-                }
-            });
-
-        } catch (ServidorPublicoDoesntHaveAnEmailException $e) {
-            $logger = new Logger(new MonologLogger('mailer_exception'), new StreamHandler(storage_path() . '/logs/mailer/mailer_' . date('Y-m-d') . '.log', Logger::ERROR));
-            $logger->log($e);
+        if (!$this->encargo->tieneEmail()) {
+            return false;
         }
+
+        $this->datos = [
+            'encargo' => $this->encargo
+        ];
+
+        Mail::send($this->vista, $this->datos, function ($message) {
+            $message->from($this->remitente);
+            $message->subject($this->asunto);
+            $message->to($this->encargo->getServidorPublico()->getEmail());
+
+            // si tiene adjunto, incluírlo
+            if (!is_null($this->adjuntos)) {
+                $message->attach($this->adjuntos);
+            }
+        });
+
+        return true;
     }
 
     /**

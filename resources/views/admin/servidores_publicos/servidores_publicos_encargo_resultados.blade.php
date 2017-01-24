@@ -1,7 +1,7 @@
 @if (isset($encargos) && !is_null($encargos))
-    <table id="tablaResultados" class="table table-hover text-small">
+    <table id="tablaResultados" class="table table-bordered table-hover table-primary text-small">
         <thead>
-            <tr class="bg-primary">
+            <tr>
                 <th role="columnheader">NOMBRE</th>
                 <th role="columnheader">CURP</th>
                 <th role="columnheader">RFC</th>
@@ -26,6 +26,16 @@
             @endforeach
         </tbody>
     </table>
+
+    <style>
+        tr.resultados {
+            cursor: pointer;
+        }
+
+        tr.resultados:hover {
+            background: #c0c0c0;
+        }
+    </style>
 @else
     <h5 class="center">NO SE ENCONTRARON COINCIDENCIAS CON EL DATO DE BÚSQUEDA. POR FAVOR, CAPTURE LOS DATOS DEL SERVIDOR PÚBLICO</h5>
 @endif

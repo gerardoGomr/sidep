@@ -64,10 +64,10 @@ class Encargo extends \Sidep\Dominio\ServidoresPublicos\Encargo implements \Doct
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'servidorPublico', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'adscripcion', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'cuentaAcceso', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'puesto', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'fechaAlta', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'activo', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'dependencia', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'movimientos', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'declaraciones', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'exento'];
+            return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'servidorPublico', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'adscripcion', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'cuentaAcceso', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'puesto', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'fechaAlta', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'activo', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'usuarioSidep', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'tipoUsuario', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'dependencia', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'movimientos', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'declaraciones', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'privilegios', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'exento'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'servidorPublico', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'adscripcion', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'cuentaAcceso', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'puesto', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'fechaAlta', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'activo', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'dependencia', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'movimientos', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'declaraciones', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'exento'];
+        return ['__isInitialized__', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'id', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'servidorPublico', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'adscripcion', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'cuentaAcceso', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'puesto', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'fechaAlta', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'activo', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'usuarioSidep', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'tipoUsuario', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'dependencia', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'movimientos', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'declaraciones', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'privilegios', '' . "\0" . 'Sidep\\Dominio\\ServidoresPublicos\\Encargo' . "\0" . 'exento'];
     }
 
     /**
@@ -268,6 +268,28 @@ class Encargo extends \Sidep\Dominio\ServidoresPublicos\Encargo implements \Doct
     /**
      * {@inheritDoc}
      */
+    public function esUsuarioSidep()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'esUsuarioSidep', []);
+
+        return parent::esUsuarioSidep();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function tipoUsuario()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'tipoUsuario', []);
+
+        return parent::tipoUsuario();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function estaExento()
     {
 
@@ -329,6 +351,28 @@ class Encargo extends \Sidep\Dominio\ServidoresPublicos\Encargo implements \Doct
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDeclaraciones', []);
 
         return parent::getDeclaraciones();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPrivilegios()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPrivilegios', []);
+
+        return parent::getPrivilegios();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function inicializarModulos(\Sidep\Dominio\Listas\IColeccion $privilegios)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'inicializarModulos', [$privilegios]);
+
+        return parent::inicializarModulos($privilegios);
     }
 
     /**
@@ -428,6 +472,94 @@ class Encargo extends \Sidep\Dominio\ServidoresPublicos\Encargo implements \Doct
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'obtenerFechaAnteriorAPromocion', [$fecha]);
 
         return parent::obtenerFechaAnteriorAPromocion($fecha);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function tieneMovimientos()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'tieneMovimientos', []);
+
+        return parent::tieneMovimientos();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function obtenerUltimoMovimiento()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'obtenerUltimoMovimiento', []);
+
+        return parent::obtenerUltimoMovimiento();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function elUltimoMovimientoEsBaja()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'elUltimoMovimientoEsBaja', []);
+
+        return parent::elUltimoMovimientoEsBaja();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function elUltimoMovimientoEsPorTerminoEncargo()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'elUltimoMovimientoEsPorTerminoEncargo', []);
+
+        return parent::elUltimoMovimientoEsPorTerminoEncargo();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generarUsuarioSidep($usuarioTipo)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'generarUsuarioSidep', [$usuarioTipo]);
+
+        return parent::generarUsuarioSidep($usuarioTipo);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removerPrivilegios()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removerPrivilegios', []);
+
+        return parent::removerPrivilegios();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function asignarPrivilegio(\Sidep\Dominio\ServidoresPublicos\EncargoPrivilegio $encargoPrivilegio)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'asignarPrivilegio', [$encargoPrivilegio]);
+
+        return parent::asignarPrivilegio($encargoPrivilegio);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function tieneElPrivilegio(\Sidep\Dominio\Usuarios\Modulo $modulo)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'tieneElPrivilegio', [$modulo]);
+
+        return parent::tieneElPrivilegio($modulo);
     }
 
 }

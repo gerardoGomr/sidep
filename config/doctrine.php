@@ -28,7 +28,8 @@ return [
             'namespaces' => [
                 'ServidoresPublicos' => 'Sidep\Dominio\ServidoresPublicos',
                 'Folios'             => 'Sidep\Dominio\Folios',
-                'Declaraciones'      => 'Sidep\Dominio\Declaraciones'
+                'Declaraciones'      => 'Sidep\Dominio\Declaraciones',
+                'Usuarios'           => 'Sidep\Dominio\Usuarios',
             ],
             'paths'      => [
                 base_path('app/Dominio/ServidoresPublicos'),

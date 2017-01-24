@@ -43,7 +43,7 @@ class Movimiento
 
     /**
      * Movimiento constructor.
-     * @param string $movimientoTipo
+     * @param int $movimientoTipo
      * @param DateTime $fecha
      * @param Encargo $encargo
      * @param null $movimientoMotivo

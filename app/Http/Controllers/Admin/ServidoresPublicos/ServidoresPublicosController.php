@@ -1,7 +1,9 @@
 <?php
 namespace Sidep\Http\Controllers\Admin\ServidoresPublicos;
 
-use \DateTime;
+use DateTime;
+use Exception;
+use Maatwebsite\Excel\Facades\Excel;
 use Sidep\Aplicacion\ColeccionArray;
 use Sidep\Aplicacion\Reporte;
 use Sidep\Aplicacion\Reportes\CartaCompromisoCrystalReports;
@@ -10,8 +12,10 @@ use Sidep\Aplicacion\TransformadorMayusculas;
 use Sidep\Dominio\ServidoresPublicos\CuentaAcceso;
 use Sidep\Dominio\ServidoresPublicos\Declaracion;
 use Sidep\Dominio\ServidoresPublicos\DeclaracionTipo;
+use Sidep\Dominio\ServidoresPublicos\Dependencia;
 use Sidep\Dominio\ServidoresPublicos\Domicilio;
 use Sidep\Dominio\ServidoresPublicos\Encargo;
+use Sidep\Dominio\ServidoresPublicos\EstadoCivil;
 use Sidep\Dominio\ServidoresPublicos\Movimiento;
 use Sidep\Dominio\ServidoresPublicos\MovimientoMotivo;
 use Sidep\Dominio\ServidoresPublicos\MovimientoTipo;
@@ -25,6 +29,9 @@ use Sidep\Http\Controllers\Controller;
 use Sidep\Http\Requests\FormAltaRequest;
 use Sidep\Http\Requests\FormEditarServidorPublico;
 use Sidep\Aplicacion\LaravelMailer;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Sidep\Exceptions\SidepLogger;
 
 /**
  * Class ServidoresPublicosController
@@ -75,6 +82,17 @@ class ServidoresPublicosController extends Controller
     }
 
     /**
+     * mostrar vista de importar excel para alta
+     * @param DependenciasRepositorio $dependenciasRepositorio
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function altaImportar(DependenciasRepositorio $dependenciasRepositorio)
+    {
+        $dependencias = $dependenciasRepositorio->obtenerTodos();
+        return view('admin.servidores_publicos.servidores_publicos_encargo_alta_excel', compact('dependencias'));
+    }
+
+    /**
      * buscar un servidor público para el formulario de alta
      * se puede buscar por nombres, curp, rfc o dependencia
      * @param Request $request
@@ -89,7 +107,10 @@ class ServidoresPublicosController extends Controller
         $origen       = $request->get('origen');
         $respuesta    = [];
 
-        $encargos === null ? $respuesta['estatus'] = 'fail' : $respuesta['estatus'] = 'OK';
+        if (is_null($encargos)) {
+            $respuesta['estatus'] = 'fail';
+            return response()->json($respuesta);
+        }
 
         switch ($origen) {
             case 'alta':
@@ -102,7 +123,7 @@ class ServidoresPublicosController extends Controller
                     compact('encargos'))->render();
                 break;
         }
-
+        $respuesta['estatus']   = 'OK';
         $respuesta['contenido'] = $vista;
 
         return response()->json($respuesta);
@@ -196,8 +217,8 @@ class ServidoresPublicosController extends Controller
         }
 
         // enviar correo al servidor público si tiene
-        /*$mailer = new LaravelMailer('mails.encargo_alta', $encargo, 'ALTA DE ENCARGO');
-        $mailer->enviar();*/
+        $mailer = new LaravelMailer('mails.encargo_alta', $encargo, 'ALTA DE ENCARGO');
+        $mailer->enviar();
         // ================================================================================
 
         $respuesta['id']   = $encargo->getId();
@@ -471,7 +492,7 @@ class ServidoresPublicosController extends Controller
         try {
             $encargo->recibirPromocion($puesto, $adscripcion, $movimientoBaja, $movimientoAlta, $declaracionConclusion, $declaracionInicial);
 
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
             $respuesta['estatus'] = 'fail';
             $respuesta['error']   = $e->getMessage();
 
@@ -488,5 +509,268 @@ class ServidoresPublicosController extends Controller
         $respuesta['html']    = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
 
         return response()->json($respuesta);
+    }
+
+    public function registrarEncargoExcel(Request $request, PuestosRepositorio $puestosRepositorio, DependenciasRepositorio $dependenciasRepositorio)
+    {
+        if($request->hasFile('archivo')) {
+            $path                  = $request->file('archivo')->getRealPath();
+            $dependenciaId         = (int)$request->get('dependencia');
+            $dependencia           = $dependenciasRepositorio->obtenerPorId($dependenciaId);
+            $fechaAlta             = $request->get('fechaAlta');
+            $servidoresSinImportar = [];
+            $registrosProcesados   = 0;
+            $registrosImportados   = 0;
+            $registrosNoImportados = 0;
+
+            Excel::load($path, function ($reader) use ($puestosRepositorio, $dependencia, $fechaAlta, &$servidoresSinImportar, &$registrosImportados, &$registrosNoImportados, &$registrosProcesados) {
+                $excel     = $reader->getExcel();
+                //$hoja      = $excel->setSheetByIndex(0);
+                $maximoRow = $excel->setActiveSheetIndex(0)->getHighestRow();
+
+                for ($row = 9; $row <= $maximoRow; $row++) {
+                    // validar la primer columna, que sea curp
+                    $curp        = $excel->getActiveSheet()->getCell("B$row")->getValue();
+                    $nombre      = $excel->getActiveSheet()->getCell("C$row")->getValue();
+                    $paterno     = $excel->getActiveSheet()->getCell("D$row")->getValue();
+                    $materno     = $excel->getActiveSheet()->getCell("E$row")->getValue();
+                    $puesto      = $excel->getActiveSheet()->getCell("F$row")->getValue();
+                    $categoria   = $excel->getActiveSheet()->getCell("G$row")->getValue();
+                    $adscripcion = $excel->getActiveSheet()->getCell("H$row")->getValue();
+                    $movimiento  = $excel->getActiveSheet()->getCell("I$row")->getValue();
+                    $calle       = $excel->getActiveSheet()->getCell("K$row")->getValue();
+                    $num         = $excel->getActiveSheet()->getCell("L$row")->getValue();
+                    $colonia     = $excel->getActiveSheet()->getCell("M$row")->getValue();
+                    $cp          = $excel->getActiveSheet()->getCell("N$row")->getValue();
+                    $municipio   = $excel->getActiveSheet()->getCell("O$row")->getValue();
+
+                    if (trim($movimiento) === 'ALTA') {
+                        // validar la curp en el sistema
+                        $encargos = $this->encargosRepositorio->obtenerEncargos($curp);
+
+                        if (is_null($encargos)) {
+                            // buscar por nombre
+                            $encargos = $this->encargosRepositorio->obtenerEncargos($nombre . $paterno . $materno);
+
+                            if (is_null($encargos)) {
+                                // es nuevo encargo
+                                $servidorPublico = $this->crearServidor($nombre, $paterno, $materno, $curp, $calle, $num, $colonia, $cp, $municipio);
+
+                                try {
+                                    $encargo = $this->crearNuevoEncargo($servidorPublico, $categoria, $adscripcion, $dependencia, $puestosRepositorio);
+                                    if (!$this->generarNuevoEncargo($encargo, $fechaAlta)) {
+                                        $registrosNoImportados++;
+                                    } else {
+                                        $registrosImportados++;
+                                    }
+
+                                } catch (Exception $e) {
+                                    // loguear el error
+                                    $pdoLogger = new SidepLogger(new Logger('exception'), new StreamHandler(storage_path() . '/logs/exceptions/exc_' . date('Y-m-d') . '.log', Logger::ERROR));
+                                    $pdoLogger->log($e);
+
+                                    // meter a listado de los que no se pueden ingresar
+                                    $datosDelServidor = [
+                                        'nombre' => $nombre . ' ' . $paterno . ' ' . $materno,
+                                        'curp'   => $curp
+                                    ];
+
+                                    $servidoresSinImportar[] = $datosDelServidor;
+                                    $registrosNoImportados++;
+                                }
+
+                            } else {
+                                // verificar el ultimo movimiento, en caso que tenga baja, reactivar
+                                // si no es mov. de baja, rechazar
+                                if (count($encargos) === 1) {
+                                    $encargo = array_first($encargos);
+
+                                    if ($encargo->elUltimoMovimientoEsBaja()) {
+                                        if ($encargo->elUltimoMovimientoEsPorTerminoEncargo()) {
+                                            if (!$this->generarNuevoEncargo($encargo, $fechaAlta)) {
+                                                $registrosNoImportados++;
+                                            } else {
+                                                $registrosImportados++;
+                                            }
+
+                                        } else {
+                                            // meter a listado de los que no se pueden ingresar
+                                            $datosDelServidor = [
+                                                'nombre' => $encargo->getServidorPublico()->nombreCompleto(),
+                                                'curp'   => $encargo->getServidorPublico()->getCurp()
+                                            ];
+
+                                            $servidoresSinImportar[] = $datosDelServidor;
+                                            $registrosNoImportados++;
+                                        }
+                                    } else {
+                                        // meter a listado de los que no se pueden ingresar
+                                        $datosDelServidor = [
+                                            'nombre' => $encargo->getServidorPublico()->nombreCompleto(),
+                                            'curp'   => $encargo->getServidorPublico()->getCurp()
+                                        ];
+
+                                        $servidoresSinImportar[] = $datosDelServidor;
+                                        $registrosNoImportados++;
+                                    }
+                                } else {
+                                    // meter a listado de los que no se pueden ingresar
+                                    $datosDelServidor = [
+                                        'nombre' => $nombre . ' ' . $paterno . ' ' . $materno,
+                                        'curp'   => $curp
+                                    ];
+
+                                    $servidoresSinImportar[] = $datosDelServidor;
+                                    $registrosNoImportados++;
+                                }
+                            }
+                        } else {
+                            // verificar el ultimo movimiento, en caso que tenga baja, reactivar
+                            // si no es mov. de baja, rechazar
+                            if (count($encargos) === 1) {
+                                $encargo = array_first($encargos);
+
+                                if ($encargo->elUltimoMovimientoEsBaja()) {
+                                    if ($encargo->elUltimoMovimientoEsPorTerminoEncargo()) {
+                                        if (!$this->generarNuevoEncargo($encargo, $fechaAlta)) {
+                                            $registrosNoImportados++;
+                                        } else {
+                                            $registrosImportados++;
+                                        }
+
+                                    } else {
+                                        // meter a listado de los que no se pueden ingresar
+                                        $datosDelServidor = [
+                                            'nombre' => $encargo->getServidorPublico()->nombreCompleto(),
+                                            'curp'   => $encargo->getServidorPublico()->getCurp()
+                                        ];
+
+                                        $servidoresSinImportar[] = $datosDelServidor;
+                                        $registrosNoImportados++;
+                                    }
+                                } else {
+                                    // meter a listado de los que no se pueden ingresar
+                                    $datosDelServidor = [
+                                        'nombre' => $encargo->getServidorPublico()->nombreCompleto(),
+                                        'curp'   => $encargo->getServidorPublico()->getCurp()
+                                    ];
+
+                                    $servidoresSinImportar[] = $datosDelServidor;
+                                    $registrosNoImportados++;
+                                }
+                            } else {
+                                // meter a listado de los que no se pueden ingresar
+                                $datosDelServidor = [
+                                    'nombre' => $nombre . ' ' . $paterno . ' ' . $materno,
+                                    'curp'   => $curp
+                                ];
+
+                                $servidoresSinImportar[] = $datosDelServidor;
+                                $registrosNoImportados++;
+                            }
+                        }
+                    } else {
+                        // meter a listado de los que no se pueden ingresar
+                        $datosDelServidor = [
+                            'nombre' => $nombre . ' ' . $paterno . ' ' . $materno,
+                            'curp'   => $curp
+                        ];
+
+                        $servidoresSinImportar[] = $datosDelServidor;
+                        $registrosNoImportados++;
+                    }
+
+                    $registrosProcesados++;
+                }
+            });
+
+            return response()->json([
+                'estatus' => 'OK',
+                'html'    => view('admin.servidores_publicos.servidores_publicos_resultado_importacion', compact('servidoresSinImportar', 'registrosProcesados', 'registrosImportados', 'registrosNoImportados'))->render()
+            ]);
+
+        } else {
+            return response()->json([
+                'estatus' => 'fail',
+                'mensaje' => 'EL ARCHIVO NO SE SUBIÓ AL SERVIDOR'
+            ]);
+        }
+    }
+
+    /**
+     * crear un nuevo servidor publico
+     * @param string $nombre
+     * @param string $paterno
+     * @param string $materno
+     * @param string $curp
+     * @param string $calle
+     * @param string $numero
+     * @param string $colonia
+     * @param string $cp
+     * @param string $municipio
+     * @return ServidorPublico
+     * @throws \Sidep\Dominio\Excepciones\EstadoCivilInvalidoException
+     */
+    private function crearServidor($nombre, $paterno, $materno, $curp, $calle, $numero, $colonia, $cp, $municipio)
+    {
+        // crear objeto servidor
+        $servidor = new ServidorPublico();
+        $servidor->registrar($nombre, $paterno, $materno, '', $curp, null, new Domicilio($calle, $numero, '', $colonia, $cp, $municipio ), EstadoCivil::SOLTERO, '', '');
+        $servidor->obtenerFechaNacimientoEnBaseACurp();
+        $servidor->obtenerRfcEnBaseACurp();
+
+        return $servidor;
+    }
+
+    /**
+     * crear nuevo encargo
+     * @param ServidorPublico $servidor
+     * @param string $categoria
+     * @param string $adscripcion
+     * @param Dependencia $dependencia
+     * @param PuestosRepositorio $puestosRepositorio
+     * @throws Exception
+     * @return Encargo
+     */
+    private function crearNuevoEncargo(ServidorPublico $servidor, $categoria, $adscripcion, Dependencia $dependencia, PuestosRepositorio $puestosRepositorio)
+    {
+        // obtener puesto por id
+        $puesto = $puestosRepositorio->obtenerPorNombre($categoria);
+
+        if (is_null($puesto)) {
+            throw new Exception('EL PUESTO ESPECIFICADO EN EL ARCHIVO NO EXISTE EN LA BASE DE DATOS');
+        }
+
+        return new Encargo($servidor, $adscripcion, new CuentaAcceso(), $puesto, $dependencia, new ColeccionArray(), new ColeccionArray());
+
+    }
+
+    /**
+     * generar nuevo encargo
+     * @param Encargo $encargo
+     * @param string $fechaAlta
+     * @return bool
+     * @throws \Sidep\Dominio\Excepciones\NoEsDeclaracionInicialException
+     * @throws \Sidep\Dominio\Excepciones\NoEsMovimientoDeAltaException
+     */
+    private function generarNuevoEncargo(Encargo $encargo, $fechaAlta)
+    {
+        // generar declaracion
+        $declaracion = new Declaracion(DeclaracionTipo::INICIAL, new DateTime(), $encargo);
+
+        // generar movimiento
+        $movimiento = new Movimiento(MovimientoTipo::ALTA, new DateTime(), $encargo);
+
+        // generar alta
+        $encargo->alta(false, $movimiento, $declaracion, $fechaAlta);
+
+        return $this->encargosRepositorio->guardar($encargo);
+    }
+
+    public function agregarServidorPublicoQueNoSeAgrega(array $servidoresSinImportar)
+    {
+        $servidoresSinImportar[] = [
+            ''
+        ];
     }
 }

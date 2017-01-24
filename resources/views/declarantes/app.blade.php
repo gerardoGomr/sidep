@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7 footer-sticky navbar-sticky"> <![endif]-->
-<!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8 footer-sticky navbar-sticky"> <![endif]-->
-<!--[if IE 8]>    <html class="ie lt-ie9 footer-sticky navbar-sticky"> <![endif]-->
-<!--[if gt IE 8]> <html class="ie footer-sticky navbar-sticky"> <![endif]-->
-<!--[if !IE]><!--><html class="footer-sticky navbar-sticky"><!-- <![endif]-->
+<!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="ie lt-ie9"> <![endif]-->
+<!--[if gt IE 8]> <html class=""> <![endif]-->
+<!--[if !IE]><!--><html class=""><!-- <![endif]-->
 	<head>
 		<title>CENTRO ESTATAL DE CONTROL DE CONFIANZA CERTIFICADO.- SIDEP</title>
 
@@ -15,7 +15,7 @@
 		<!-- CSS DEFINITION -->
 		<link rel="shortcut icon" href="{{ asset('public/img/logo.png') }}">
 		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/base-styles.css') }}" />
-		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/admin.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ asset('public/css/front.css') }}" />
 
 		@yield('css')
 
@@ -27,25 +27,30 @@
 
 	</head>
 
-	<body class="scripts-async menu-right-hidden">
+	<body>
 		<!-- Main Container Fluid -->
-		<div class="container-fluid menu-hidden">
+		<div class="container-fluid">
+			@include('declarantes.navbar')
 			<!-- Content -->
 			<div id="content">
-				@include('declarantes.navbar')
-				<div class="layout-app">
-					@yield('contenido')
-				</div>
+				@yield('contenido')
 			</div>
 
-			<!-- // Content END -->
-			<div class="clearfix"></div>
-
 			<!-- Footer -->
-			<div id="footer" class="hidden-print bg-primary">
-				<!--  Copyright Line -->
-				<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIDEP v2.0</a> - SISTEMA INTEGRAL DE DECLARACIONES PATRIMONIALES C3 - UNIDAD DE INFORMÁTICA</div>
-				<!--  End Copyright Line -->
+			<div id="footer" class="hidden-print">
+				<div class="container">
+					<ul class="list-unstyled center">
+						<li><a href="index.html?lang=en" >Declaración de situación patrimonial</a></li>
+						<li><a href="portfolio.html?lang=en">Ley de Responsabilidad de Servidores Públicos del Estado</a></li>
+						<li><a href="pricing.html?lang=en">Acuerdo de Declaración de Situación Patrimonial</a></li>
+						<li><a href="blog.html">Tutorial</a></li>
+						<li><a href="contact.html?lang=en">Datos de Contacto</a></li>
+					</ul>
+					<!--  Copyright Line -->
+					<div class="copy">&copy; {{ date('Y') }} - <a href="#">SIDEP v2.0</a> - SISTEMA INTEGRAL DE DECLARACIONES PATRIMONIALES C3 - UNIDAD DE INFORMÁTICA</div>
+					<!--  End Copyright Line -->
+					<div class="copy margin-none"><a>1a. Av. Sur Oriente #290 Esq. 2a Oriente Sur Col. Centro, C. P. 29000; Tuxtla Gutiérrez, Chiapas. Conmutador: 01 961 618 93 00 ext. red. 64009, 64115, 64136 y 64138 patrimonialchiapas@gmail.com</a></div>
+				</div>
 			</div>
 			<!-- Footer END -->
 		</div>

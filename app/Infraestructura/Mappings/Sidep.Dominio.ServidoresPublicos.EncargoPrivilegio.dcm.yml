@@ -1,0 +1,29 @@
+Sidep\Dominio\ServidoresPublicos\EncargoPrivilegio:
+  type: entity
+  table: encargo_modulo
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    fechaAsignacion:
+      type: datetime
+      column: fecha_asignacion
+  manyToOne:
+    encargo:
+      targetEntity: Encargo
+      inversedBy: privilegios
+      joinColumn:
+        name: encargo_id
+        referencedColumnName: id
+    encargoAsigna:
+      targetEntity: Encargo
+      joinColumn:
+        name: encargo_asigna_id
+        referencedColumnName: id
+    modulo:
+      targetEntity: Sidep\Dominio\Usuarios\Modulo
+      joinColumn:
+        name: modulo_id
+        referencedColumnName: id

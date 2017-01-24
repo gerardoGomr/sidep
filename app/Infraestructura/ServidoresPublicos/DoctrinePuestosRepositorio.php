@@ -6,7 +6,8 @@ use Monolog\Logger;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\Puesto;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\PuestosRepositorio;
 use Doctrine\ORM\EntityManager;
-use Sidep\Exceptions\PDO\PDOLogger;
+use Sidep\Exceptions\SidepLogger;
+use PDOException;
 
 /**
  * Class DoctrinePuestosRepositorio
@@ -47,8 +48,8 @@ class DoctrinePuestosRepositorio implements PuestosRepositorio
             $puestos = $query->getResult();
 
             return $puestos;
-        } catch (\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return null;
         }
@@ -68,8 +69,33 @@ class DoctrinePuestosRepositorio implements PuestosRepositorio
 
             return $puestos[0];
 
-        } catch (\PDOException $e) {
-            $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+            return null;
+        }
+    }
+
+    /**
+     * obtener puestos por semejanza del nombre
+     * @param string $puesto
+     * @return Puesto
+     */
+    public function obtenerPorNombre($puesto)
+    {
+        try {
+            $query   = $this->entityManager->createQuery('SELECT p FROM ServidoresPublicos:Puesto p WHERE p.puesto = :puesto ORDER BY p.puesto')
+                ->setParameter('puesto', $puesto);
+            $puesto = $query->getResult();
+
+            if (count($puesto) > 0) {
+                return $puesto[0];
+            }
+
+            return null;
+
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return null;
         }

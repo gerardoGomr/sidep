@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Sidep\Dominio\Declaraciones\OficioRequerimiento;
-use Sidep\Dominio\Folios\Folio;
 use Sidep\Dominio\Folios\Repositorios\FoliosRepositorio;
 use Sidep\Dominio\ServidoresPublicos\DeclaracionEstatus;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\DeclaracionesRepositorio;

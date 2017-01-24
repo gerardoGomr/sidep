@@ -64,21 +64,22 @@
             </div>
             <div class="col-sm-5 col-lg-4">
                 <div class="box-generic padding-none">
-                    <h5 class="innerAll border-bottom margin-none bg-gray">ACCIONES</h5>
                     <div class="innerAll">
-                        <a href="{{ url('admin/servidores/editar/'. $encargo->servidorPublico()->getId()) }}" class="btn btn-default btn-stroke btn-block"><i class="fa fa-edit"></i> EDITAR DATOS PERSONALES</a>
+                        <a href="{{ url('admin/servidores/editar/'. $encargo->servidorPublico()->getId()) }}" class="btn btn-info btn-block"><i class="fa fa-edit"></i> EDITAR DATOS PERSONALES</a>
                         @if($encargo->estaActivo())
-                            <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-default btn-stroke btn-block"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</button>
-                            <button type="button" data-id="{{ $encargo->getId() }}" data-adscripcion="{{ $encargo->getAdscripcion() }}" class="promocion btn btn-default btn-stroke btn-block"><i class="fa fa-thumbs-up"></i> REGISTRAR PROMOCIÓN</button>
-                            <button type="button" data-id="{{ $encargo->getId() }}" data-adscripcion="{{ $encargo->getAdscripcion() }}" class="cambioAdscripcion btn btn-default btn-stroke btn-block"><i class="fa fa-share-square"></i> REGISTRAR CAMBIO DE ADSCRIPCIÓN</button>
+                            <button data-id="{{ $encargo->getId() }}" type="button" class="baja btn btn-info btn-block"><i class="fa fa-minus-circle"></i> REGISTRAR BAJA</button>
+                            <button type="button" data-id="{{ $encargo->getId() }}" data-adscripcion="{{ $encargo->getAdscripcion() }}" class="promocion btn btn-info btn-block"><i class="fa fa-thumbs-up"></i> REGISTRAR PROMOCIÓN</button>
+                            <button type="button" data-id="{{ $encargo->getId() }}" data-adscripcion="{{ $encargo->getAdscripcion() }}" class="cambioAdscripcion btn  btn-info btn-block"><i class="fa fa-share-square"></i> REGISTRAR CAMBIO DE ADSCRIPCIÓN</button>
                         @else
-                            <button data-id="{{ $encargo->getId() }}" type="button" class="alta btn btn-default btn-stroke btn-block"><i class="fa fa-plus-circle"></i> REGISTRAR ALTA</button>
+                            <button data-id="{{ $encargo->getId() }}" type="button" class="alta btn btn-info btn-block"><i class="fa fa-plus-circle"></i> REGISTRAR ALTA</button>
                         @endif
                     </div>
                 </div>
-                <div class="separator"></div>
-
             </div>
         </div>
+        <div class="separator"></div>
+        <a href="{{ url('admin/servidores/carta-compromiso/' . $encargo->getId()) }}" target="_blank" class="btn btn-info"><i class="fa fa-print"></i> CARTA COMPROMISO</a>
+
+        <a href="{{ url('admin/servidores/comprobante-cuenta-acceso/' . $encargo->getId() . '/' . base64_encode($encargo->getCuentaAcceso()->getPassword())) }}" target="_blank" class="btn btn-info"><i class="fa fa-print"></i> COMPROBANTE USUARIO Y CONTRASEÑA</a>
     </div>
 </div>

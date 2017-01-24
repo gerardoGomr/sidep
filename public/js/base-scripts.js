@@ -7011,30 +7011,23 @@ _fnCallbackFire:u,_fnLengthOverflow:Sa,_fnRenderer:Na,_fnDataSource:y,_fnRowAttr
 l=0;for(h=f.length;l<h;l++)if(c=f[l],b.isArray(c))q(d,c);else{g=e="";switch(c){case "ellipsis":e="&#x2026;";g="disabled";break;case "first":e=k.sFirst;g=c+(0<j?"":" disabled");break;case "previous":e=k.sPrevious;g=c+(0<j?"":" disabled");break;case "next":e=k.sNext;g=c+(j<n-1?"":" disabled");break;case "last":e=k.sLast;g=c+(j<n-1?"":" disabled");break;default:e=c+1,g=j===c?"active":""}e&&(i=b("<li>",{"class":s.sPageButton+" "+g,id:0===r&&"string"===typeof c?a.sTableId+"_"+c:null}).append(b("<a>",{href:"#",
 "aria-controls":a.sTableId,"aria-label":t[c],"data-dt-idx":p,tabindex:a.iTabIndex}).html(e)).appendTo(d),a.oApi._fnBindAction(i,{action:c},m),p++)}},i;try{i=b(h).find(d.activeElement).data("dt-idx")}catch(u){}q(b(h).empty().html('<ul class="pagination"/>').children("ul"),m);i&&b(h).find("[data-dt-idx="+i+"]").focus()};return f});
 
-function generarDatatables(idTabla) {
-
-    $('#'+idTabla).DataTable({
+/**
+ * Created by Gerardo on 05/11/2016.
+ */
+function datatables(tableId) {
+    $(tableId).DataTable({
         "language": {
-            "lengthMenu" : "Registros por pagina: _MENU_ ",
-            "zeroRecords": "No hay registros",
-            "info"       : "Mostrando _START_ a _END_ de _TOTAL_ registros",
-            "infoEmpty"  : "No hay registros disponibles",
-            "search"     : "Buscar:",
-            "paginate"   : {
-                "first"   : "Inicio",
-                "previous": "Anterior",
-                "next"    : "Siguiente",
-                "last"    : "Fin"
-            },
-            "processing"  : "Cargando datos ... espere",
-            "infoFiltered": "(filtrado desde _MAX_ registros)"
-        },
-        "dom"           : "<'row'<'col-sm-3'l><'col-sm-6'f><'col-sm-3'>>" +
-                          "<'row'<'col-sm-12'tr>>" +
-                          "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-        "destroy"       : true,
-        "processing"    : true,
-        "autoWidth"     : false
+            "lengthMenu": "Desplegando _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "Sin resultados",
+            "infoFiltered": "(filtrado de _MAX_ registros totales)",
+            "search": "Buscar:",
+            "paginate": {
+                "previous": "Anterior <<",
+                "next": "Siguiente >>"
+            }
+        }
     });
 }
 /**
@@ -7210,7 +7203,19 @@ function agregaValidacionesElementos($form)
 
 	$form.find('.pdf').each(function() {
 		$(this).rules('add', {
-			extension: 'pdf'
+			extension: 'pdf',
+			messages: {
+				extension: 'EL ARCHIVO DEBE ESTAR EN .pdf'
+			}
+		});
+	});
+
+	$form.find('.xlsx').each(function() {
+		$(this).rules('add', {
+			extension: 'xlsx',
+			messages: {
+				extension: 'EL ARCHIVO DEBE ESTAR EN .xlsx'
+			}
 		});
 	});
 }

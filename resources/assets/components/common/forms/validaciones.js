@@ -7,18 +7,20 @@ function init()
 {
 	// overriding default values
 	$.validator.setDefaults({
-		showErrors: function(map, list) {
-			this.currentElements.parents('label:first, div:first').find('.has-error').remove();
-			this.currentElements.parents('.form-group:first').removeClass('has-error');
-
-			$.each(list, function(index, error) {
-				var ee = $(error.element);
-				var eep = ee.parents('label:first').length ? ee.parents('label:first') : ee.parents('div:first');
-
-				ee.parents('.form-group:first').addClass('has-error');
-				eep.find('.has-error').remove();
-				eep.append('<p class="has-error help-block">' + error.message + '</p>');
-			});
+		highlight: function(element) {
+			jQuery(element).closest('.form-group').addClass('has-error');
+		},
+		unhighlight: function(element) {
+			jQuery(element).closest('.form-group').removeClass('has-error');
+		},
+		errorElement: 'span',
+		errorClass: 'label label-danger',
+		errorPlacement: function(error, element) {
+			if(element.parent('.input-group').length) {
+				error.insertAfter(element.parent());
+			} else {
+				error.insertAfter(element);
+			}
 		}
 	});
 
@@ -171,7 +173,19 @@ function agregaValidacionesElementos($form)
 
 	$form.find('.pdf').each(function() {
 		$(this).rules('add', {
-			extension: 'pdf'
+			extension: 'pdf',
+			messages: {
+				extension: 'EL ARCHIVO DEBE ESTAR EN .pdf'
+			}
+		});
+	});
+
+	$form.find('.xlsx').each(function() {
+		$(this).rules('add', {
+			extension: 'xlsx',
+			messages: {
+				extension: 'EL ARCHIVO DEBE ESTAR EN .xlsx'
+			}
 		});
 	});
 }

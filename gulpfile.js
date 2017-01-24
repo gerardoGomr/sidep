@@ -12,7 +12,9 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function (mix) {
-    mix.less('admin/admin.less').scripts([
+    mix.less('admin/admin.less').
+    less('front/front.less').
+    scripts([
         'components/library/jquery/jquery.min.js',
         'components/plugins/ajaxify/script.min.js',
         'components/library/modernizr/modernizr.js',
@@ -41,9 +43,9 @@ elixir(function (mix) {
         'components/common/forms/elements/select2/assets/lib/js/select2.js',
         'components/common/forms/elements/fuelux-radio/fuelux-radio.js',
         'components/common/forms/elements/fuelux-checkbox/fuelux-checkbox.js',
-        'components/common/tables/datatables/DataTables-1.10.12/media/js/jquery.dataTables.min.js',
-        'components/common/tables/datatables/DataTables-1.10.12/media/js/dataTables.bootstrap.min.js',
-        'components/common/tables/datatables/datatables.js',
+        'components/common/tables/datatables/1.10.12/js/jquery.dataTables.min.js',
+        'components/common/tables/datatables/1.10.12/js/dataTables.bootstrap.min.js',
+        'components/common/tables/datatables/1.10.12/js/datatables.js',
         'components/common/forms/validaciones.js'
 
     ], 'public/js/base-scripts.js', 'resources/assets').styles([
@@ -61,7 +63,7 @@ elixir(function (mix) {
         'components/library/animate/animate.min.css',
         'components/common/forms/elements/bootstrap-datepicker/assets/lib/css/bootstrap-datepicker.css',
         'components/common/forms/elements/select2/assets/lib/css/select2.css',
-        'components/common/tables/datatables/DataTables-1.10.12/media/css/jquery.dataTables.css',
+        'components/common/tables/datatables/1.10.12/css/dataTables.bootstrap.min.css',
         'components/library/icons/glyphicons/assets/css/glyphicons_filetypes.css',
         'components/library/icons/glyphicons/assets/css/glyphicons_regular.css',
         'components/library/icons/glyphicons/assets/css/glyphicons_social.css',
@@ -72,16 +74,17 @@ elixir(function (mix) {
         'resources/assets/components/library/icons/fontawesome/assets/fonts',
         'resources/assets/components/library/icons/glyphicons/assets/fonts',
         'resources/assets/components/library/icons/pictoicons/fonts',
+        'resources/assets/components/library/bootstrap/fonts',
         'resources/assets/components/core/fonts/'
     ], 'public/fonts').copy([
         'resources/assets/components/common/forms/elements/select2/assets/lib/css/select2.png',
         'resources/assets/components/common/forms/elements/select2/assets/lib/css/select2-spinner.gif',
         'resources/assets/components/common/forms/elements/select2/assets/lib/css/select2x2.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_asc.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_asc_disabled.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_both.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_desc.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_desc_disabled.png'
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_asc.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_asc_disabled.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_both.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_desc.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_desc_disabled.png'
     ], 'public/css').copy([
         'resources/assets/images/default_user.png',
         'resources/assets/images/error-icon-bucket.png',
@@ -94,12 +97,13 @@ elixir(function (mix) {
         'resources/assets/images/logo_255.png',
         'resources/assets/images/logo_255_negro.png',
         'resources/assets/images/poderEjecutivo.jpg',
-        'resources/assets/images/warning-error.png'
+        'resources/assets/images/warning-error.png',
+        'resources/assets/images/main.jpg'
     ], 'public/img').copy([
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_asc.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_asc_disabled.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_both.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_desc.png',
-        'resources/assets/components/common/tables/datatables/DataTables-1.10.12/media/images/sort_desc_disabled.png'
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_asc.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_asc_disabled.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_both.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_desc.png',
+        'resources/assets/components/common/tables/datatables/1.10.12/images/sort_desc_disabled.png'
     ], 'public/images');
 });

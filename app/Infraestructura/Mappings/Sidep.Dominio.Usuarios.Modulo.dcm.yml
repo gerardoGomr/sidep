@@ -1,0 +1,32 @@
+Sidep\Dominio\Usuarios\Modulo:
+  type: entity
+  table: modulo
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    nombre:
+      type: string
+      length: 80
+    icono:
+      type: string
+      length: 50
+    url:
+      type: string
+      length: 100
+    nivel:
+      type: integer
+  oneToMany:
+    modulos:
+      targetEntity: Modulo
+      mappedBy: moduloPadre
+  manyToOne:
+    moduloPadre:
+      targetEntity: Modulo
+      inversedBy: modulos
+      fetch: EAGER
+      joinColumn:
+        name: parent_id
+        referencedColumnName: id

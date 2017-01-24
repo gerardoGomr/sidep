@@ -10,6 +10,8 @@ use Sidep\Dominio\Excepciones\NoEsMovimientoDeBajaException;
 use Sidep\Dominio\Excepciones\NoEsMovimientoDeCambioAdscripciónException;
 use Sidep\Dominio\Excepciones\NoEsMovimientoPorPromocionException;
 use Sidep\Dominio\Listas\IColeccion;
+use Sidep\Dominio\Usuarios\Modulo;
+use Sidep\Dominio\Usuarios\UsuarioTipo;
 
 /**
  * Class Encargo
@@ -55,6 +57,16 @@ class Encargo
     private $activo;
 
     /**
+     * @var bool
+     */
+    private $usuarioSidep;
+
+    /**
+     * @var int
+     */
+    private $tipoUsuario;
+
+    /**
      * @var Dependencia
      */
     private $dependencia;
@@ -68,6 +80,11 @@ class Encargo
      * @var IColeccion
      */
     private $declaraciones;
+
+    /**
+     * @var IColeccion
+     */
+    private $privilegios;
 
     /**
      * @var bool
@@ -166,11 +183,46 @@ class Encargo
     /**
      * @return boolean
      */
+    public function esUsuarioSidep()
+    {
+        return $this->usuarioSidep;
+    }
+
+    /**
+     * @return string
+     */
+    public function tipoUsuario()
+    {
+        $tipoUsuario = '';
+
+        switch ($this->tipoUsuario) {
+            case UsuarioTipo::ADMINISTRADOR:
+                $tipoUsuario = 'ADMINISTRADOR';
+                break;
+
+            case UsuarioTipo::JEFE:
+                $tipoUsuario = 'JEFE DE UNIDAD';
+                break;
+
+            case UsuarioTipo::ANALISTA:
+                $tipoUsuario = 'ANALISTA';
+                break;
+        }
+
+        return $tipoUsuario;
+    }
+
+    /**
+     * @return boolean
+     */
     public function estaExento()
     {
         return $this->exento;
     }
 
+    /**
+     * @return string
+     */
     public function getExento()
     {
         if ($this->estaExento()) {
@@ -211,6 +263,21 @@ class Encargo
     public function getDeclaraciones()
     {
         return $this->declaraciones;
+    }
+
+    /**
+     * @return IColeccion
+     */
+    public function getPrivilegios()
+    {
+        return $this->privilegios;
+    }
+
+    public function inicializarModulos(IColeccion $privilegios)
+    {
+        if (is_null($this->privilegios)) {
+            $this->privilegios = $privilegios;
+        }
     }
 
     /**
@@ -432,5 +499,90 @@ class Encargo
         // nueva fecha con el mismo valor que la fecha enviada
         $nuevaFecha = DateTime::createFromFormat('d/m/Y', $fecha->format('d/m/Y'));
         return $nuevaFecha->sub(new DateInterval('P1D'))->format('d/m/Y');
+    }
+
+    /**
+     * verifica si tiene movimientos generados
+     * @return bool
+     */
+    public function tieneMovimientos()
+    {
+        return $this->movimientos->count() > 0;
+    }
+
+    /**
+     * devuelve el ultimo movimiento realizado
+     * @return Movimiento
+     */
+    public function obtenerUltimoMovimiento()
+    {
+        if ($this->tieneMovimientos()) {
+            $movimiento = $this->movimientos->last();
+
+            return $movimiento;
+        }
+
+        return null;
+    }
+
+    /**
+     * verificar que el último movimiento es BAJA
+     * @return bool
+     */
+    public function elUltimoMovimientoEsBaja()
+    {
+        return $this->obtenerUltimoMovimiento()->getMovimientoTipo() === MovimientoTipo::BAJA;
+    }
+
+    /**
+     * verifica que el último movimiento es por renuncia voluntaria
+     * @return bool
+     */
+    public function elUltimoMovimientoEsPorTerminoEncargo()
+    {
+        return $this->obtenerUltimoMovimiento()->getMovimientoMotivo() === MovimientoMotivo::RENUNCIA_VOLUNTARIA;
+    }
+
+    /**
+     * generar usuario sidep
+     * @param int $usuarioTipo
+     */
+    public function generarUsuarioSidep($usuarioTipo)
+    {
+        $this->usuarioSidep = true;
+        $this->tipoUsuario  = $usuarioTipo;
+    }
+
+    /**
+     * remover todos los elementos de la coleccion
+     */
+    public function removerPrivilegios()
+    {
+        $this->privilegios->clear();
+    }
+
+    /**
+     * agregar un modulo a privilegios
+     * @param EncargoPrivilegio $encargoPrivilegio
+     */
+    public function asignarPrivilegio(EncargoPrivilegio $encargoPrivilegio)
+    {
+        $this->privilegios->add($encargoPrivilegio);
+    }
+
+    /**
+     * verifica que el módulo tenga asignado el privilegio
+     * @param Modulo $modulo
+     * @return bool
+     */
+    public function tieneElPrivilegio(Modulo $modulo)
+    {
+        foreach ($this->privilegios as $encargoModulo) {
+            if ($encargoModulo->getModulo()->getId() === $modulo->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

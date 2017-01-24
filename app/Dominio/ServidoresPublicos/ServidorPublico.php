@@ -1,7 +1,7 @@
 <?php
 namespace Sidep\Dominio\ServidoresPublicos;
 
-use \DateTime;
+use DateTime;
 use Sidep\Dominio\Excepciones\EstadoCivilInvalidoException;
 use Sidep\Dominio\Personas\Persona;
 
@@ -150,7 +150,7 @@ class ServidorPublico extends Persona
      * @param  string $email
      * @throws EstadoCivilInvalidoException
      */
-    public function registrar($nombre = '', $paterno = '', $materno = '', $rfc = '', $curp, DateTime $fechaNacimiento, Domicilio $domicilio, $estadoCivil = EstadoCivil::SOLTERO, $telefono = '', $email = '')
+    public function registrar($nombre = '', $paterno = '', $materno = '', $rfc = '', $curp, DateTime $fechaNacimiento = null, Domicilio $domicilio, $estadoCivil = EstadoCivil::SOLTERO, $telefono = '', $email = '')
     {
         $this->curp            = $curp;
         $this->fechaNacimiento = $fechaNacimiento;
@@ -166,5 +166,29 @@ class ServidorPublico extends Persona
             throw new EstadoCivilInvalidoException('EL ESTADO CIVIL ESPECIFICADO ES INVÁLIDO');
         }
         $this->estadoCivil = $estadoCivil;
+    }
+
+    /**
+     * generar la fecha de nacimiento a partir de la curp
+     */
+    public function obtenerFechaNacimientoEnBaseACurp()
+    {
+        $fecha = substr($this->curp, 4, 6);
+
+        $anio = substr($fecha, 0, 2);
+        $mes  = substr($fecha, 2, 2);
+        $dia  = substr($fecha, 4, 2);
+
+        (int)$anio > 30 ? $anio = '19' . $anio : '20' . $anio;
+
+        $this->fechaNacimiento = DateTime::createFromFormat('d/m/Y', $dia . '/' . $mes . '/' . $anio);
+    }
+
+    /**
+     * se genera el rfc en base a la curp
+     */
+    public function obtenerRfcEnBaseACurp()
+    {
+        $this->rfc = substr($this->curp, 0, 10);
     }
 }

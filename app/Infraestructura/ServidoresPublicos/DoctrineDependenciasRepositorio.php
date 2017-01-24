@@ -3,6 +3,7 @@ namespace Sidep\Infraestructura\ServidoresPublicos;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use PDOException;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\Dependencia;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\DependenciasRepositorio;
 use Doctrine\ORM\EntityManager;
@@ -47,7 +48,7 @@ class DoctrineDependenciasRepositorio implements DependenciasRepositorio
             $dependencias = $query->getResult();
 
             return $dependencias;
-        } catch (\Exception $e) {
+        } catch (PDOException $e) {
             $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return null;
@@ -68,7 +69,7 @@ class DoctrineDependenciasRepositorio implements DependenciasRepositorio
             $dependencias = $query->getResult();
 
             return $dependencias[0];
-        } catch (\Exception $e) {
+        } catch (PDOException $e) {
             $pdoLogger = new PDOLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
             $pdoLogger->log($e);
             return null;

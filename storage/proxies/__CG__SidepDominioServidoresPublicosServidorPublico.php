@@ -257,12 +257,34 @@ class ServidorPublico extends \Sidep\Dominio\ServidoresPublicos\ServidorPublico 
     /**
      * {@inheritDoc}
      */
-    public function registrar($nombre = '', $paterno = '', $materno = '', $rfc = '', $curp, \DateTime $fechaNacimiento, \Sidep\Dominio\ServidoresPublicos\Domicilio $domicilio, $estadoCivil = 2, $telefono = '', $email = '')
+    public function registrar($nombre = '', $paterno = '', $materno = '', $rfc = '', $curp, \DateTime $fechaNacimiento = NULL, \Sidep\Dominio\ServidoresPublicos\Domicilio $domicilio, $estadoCivil = 2, $telefono = '', $email = '')
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'registrar', [$nombre, $paterno, $materno, $rfc, $curp, $fechaNacimiento, $domicilio, $estadoCivil, $telefono, $email]);
 
         return parent::registrar($nombre, $paterno, $materno, $rfc, $curp, $fechaNacimiento, $domicilio, $estadoCivil, $telefono, $email);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function obtenerFechaNacimientoEnBaseACurp()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'obtenerFechaNacimientoEnBaseACurp', []);
+
+        return parent::obtenerFechaNacimientoEnBaseACurp();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function obtenerRfcEnBaseACurp()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'obtenerRfcEnBaseACurp', []);
+
+        return parent::obtenerRfcEnBaseACurp();
     }
 
     /**

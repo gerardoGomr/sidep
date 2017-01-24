@@ -25,6 +25,9 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
       type: boolean
       nullable: true,
       column: activo
+    usuarioSidep:
+      type: boolean
+      column: usuario_sidep
   oneToOne:
     servidorPublico:
       targetEntity: ServidorPublico
@@ -60,3 +63,7 @@ Sidep\Dominio\ServidoresPublicos\Encargo:
       targetEntity: Declaracion
       mappedBy: encargo
       cascade: ["persist", "refresh"]
+    privilegios:
+      targetEntity: EncargoPrivilegio
+      mappedBy: encargo
+      cascade: [persist]
