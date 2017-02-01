@@ -95,7 +95,9 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
     {
         // TODO: Implement guardar() method.
         try {
-            $this->entityManager->persist($encargo);
+            if (is_null($encargo->getId())) {
+                $this->entityManager->persist($encargo);
+            }
             $this->entityManager->flush();
             return true;
 
@@ -169,24 +171,6 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
     }
 
     /**
-     * guardar cambios en BD
-     * @param Encargo $encargo
-     * @return bool
-     */
-    public function actualizar(Encargo $encargo)
-    {
-        try {
-            $this->entityManager->flush();
-            return true;
-
-        } catch (PDOException $e) {
-            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
-            $pdoLogger->log($e);
-            return false;
-        }
-    }
-
-    /**
      * obtener una lista de encargos por los parametros
      * @param array $parametros
      * @return array|null
@@ -214,7 +198,7 @@ class DoctrineEncargosRepositorio implements EncargosRepositorio
                 $where .= ' AND e.fecha BETWEEN :fecha1 AND :fecha2';
             }
 
-            $query = $this->entityManager->createQuery("SELECT e, c, p, s, d, m FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s JOIN e.dependencia d JOIN e.movimientos m WHERE e.id IS NOT NULL $where ORDER BY e.id DESC");
+            $query = $this->entityManager->createQuery("SELECT e, c, p, s, d, m FROM ServidoresPublicos:Encargo e JOIN e.cuentaAcceso c JOIN e.puesto p JOIN e.servidorPublico s JOIN e.dependencia d LEFT JOIN e.movimientos m WHERE e.id IS NOT NULL $where ORDER BY e.id DESC");
 
             if (array_key_exists('dependencia', $parametros)) {
                 $query->setParameter('dependencia', $parametros['dependencia']);

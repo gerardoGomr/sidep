@@ -17,7 +17,7 @@ interface ServidoresPublicosRepositorio extends Repositorio
 	 * @param  ServidorPublico $servidor
 	 * @return bool
 	 */
-	public function actualizar(ServidorPublico $servidor);
+	public function guardar(ServidorPublico $servidor);
 
 	/**
 	 * obtener por curp

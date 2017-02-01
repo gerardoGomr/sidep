@@ -30,6 +30,7 @@ return [
                 'Folios'             => 'Sidep\Dominio\Folios',
                 'Declaraciones'      => 'Sidep\Dominio\Declaraciones',
                 'Usuarios'           => 'Sidep\Dominio\Usuarios',
+                'Modelos'            => 'Sidep\Aplicacion\Modelos',
             ],
             'paths'      => [
                 base_path('app/Dominio/ServidoresPublicos'),

@@ -1,21 +1,21 @@
 <?php
-namespace Sidep\Infraestructura\ServidoresPublicos;
+namespace Sidep\Infraestructura\Usuarios;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use PDOException;
-use Sidep\Dominio\ServidoresPublicos\ServidorPublico;
-use Sidep\Dominio\ServidoresPublicos\Repositorios\ServidoresPublicosRepositorio;
 use Doctrine\ORM\EntityManager;
+use PDOException;
+use Sidep\Aplicacion\Modelos\EncargoSeguimiento;
+use Sidep\Aplicacion\Modelos\Repositorios\EncargosSeguimientosRepositorio;
 use Sidep\Exceptions\SidepLogger;
 
 /**
- * Class DoctrineServidoresPublicosRepositorio
- * @package Sidep\Infraestructura\ServidoresPublicos
+ * Class DoctrineEncargosSeguimientosRepositorio
+ * @package Sidep\Infraestructura\Usuarios
  * @author Gerardo Adrián Gómez Ruiz
  * @version 1.0
  */
-class DoctrineServidoresPublicosRepositorio implements ServidoresPublicosRepositorio
+class DoctrineEncargosSeguimientosRepositorio implements EncargosSeguimientosRepositorio
 {
     /**
      * @var EntityManager
@@ -33,21 +33,25 @@ class DoctrineServidoresPublicosRepositorio implements ServidoresPublicosReposit
 
     /**
      * @param int $id
-     * @return ServidorPublico|null
+     * @return Modulo|null
      */
     public function obtenerPorId($id)
     {
         // TODO: Implement obtenerPorId() method.
         try {
-            $query   =  $this->entityManager->createQuery('SELECT s FROM ServidoresPublicos:ServidorPublico s WHERE s.id = :id');
-            $query->setParameter(':id', $id);
-            $servidores = $query->getResult();
+            $modulos = $this->entityManager->createQuery('SELECT m, mp FROM Usuarios:Modulo m LEFT JOIN m.moduloPadre mp WHERE m.id = :id')
+                ->setParameter(':id', $id)
+                ->getResult();
 
-            if (count($servidores) === 0) {
+            if (count($modulos) === 0) {
                 return null;
             }
 
-            return $servidores[0];
+            $this->entityManager->createQuery('SELECT m, s FROM Usuarios:Modulo m LEFT JOIN m.modulos s WHERE m.id = :id')
+                ->setParameter(':id', $id)
+                ->getResult();
+
+            return $modulos[0];
 
         } catch (PDOException $e) {
             $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
@@ -57,53 +61,46 @@ class DoctrineServidoresPublicosRepositorio implements ServidoresPublicosReposit
     }
 
     /**
-     * obtener por curp
-     * @param  string $curp
-     * @return ServidorPublico
-     */
-    public function obtenerPorCurp($curp)
-    {
-        // TODO: Implement obtenerPorId() method.
-        try {
-            $query = $this->entityManager->createQuery('SELECT s FROM ServidoresPublicos:ServidorPublico s WHERE s.curp = :curp')
-                ->setParameter(':curp', $curp);
-
-            $servidores = $query->getResult();
-
-            if (count($servidores) === 0) {
-                return null;
-            }
-
-            return $servidores[0];
-
-        } catch (PDOException $e) {
-            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
-            $pdoLogger->log($e);
-            return null;
-        }
-    }
-
-    /**
-     * @return array
+     * @return ColeccionArray
      */
     public function obtenerTodos()
     {
         // TODO: Implement obtenerTodos() method.
+        try {
+            $modulos = $this->entityManager->createQuery('SELECT m, mp FROM Usuarios:Modulo m LEFT JOIN m.moduloPadre mp WHERE m.nivel = 1')
+                ->getResult();
+
+            if (count($modulos) === 0) {
+                return null;
+            }
+
+            $this->entityManager->createQuery('SELECT m, s FROM Usuarios:Modulo m LEFT JOIN m.modulos s WHERE m.nivel = 1')
+                ->getResult();
+
+            return new ColeccionArray($modulos);
+
+        } catch (PDOException $e) {
+            $pdoLogger = new SidepLogger(new Logger('pdo_exception'), new StreamHandler(storage_path() . '/logs/pdo/sqlsrv_' . date('Y-m-d') . '.log', Logger::ERROR));
+            $pdoLogger->log($e);
+            return null;
+        }
     }
 
     /**
-     * guardar cambios en BD
-     * @param  ServidorPublico $servidor
+     * persistir cambios
+     * @param EncargoSeguimiento $encargoSeguimiento
      * @return bool
      */
-    public function guardar(ServidorPublico $servidor)
+    public function persistir(EncargoSeguimiento $encargoSeguimiento)
     {
+        // TODO: Implement persistir() method.
         try {
-            if (is_null($servidor->getId())) {
-                $this->entityManager->persist($servidor);
+            if (is_null($encargoSeguimiento->getId())) {
+                $this->entityManager->persist($encargoSeguimiento);
             }
 
             $this->entityManager->flush();
+
             return true;
 
         } catch (PDOException $e) {

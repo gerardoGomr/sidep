@@ -10,7 +10,7 @@
         <div class="col-md-5 content center">
             <h1 class="strong">LO SENTIMOS</h1>
             <div class="well">
-                {{ $error }}
+                -
             </div>
 
             <a href="{{ url('admin') }}" class="btn btn-primary btn-lg"><i class="fa fa-home"></i> VOLVER AL INICIO</a>

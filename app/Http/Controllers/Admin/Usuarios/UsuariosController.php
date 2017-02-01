@@ -9,6 +9,7 @@ use Sidep\Aplicacion\Menu\ConstructorFormModulos;
 use Sidep\Dominio\ServidoresPublicos\EncargoPrivilegio;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\EncargosRepositorio;
 use Sidep\Dominio\Usuarios\Repositorios\ModulosRepositorio;
+use Sidep\Jobs\GuardarAccionDeEncargo;
 use Sidep\Http\Controllers\Controller;
 
 /**
@@ -55,17 +56,25 @@ class UsuariosController extends Controller
         $encargos = $this->encargosRepositorio->obtenerEncargosPor($parametros);
 
         $encargosSidep = $this->buscarUsuarios();
+
+        (new GuardarAccionDeEncargo('INGRESÓ A LISTADO DE USUARIOS', session('encargo')))->handle();
         return view('admin.usuarios.usuarios', compact('encargos', 'encargosSidep'));
     }
 
     /**
-     * buscar a los usuarios
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * buscar a usuarios
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * @throws \Throwable
      */
     public function buscar()
     {
-        $encargosSidep = $this->buscarUsuarios();
-        return view('admin.usuarios.usuarios_resultados', compact('encargosSidep'));
+        $respuesta         = ['estatus' => 'OK'];
+        $encargosSidep     = $this->buscarUsuarios();
+        $respuesta['html'] = view('admin.usuarios.usuarios_resultados', compact('encargosSidep'))->render();
+
+        (new GuardarAccionDeEncargo('BUSCÓ A USUARIOS DESDE EL MÓDULO DE USUARIOS', session('encargo')))->handle();
+        return response()->json($respuesta);
     }
 
     /**
@@ -98,9 +107,11 @@ class UsuariosController extends Controller
         $encargo->generarUsuarioSidep($tipoUsuario);
 
         $respuesta['estatus'] = 'OK';
-        if (!$this->encargosRepositorio->actualizar($encargo)) {
+        if (!$this->encargosRepositorio->guardar($encargo)) {
             $respuesta['estatus'] = 'fail';
         }
+
+        (new GuardarAccionDeEncargo('MARCÓ A UN ENCARGO COMO USUARIO SIDEP', session('encargo')))->handle();
 
         return response()->json($respuesta);
     }
@@ -120,6 +131,7 @@ class UsuariosController extends Controller
         $constructorFormModulos = new ConstructorFormModulos($encargo);
         $respuesta['html']      = $constructorFormModulos->construir($modulos);
 
+        (new GuardarAccionDeEncargo('SELECCIONÓ ASIGNAR PRIVILEGIOS A USUARIO Y SE PRESENTÓ FORMULARIO', session('encargo')))->handle();
         return response()->json($respuesta);
     }
 
@@ -148,11 +160,36 @@ class UsuariosController extends Controller
                 $encargo->asignarPrivilegio(new EncargoPrivilegio($modulo, $encargoAsigna, $encargo, new DateTime()));
             }
 
-            if (!$this->encargosRepositorio->actualizar($encargo)) {
+            if (!$this->encargosRepositorio->guardar($encargo)) {
                 $respuesta['estatus'] = 'fail';
                 $respuesta['mensaje'] = 'OCURRIÓ UN ERROR AL GUARDAR EN LA BASE DE DATOS';
             }
         }
+
+        (new GuardarAccionDeEncargo('ASIGNÓ PRIVILEGIOS A USUARIO ' . $encargo->getServidorPublico()->nombreCompleto(), session('encargo')))->handle();
+
+        return response()->json($respuesta);
+    }
+
+    /**
+     * quitar estatus de usuario Sidep
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function eliminar(Request $request)
+    {
+        $respuesta     = ['estatus' => 'OK'];
+        $encargoId     = (int)$request->get('encargoId');
+        $encargo       = $this->encargosRepositorio->obtenerPorId($encargoId);
+
+        $encargo->yaNoEsUsuarioSidep();
+
+        if (!$this->encargosRepositorio->guardar($encargo)) {
+            $respuesta['estatus'] = 'fail';
+            $respuesta['mensaje'] = 'OCURRIÓ UN ERROR AL GUARDAR EN LA BASE DE DATOS';
+        }
+
+        (new GuardarAccionDeEncargo('REMOVIÓ A ENCARGO DE SER USUARIO: ' . $encargo->getServidorPublico()->nombreCompleto(), session('encargo')))->handle();
 
         return response()->json($respuesta);
     }

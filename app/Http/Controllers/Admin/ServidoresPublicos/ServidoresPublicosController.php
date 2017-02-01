@@ -8,7 +8,6 @@ use Sidep\Aplicacion\ColeccionArray;
 use Sidep\Aplicacion\Reporte;
 use Sidep\Aplicacion\Reportes\CartaCompromisoCrystalReports;
 use Sidep\Aplicacion\Reportes\ComprobanteCuentaAccesoCrystalReports;
-use Sidep\Aplicacion\TransformadorMayusculas;
 use Sidep\Dominio\ServidoresPublicos\CuentaAcceso;
 use Sidep\Dominio\ServidoresPublicos\Declaracion;
 use Sidep\Dominio\ServidoresPublicos\DeclaracionTipo;
@@ -32,6 +31,7 @@ use Sidep\Aplicacion\LaravelMailer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Sidep\Exceptions\SidepLogger;
+use Sidep\Jobs\GuardarAccionDeEncargo;
 
 /**
  * Class ServidoresPublicosController
@@ -65,6 +65,9 @@ class ServidoresPublicosController extends Controller
     {
         $encargos = $this->encargosRepositorio->obtenerTodos();
         $puestos  = $puestosRepositorio->obtenerTodos();
+
+        (new GuardarAccionDeEncargo('INGRESÓ A ADMINISTRACIÓN DE ENCARGOS', session('encargo')))->handle();
+
         return view('admin.servidores_publicos.servidores_publicos', compact('encargos', 'puestos'));
     }
 
@@ -78,6 +81,8 @@ class ServidoresPublicosController extends Controller
     {
         $dependencias = $dependenciasRepositorio->obtenerTodos();
         $puestos      = $puestosRepositorio->obtenerTodos();
+
+        (new GuardarAccionDeEncargo('INGRESÓ A ALTA DE NUEVO ENCARGO', session('encargo')))->handle();
         return view('admin.servidores_publicos.servidores_publicos_encargo_alta', compact('dependencias', 'puestos'));
     }
 
@@ -89,6 +94,7 @@ class ServidoresPublicosController extends Controller
     public function altaImportar(DependenciasRepositorio $dependenciasRepositorio)
     {
         $dependencias = $dependenciasRepositorio->obtenerTodos();
+        (new GuardarAccionDeEncargo('INGRESÓ A ALTA DE ENCARGOS MEDIANTE ARCHIVO EXCEL', session('encargo')))->handle();
         return view('admin.servidores_publicos.servidores_publicos_encargo_alta_excel', compact('dependencias'));
     }
 
@@ -102,6 +108,7 @@ class ServidoresPublicosController extends Controller
      */
     public function busqueda(Request $request)
     {
+        (new GuardarAccionDeEncargo("BUSCÓ A UN SERVIDOR PÚBLICO CON EL PARÁMETRO: {\"" . $request->get('dato') . "\"}", session('encargo')))->handle();
         $datoBusqueda = str_replace(' ', '', $request->get('dato'));
         $encargos     = $this->encargosRepositorio->obtenerEncargos($datoBusqueda);
         $origen       = $request->get('origen');
@@ -142,8 +149,7 @@ class ServidoresPublicosController extends Controller
     public function registrarEncargo(FormAltaRequest $request, DependenciasRepositorio $dependenciasRepositorio, PuestosRepositorio $puestosRepositorio, ServidoresPublicosRepositorio $servidoresRepositorio)
     {
         // transformar a mayúsculas
-        $transformador = new TransformadorMayusculas();
-        $transformador->transformar($request);
+        $this->transformarMayusculas($request);
 
         // logica de guardado de servidor - encargo - movimiento - declaración
         $exento             = $request->get('exento') === 'on' ? true : false;
@@ -213,6 +219,7 @@ class ServidoresPublicosController extends Controller
         $respuesta['estatus'] = 'OK';
 
         if (!$this->encargosRepositorio->guardar($encargo)) {
+            (new GuardarAccionDeEncargo('INTENTÓ DAR DE ALTA UN NUEVO ENCARGO DE SERVIDOR PÚBLICO CON FALLO: "[' . serialize($encargo) . ']"', session('encargo')))->handle();
             $respuesta['estatus'] = 'fail';
         }
 
@@ -220,6 +227,8 @@ class ServidoresPublicosController extends Controller
         $mailer = new LaravelMailer('mails.encargo_alta', $encargo, 'ALTA DE ENCARGO');
         $mailer->enviar();
         // ================================================================================
+
+        (new GuardarAccionDeEncargo('DIÓ DE ALTA UN NUEVO ENCARGO DE SERVIDOR PÚBLICO: "[' . serialize($encargo) . ']"', session('encargo')))->handle();
 
         $respuesta['id']   = $encargo->getId();
         $respuesta['pass'] = $encargo->getCuentaAcceso()->getPrimerPassword();
@@ -242,6 +251,8 @@ class ServidoresPublicosController extends Controller
 
         $respuesta['contenido'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
 
+        (new GuardarAccionDeEncargo('VISUALIZÓ EL DETALLE DE UN ENCARGO: "[' . serialize($encargo) . ']"', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -261,6 +272,8 @@ class ServidoresPublicosController extends Controller
             return view('admin.errors.404', compact('error'));
         }
 
+        (new GuardarAccionDeEncargo('INGRESÓ A EDITAR LOS DATOS DE UN SERVIDOR PÚBLICO: "[' . serialize($servidor) . ']"', session('encargo')))->handle();
+
         return view('admin.servidores_publicos.servidores_publicos_editar', compact('servidor'));
     }
 
@@ -272,6 +285,9 @@ class ServidoresPublicosController extends Controller
      */
     public function actualizar(FormEditarServidorPublico $request, ServidoresPublicosRepositorio $servidoresRepositorio)
     {
+        // transformar a mayúsculas
+        $this->transformarMayusculas($request);
+
         $respuesta = [];
         $servidor  = $servidoresRepositorio->obtenerPorId((int)$request->get('idServidorPublico'));
 
@@ -304,9 +320,11 @@ class ServidoresPublicosController extends Controller
         $respuesta['estatus'] = 'OK';
 
         // persistir cambios
-        if (!$servidoresRepositorio->actualizar($servidor)) {
+        if (!$servidoresRepositorio->guardar($servidor)) {
             $respuesta['estatus'] = 'fail';
         }
+
+        (new GuardarAccionDeEncargo('ACTUALIZÓ LOS DATOS DEL SERVIDOR PÚBLICO: "[' . serialize($servidor) . ']"', session('encargo')))->handle();
 
         return response()->json($respuesta);
     }
@@ -330,6 +348,8 @@ class ServidoresPublicosController extends Controller
         }
 
         $reporte = new Reporte(new CartaCompromisoCrystalReports($id));
+
+        (new GuardarAccionDeEncargo('GENERÓ EL REPORTE DE CARTA COMPROMISO', session('encargo')))->handle();
 
         if ($reporte->existe()) {
             return response()->file($reporte->ruta());
@@ -363,6 +383,8 @@ class ServidoresPublicosController extends Controller
         }
 
         $reporte = new Reporte(new ComprobanteCuentaAccesoCrystalReports($id, $password));
+
+        (new GuardarAccionDeEncargo('GENERÓ EL REPORTE DE COMPROBANTE DE CUENTA DE ACCESO', session('encargo')))->handle();
 
         if ($reporte->existe()) {
             return response()->file($reporte->ruta());
@@ -407,11 +429,13 @@ class ServidoresPublicosController extends Controller
         // persistir encargo
         $respuesta['estatus'] = 'OK';
 
-        if (!$this->encargosRepositorio->actualizar($encargo)) {
+        if (!$this->encargosRepositorio->guardar($encargo)) {
             $respuesta['estatus'] = 'fail';
 
             return response()->json($respuesta);
         }
+
+        (new GuardarAccionDeEncargo('REGISTRÓ LA BAJA DEL ENCARGO: "[' . serialize($encargo) . ']"', session('encargo')))->handle();
 
         // enviar correo al servidor público si tiene
         /*$mailer = new LaravelMailer('mails.encargo_baja', $encargo, 'BAJA DE ENCARGO');
@@ -432,6 +456,8 @@ class ServidoresPublicosController extends Controller
      */
     public function cambioAdscripcion(Request $request)
     {
+        $this->transformarMayusculas($request);
+
         $encargoId   = (int)$request->get('encargoId');
         $adscripcion = $request->get('adscripcion');
         $respuesta   = [];
@@ -450,11 +476,13 @@ class ServidoresPublicosController extends Controller
 
         $respuesta['estatus'] = 'OK';
 
-        if (!$this->encargosRepositorio->actualizar($encargo)) {
+        if (!$this->encargosRepositorio->guardar($encargo)) {
             $respuesta['estatus'] = 'fail';
 
             return response()->json($respuesta);
         }
+
+        (new GuardarAccionDeEncargo('REGISTRÓ CAMBIO DE ADSCRIPCIÓN: "[' . serialize($encargo) . ']"', session('encargo')))->handle();
 
         $respuesta['html'] = view('admin.servidores_publicos.servidores_publicos_ficha', compact('encargo'))->render();
         return response()->json($respuesta);
@@ -499,10 +527,12 @@ class ServidoresPublicosController extends Controller
             return response()->json($respuesta);
         }
 
-        if(!$this->encargosRepositorio->actualizar($encargo)) {
+        if(!$this->encargosRepositorio->guardar($encargo)) {
             $respuesta['estatus'] = 'fail';
             return response()->json($respuesta);
         }
+
+        (new GuardarAccionDeEncargo('REGISTRÓ UNA PROMOCIÓN: "[' . serialize($encargo) . ']"', session('encargo')))->handle();
 
         $respuesta['id']      = $encargo->getId();
         $respuesta['estatus'] = 'OK';
@@ -511,6 +541,15 @@ class ServidoresPublicosController extends Controller
         return response()->json($respuesta);
     }
 
+    /**
+     * registrar un nuevo encargo mediante la importación de archivo en excel
+     * @param Request $request
+     * @param PuestosRepositorio $puestosRepositorio
+     * @param DependenciasRepositorio $dependenciasRepositorio
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
+     * @throws \Throwable
+     */
     public function registrarEncargoExcel(Request $request, PuestosRepositorio $puestosRepositorio, DependenciasRepositorio $dependenciasRepositorio)
     {
         if($request->hasFile('archivo')) {

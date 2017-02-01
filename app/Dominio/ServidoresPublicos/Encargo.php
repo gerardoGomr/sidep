@@ -585,4 +585,12 @@ class Encargo
 
         return false;
     }
+
+    /**
+     * quita la bandera de usuario SIDEP
+     */
+    public function yaNoEsUsuarioSidep()
+    {
+        $this->usuarioSidep = false;
+    }
 }

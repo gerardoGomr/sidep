@@ -1,6 +1,7 @@
 jQuery(document).ready(function ($) {
     // variables
-    var $formBusquedaServidores = $('#formBusquedaServidores');
+    var $formBusquedaServidores = $('#formBusquedaServidores'),
+        _token                  = $('#formPrivilegios').find('input[name="_token"]').val();
 
     // validar form
     init();
@@ -12,9 +13,10 @@ jQuery(document).ready(function ($) {
 
     // si existen usuarios, generar datatables
     if ($('#existenUsuarios').val() === '1') {
-        datatables('#tablaUsuarios');
+        datatables('#tablaUsuarios', 1);
 
-        $('#tablaUsuarios').on('click', 'button.editarPrivilegios', function () {
+        // editar privilegios de usuario
+        $('#usuariosRegistrados').on('click', 'button.editarPrivilegios', function () {
             var encargoId = $(this).data('id'),
                 nombre    = $(this).data('nombre');
 
@@ -22,7 +24,10 @@ jQuery(document).ready(function ($) {
                 url:        $('#tablaUsuarios').data('url'),
                 type:       'post',
                 dataType:   'json',
-                data:       {encargoId: encargoId, _token: $('#formPrivilegios').find('input[name="_token"]').val()},
+                data:       {
+                    encargoId: encargoId,
+                    _token:    _token
+                },
                 beforeSend: function () {
                     $('#loadingGuardar').modal('show');
                 }
@@ -43,42 +48,82 @@ jQuery(document).ready(function ($) {
                 bootbox.alert('OCURRIÓ UN ERROR AL CONSTRUIR EL FORMULARIO. POR FAVOR, INTENTE DE NUEVO.')
             });
         });
+
+        // eliminar usuario
+        $('#usuariosRegistrados').on('click', 'button.removerUsuario', function () {
+            var encargoId = $(this).data('id');
+            
+            bootbox.confirm('¿REALMENTE DESEA REMOVER AL USUARIO?', function (respuesta) {
+                if (respuesta) {
+                    $.ajax({
+                        url:        $('#tablaUsuarios').data('urlEliminar'),
+                        type:       'post',
+                        dataType:   'json',
+                        data:       {
+                            encargoId: encargoId,
+                            _token:    _token
+                        },
+                        beforeSend: function () {
+                            $('#loadingGuardar').modal('show');
+                        }
+
+                    }).done(function (respuesta) {
+                        console.log(respuesta.estatus);
+                        if (respuesta.estatus === 'OK') {
+                            bootbox.alert('USUARIO ELIMINADO CON ÉXITO.', function () {
+                                recargarTabla();
+                            });
+                        }
+
+                        if (respuesta.estatus === 'fail') {
+                            bootbox.alert('OCURRIÓ UN ERROR AL ELIMINAR AL USUARIO. INTENTE DE NUEVO');
+                        }
+
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus + ': ' + errorThrown);
+                        $('#loadingGuardar').modal('hide');
+
+                        bootbox.alert('OCURRIÓ UN ERROR AL ELIMINAR AL USUARIO. INTENTE DE NUEVO');
+                    });
+                }
+            }); 
+        });
     }
 
     // crear nuevo usuario
     $('#crearUsuario').on('click', function () {
         if ($formBusquedaServidores.valid()) {
-        }
-        $.ajax({
-            url:        $formBusquedaServidores.attr('action'),
-            type:       'post',
-            dataType:   'json',
-            data:       $formBusquedaServidores.serialize(),
-            beforeSend: function () {
-                $('#loadingGuardar').modal('show');
-            }
+            $.ajax({
+                url:        $formBusquedaServidores.attr('action'),
+                type:       'post',
+                dataType:   'json',
+                data:       $formBusquedaServidores.serialize(),
+                beforeSend: function () {
+                    $('#loadingGuardar').modal('show');
+                }
 
-        }).done(function (respuesta) {
-            $('#loadingGuardar').modal('show');
+            }).done(function (respuesta) {
+                $('#loadingGuardar').modal('hide');
 
-            if (respuesta.estatus === 'fail') {
+                if (respuesta.estatus === 'fail') {
+                    bootbox.alert('OCURRIÓ UN ERROR AL CREAR AL USUARIO.');
+                }
+
+                if (respuesta.estatus === 'OK') {
+                    bootbox.alert('USUARIO CREADO CON ÉXITO.', function () {
+                        $('#modalAgregarUsuario').modal('hide');
+
+                        // recargar tabla
+                        recargarTabla();
+                    });
+                }
+
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus + ': ' + errorThrown);
+                $('#loadingGuardar').modal('hide');
                 bootbox.alert('OCURRIÓ UN ERROR AL CREAR AL USUARIO.');
-            }
-
-            if (respuesta.estatus === 'OK') {
-                bootbox.alert('USUARIO CREADO CON ÉXITO.', function () {
-                    $('#modalAgregarUsuario').modal('hide');
-
-                    // recargar tabla
-                    recargarTabla();
-                });
-            }
-
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus + ': ' + errorThrown);
-            $('#loadingGuardar').modal('show');
-            bootbox.alert('OCURRIÓ UN ERROR AL CREAR AL USUARIO.');
-        });
+            });
+        }
     });
     
     // asignar privilegios
@@ -117,14 +162,20 @@ jQuery(document).ready(function ($) {
     // recargar tabla listando los usuarios creados
     function recargarTabla() {
         $.ajax({
-            url:      $('#usuariosRegistrados').data('url'),
-            type:     'post',
-            dataType: 'json',
-            data:     {_token: $('#usuariosRegistrados').data('token')},
+            url:        $('#usuariosRegistrados').data('url'),
+            type:       'post',
+            dataType:   'json',
+            data:       {
+                _token: _token
+            },
+            beforeSend: function () {
+                $('#loadingGuardar').modal('show');
+            }
 
         }).done(function (respuesta) {
+            $('#loadingGuardar').modal('hide');
             if (respuesta.estatus === 'fail') {
-                bootbox.alert('OCURRIÓ UN ERROR AL CREAR AL USUARIO.');
+                bootbox.alert('OCURRIÓ UN ERROR AL REFRESCAR LA TABLA.');
                 return false;
             }
 
@@ -132,7 +183,8 @@ jQuery(document).ready(function ($) {
 
         }).fail(function (jqXHR, textStatus, errorThrown) {
             console.log(textStatus + ': ' + errorThrown);
-            bootbox.alert('OCURRIÓ UN ERROR AL CREAR AL USUARIO.');
+            $('#loadingGuardar').modal('hide');
+            bootbox.alert('OCURRIÓ UN ERROR AL REFRESCAR LA TABLA.');
         });
     }
 });

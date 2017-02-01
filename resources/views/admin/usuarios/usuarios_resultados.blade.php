@@ -1,5 +1,5 @@
-<?php $i = 1; ?>
-<table class="table table-primary table-bordered table-striped" id="tablaUsuarios" data-url="{{ url('admin/usuarios/privilegios/editar') }}">
+<?php $i = 0 ?>
+<table class="table table-primary table-bordered table-striped" id="tablaUsuarios" data-url="{{ url('admin/usuarios/privilegios/editar') }}" data-url-eliminar="{{ url('admin/usuarios/eliminar') }}">
     <thead>
     <tr>
         <th>#</th>
@@ -14,7 +14,7 @@
     <tbody>
     @foreach($encargosSidep as $encargo)
         <tr>
-            <td>{{ $i++ }}</td>
+            <td>{{ ++$i }}</td>
             <td>{{ $encargo->getServidorPublico()->nombreCompleto() }}</td>
             <td>{{ $encargo->getPuesto()->getPuesto() }}</td>
             <td>{{ $encargo->getAdscripcion() }}</td>
@@ -29,7 +29,7 @@
             <td>
                 <div class="btn-group btn-group-xs">
                     <button class="btn btn-info editarPrivilegios" data-nombre="{{ $encargo->getServidorPublico()->nombreCompleto() }}" data-id="{{ $encargo->getId() }}" type="button" data-toggle="tooltip" title="EDITAR PRIVILEGIOS"><i class="fa fa-sort-amount-desc"></i></button>
-                    <button class="btn btn-danger" type="button" data-toggle="tooltip" title="REMOVER USUARIO"><i class="fa fa-times"></i></button>
+                    <button class="btn btn-danger removerUsuario" type="button" data-id="{{ $encargo->getId() }}" data-toggle="tooltip" title="REMOVER USUARIO"><i class="fa fa-times"></i></button>
                 </div>
             </td>
         </tr>

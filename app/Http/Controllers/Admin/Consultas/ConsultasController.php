@@ -14,6 +14,7 @@ use Sidep\Dominio\ServidoresPublicos\Repositorios\DependenciasRepositorio;
 use Sidep\Dominio\ServidoresPublicos\Repositorios\MovimientosRepositorio;
 use Sidep\Exceptions\SidepLogger;
 use Sidep\Http\Controllers\Controller;
+use Sidep\Jobs\GuardarAccionDeEncargo;
 
 /**
  * Class ConsultasController
@@ -58,6 +59,9 @@ class ConsultasController extends Controller
     public function reporteDelDia()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+
+        (new GuardarAccionDeEncargo('INGRESÓ A VER EL REPORTE DEL DÍA', session('encargo')))->handle();
+
         return view('admin.consultas.reporte_del_dia', compact('dependencias'));
     }
 
@@ -82,6 +86,8 @@ class ConsultasController extends Controller
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.consultas.reporte_del_dia_resultados', compact('movimientos'))->render();
 
+        (new GuardarAccionDeEncargo('BUSCÓ MOVIMIENTOS DESDE EL MÓDULO DE REPORTE DEL DÍA [' . serialize($parametros) . ']', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -98,6 +104,8 @@ class ConsultasController extends Controller
         ];
 
         $movimientos = $this->movimientosRepositorio->obtenerPor($parametros);
+
+        (new GuardarAccionDeEncargo('SELECCIONÓ EXPORTAR A FORMATO ESTABLECIDO DESDE MÓDULO DE REPORTE DEL DÍA [' . serialize($parametros) . '] OPCIÓN [' . $request->get('opcion') . ']', session('encargo')))->handle();
 
         if ($request->get('opcion') === 'excel') {
             $this->exportarMovimientosDiaExcel($movimientos);
@@ -124,6 +132,8 @@ class ConsultasController extends Controller
     public function declaracionesNoRealizadas()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+
+        (new GuardarAccionDeEncargo('INGRESÓ A VER LISTADO DE DECLARACIONES NO REALIZADAS', session('encargo')))->handle();
         return view('admin.consultas.declaraciones_no_realizadas', compact('dependencias'));
     }
 
@@ -148,6 +158,8 @@ class ConsultasController extends Controller
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.consultas.declaraciones_no_realizadas_resultados', compact('declaraciones'))->render();
 
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES DESDE EL MÓDULO DE DECLARACIONES NO REALIZADAS [' . serialize($parametros) . ']', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -165,6 +177,8 @@ class ConsultasController extends Controller
         ];
 
         $declaraciones = $this->declaracionesRepositorio->obtenerPor($parametros);
+
+        (new GuardarAccionDeEncargo('EXPORTÓ A FORMATO ESTABLECIDO DESDE MÓDULO DE DECLARACIONES NO REALIZADAS [' . serialize($parametros) . '] OPCIÓN [' . $request->get('opcion') . ']', session('encargo')))->handle();
 
         if ($request->get('opcion') === 'excel') {
             $this->exportarDeclaracionesNoRealizadasExcel($declaraciones);
@@ -191,6 +205,7 @@ class ConsultasController extends Controller
     public function omisos()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+        (new GuardarAccionDeEncargo('INGRESÓ A VER LISTADO DE OMISOS', session('encargo')))->handle();
         return view('admin.consultas.omisos', compact('dependencias'));
     }
 
@@ -218,6 +233,8 @@ class ConsultasController extends Controller
 
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.consultas.omisos_resultados', compact('declaraciones'))->render();
+
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES DESDE EL MÓDULO DE OMISOS [' . serialize($parametros) . ']', session('encargo')))->handle();
 
         return response()->json($respuesta);
     }
@@ -254,6 +271,8 @@ class ConsultasController extends Controller
             }
         }
 
+        (new GuardarAccionDeEncargo('MARCÓ A DECLARACIONES COMO OMISOS [' . serialize($request->get('declaracionId')) . '] CON FECHA DE MARCADO ' . $fechaMarcado, session('encargo')))->handle();
+
         $respuesta['estatus'] = 'OK';
         return response()->json($respuesta);
     }
@@ -265,6 +284,7 @@ class ConsultasController extends Controller
     public function desmarcarOmisosMostrar()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+        (new GuardarAccionDeEncargo('INGRESÓ A LISTADO DE DECLARACIONES CON REQUERIMIENTOS', session('encargo')))->handle();
         return view('admin.consultas.omisos_desmarcar', compact('dependencias'));
     }
 
@@ -289,6 +309,8 @@ class ConsultasController extends Controller
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.consultas.omisos_desmarcar_resultados', compact('declaraciones'))->render();
 
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES DESDE EL MÓDULO DE OMISOS [' . serialize($parametros) . ']', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -311,7 +333,6 @@ class ConsultasController extends Controller
             }
 
             $respuesta['estatus'] = 'OK';
-            return response()->json($respuesta);
 
         } catch(Exception $e) {
             $pdoLogger = new SidepLogger(new Logger('exception'), new StreamHandler(storage_path() . '/logs/exceptions/exc_' . date('Y-m-d') . '.log', Logger::ERROR));
@@ -319,6 +340,9 @@ class ConsultasController extends Controller
 
             $respuesta['estatus'] = 'fail';
             $respuesta['mensaje'] = $e->getMessage();
+
+        } finally {
+            (new GuardarAccionDeEncargo('DESMARCÓ OMISO [' . serialize($declaracion) . ']', session('encargo')))->handle();
             return response()->json($respuesta);
         }
     }
@@ -330,6 +354,7 @@ class ConsultasController extends Controller
     public function declaracionesRealizadas()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+        (new GuardarAccionDeEncargo('INGRESÓ A LISTADO DE DECLARACIONES REALIZADAS', session('encargo')))->handle();
         return view('admin.consultas.declaraciones_realizadas', compact('dependencias'));
     }
 
@@ -354,6 +379,8 @@ class ConsultasController extends Controller
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.consultas.declaraciones_realizadas_resultados', compact('declaraciones'))->render();
 
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES DESDE EL MÓDULO DE DECLARACIONES REALIZADAS [' . serialize($parametros) . ']', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -371,6 +398,8 @@ class ConsultasController extends Controller
         ];
 
         $declaraciones = $this->declaracionesRepositorio->obtenerPor($parametros);
+
+        (new GuardarAccionDeEncargo('SELECCIONÓ EXPORTAR DECLARACIONES DESDE EL MÓDULO DE DECLARACIONES REALIZADAS [' . serialize($parametros) . '] OPCIÓN [' . $request->get('opcion') . ']', session('encargo')))->handle();
 
         if ($request->get('opcion') === 'excel') {
             $this->declaracionesRealizadasExportarExcel($declaraciones);

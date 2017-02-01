@@ -43,12 +43,12 @@ class ConstructorMenu
             if ($modulo->tieneModulos()) {
                 if ($modulo->tienePadre()) {
                     $html .= '<li class="menu hasSubmenu">
-                        <a href="#submenu' . (string)$this->index . '" class="glyphicons ' . $modulo->getIcono() . '" data-toggle="collapse"><i></i><span>' . $modulo->getNombre() . '</span></a>
+                        <a href="#submenu' . (string)$this->index . '" class="glyphicons ' . $modulo->getIcono() . '" data-toggle="collapse"><i></i><span class="text-small">' . $modulo->getNombre() . '</span></a>
                         <ul id="submenu' . (string)$this->index . '" class="menu collapse">';
 
                 } else {
                     $html .= '<li class="hasSubmenu">
-                        <a href="#submenu' . (string)$this->index . '" class="glyphicons ' . $modulo->getIcono() . '" data-toggle="collapse"><i></i><span>' . $modulo->getNombre() . '</span></a>
+                        <a href="#submenu' . (string)$this->index . '" class="glyphicons ' . $modulo->getIcono() . '" data-toggle="collapse"><i></i><span class="text-small">' . $modulo->getNombre() . '</span></a>
                         <ul id="submenu' . (string)$this->index . '" class="animated fadeIn collapse">';
                 }
 
@@ -59,9 +59,9 @@ class ConstructorMenu
                 
             } else {
                 if ($this->encargo->tieneElPrivilegio($modulo)) {
-                    $html .= '<li class="text-small"><a href="' . url($modulo->getUrl()) . '" class="glyphicons ' . $modulo->getIcono() . '"><i></i><span>' . $modulo->getNombre() . '</span></a></li>';
+                    $html .= '<li><a href="' . url($modulo->getUrl()) . '" class="glyphicons ' . $modulo->getIcono() . '"><i></i><span class="text-small">' . $modulo->getNombre() . '</span></a></li>';
                 } else {
-                    $html .= '<li class="text-small hide"><a href="#" class="glyphicons ' . $modulo->getIcono() . '"><i></i><span>' . $modulo->getNombre() . '</span></a></li>';
+                    $html .= '<li class="hide"><a href="#" class="glyphicons ' . $modulo->getIcono() . '"><i></i><span class="text-small">' . $modulo->getNombre() . '</span></a></li>';
                 }
             }
         }

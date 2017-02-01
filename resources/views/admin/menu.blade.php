@@ -9,7 +9,7 @@
 		<div id="logoWrapper">
 
 		</div>
-		<ul class="menu list-unstyled" id="navigation_components">
+		<ul class="menu list-unstyled text-small" id="navigation_components">
 			{!! $menu !!}
 		</ul>
 	</div>

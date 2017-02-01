@@ -18,373 +18,299 @@
 Route::group(['prefix' => 'admin'], function() {
     Route::group(['middleware' => ['usuarioC3Autenticado', 'menu']], function() {
 
-        /**
-         * ruta para mostrar la vista principal
-         */
-        Route::get('/', function () {
-            return view('admin.principal');
-        });
+        // ruta para mostrar la vista principal
+        Route::get('/', 'Admin\ServidoresPublicos\ServidoresPublicosController@index');
 
-        /**
-         * ruta para mostrar la vista de administración de encargos
-         */
+        // ruta para mostrar la vista de administración de encargos
         Route::get('servidores', 'Admin\ServidoresPublicos\ServidoresPublicosController@index');
 
-        /**
-         * ruta para mostrar la vista de alta de encargo de servidor público
-         */
+        // ruta para mostrar la vista de alta de encargo de servidor público
         Route::get('servidores/alta', 'Admin\ServidoresPublicos\ServidoresPublicosController@alta');
 
-        /**
-         * ruta para mostrar la vista de alta de encargo de servidor público
-         */
+        // ruta para mostrar la vista de alta de encargo de servidor público
         Route::get('servidores/alta/importar', 'Admin\ServidoresPublicos\ServidoresPublicosController@altaImportar');
 
-        /**
-         * ruta para buscar a servidores públicos
-         */
+        // ruta para buscar a servidores públicos
         Route::post('servidores/busqueda',[
             'as'   => 'servidores-busqueda',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@busqueda'
         ]);
 
-        /**
-         * ruta para guardar encargos alta mediante excel
-         */
+        // ruta para guardar encargos alta mediante excel
         Route::post('servidores/alta/excel', [
             'as'   => 'servidores-encargo-alta-excel',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@registrarEncargoExcel'
         ]);
 
-        /**
-         * ruta para guardar el nuevo encargo del servidor público
-         */
+        // ruta para guardar el nuevo encargo del servidor público
         Route::post('servidores/alta',[
             'as'   => 'servidores-encargo-alta',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@registrarEncargo'
         ]);
 
-        /**
-         * ruta para ver el detalle
-         */
+        // ruta para ver el detalle
         Route::post('servidores/detalle', [
             'as'   => 'servidores-detalle',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@detalle'
         ]);
 
-        /**
-         * ruta para mostrar la vista de edición de datos personales del servidor público
-         */
+        // ruta para mostrar la vista de edición de datos personales del servidor público
         Route::get('servidores/editar/{id?}', 'Admin\ServidoresPublicos\ServidoresPublicosController@editarDatos');
 
-        /**
-         * ruta para guardar los cambios generados al servidor público
-         */
+        // ruta para guardar los cambios generados al servidor público
         Route::post('servidores/editar', [
             'as'   => 'servidores-editar',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@actualizar'
         ]);
 
-        /**
-         * ruta para generar carta compromiso
-         */
+        // ruta para generar carta compromiso
         Route::get('servidores/carta-compromiso/{id}', 'Admin\ServidoresPublicos\ServidoresPublicosController@cartaCompromiso');
 
-        /**
-         * ruta para generar comprobante cuenta de acceso
-         */
+        // ruta para generar comprobante cuenta de acceso
         Route::get('servidores/comprobante-cuenta-acceso/{id}/{pass}', 'Admin\ServidoresPublicos\ServidoresPublicosController@comprobanteCuentaAcceso');
 
-        /**
-         * ruta para generar la baja del encargo especificado
-         */
+        // ruta para generar la baja del encargo especificado
         Route::post('servidores/encargo/baja', [
             'as'   => 'encargo-baja',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@bajaEncargo'
         ]);
 
-        /**
-         * ruta para actualizar la adscripción del servidor público
-         */
+        // ruta para actualizar la adscripción del servidor público
         Route::post('servidores/encargo/cambio-adscripcion', [
             'as'   => 'encargo-cambio-adscripcion',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@cambioAdscripcion'
         ]);
 
-        /**
-         * ruta para realizar una promoción
-         */
+        // ruta para realizar una promoción
         Route::post('servidores/encargo/promocion', [
             'as'   => 'encargo-promocion',
             'uses' => 'Admin\ServidoresPublicos\ServidoresPublicosController@promocion'
         ]);
 
-        /**
-         * ruta para visualizar el historial de movimientos
-         */
+        ################ rutas consultas
+
+        // ruta para visualizar el historial de movimientos
         Route::get('consultas/reporte-del-dia', 'Admin\Consultas\ConsultasController@reporteDelDia');
 
-        /**
-         * ruta para buscar dentro del historial
-         */
+        // ruta para buscar dentro del historial
         Route::post('consultas/reporte-del-dia/buscar', [
             'as'   => 'reporte-del-dia-buscar',
             'uses' => 'Admin\Consultas\ConsultasController@buscarMovimientosDia'
         ]);
 
-        /**
-         * ruta para exportar historial
-         */
+        // ruta para exportar historial
         Route::post('consultas/reporte-del-dia/exportar', [
             'as'   => 'reporte-del-dia-exportar',
             'uses' => 'Admin\Consultas\ConsultasController@exportarMovimientosDia'
         ]);
 
-        /**
-         * ruta para mostrar las declaraciones que no se han realizado
-         */
+        // ruta para mostrar las declaraciones que no se han realizado
         Route::get('consultas/declaraciones/no-realizadas', 'Admin\Consultas\ConsultasController@declaracionesNoRealizadas');
 
-        /**
-         * ruta para buscar declaraciones no realizadas
-         */
+        // ruta para buscar declaraciones no realizadas
         Route::post('consultas/declaraciones/no-realizadas/buscar', [
             'as'   => 'declaraciones-no-realizadas-buscar',
             'uses' => 'Admin\Consultas\ConsultasController@buscarDeclaracionesNoRealizadas'
         ]);
 
-        /**
-         * ruta para exportar las declaraciones no realizadas
-         */
+        // ruta para exportar las declaraciones no realizadas
         Route::post('consultas/declaraciones/no-realizadas/exportar', [
             'as'   => 'declaraciones-no-realizadas-exportar',
             'uses' => 'Admin\Consultas\ConsultasController@exportarDeclaracionesNoRealizadas'
         ]);
 
-        /**
-         * ruta para mostrar las declaraciones que ya se han realizado
-         */
+        // ruta para mostrar las declaraciones que ya se han realizado
         Route::get('consultas/declaraciones/realizadas', 'Admin\Consultas\ConsultasController@declaracionesRealizadas');
 
-        /**
-         * ruta para buscar declaraciones realizadas
-         */
+        // ruta para buscar declaraciones realizadas
         Route::post('consultas/declaraciones/realizadas/buscar', [
             'as'   => 'declaraciones-realizadas-buscar',
             'uses' => 'Admin\Consultas\ConsultasController@declaracionesRealizadasBuscar'
         ]);
 
-        /**
-         * ruta para exportar declaraciones realizadas
-         */
+        // ruta para exportar declaraciones realizadas
         Route::post('consultas/declaraciones/realizadas/exportar', [
             'as'   => 'declaraciones-realizadas-exportar',
             'uses' => 'Admin\Consultas\ConsultasController@declaracionesRealizadasExportar'
         ]);
 
-        /**
-         * ruta para generar la vista de los omisos
-         */
+        // ruta para generar la vista de los omisos
         Route::get('consultas/declaraciones/omisos', 'Admin\Consultas\ConsultasController@omisos');
 
-        /**
-         * ruta para generar la vista de desmarcar omisos
-         */
+        // ruta para generar la vista de desmarcar omisos
         Route::get('consultas/declaraciones/omisos-desmarcar', 'Admin\Consultas\ConsultasController@desmarcarOmisosMostrar');
 
-        /**
-         * ruta para buscar a omisos con requerimientos activados
-         */
+        // ruta para buscar a omisos con requerimientos activados
         Route::post('consultas/declaraciones/omisos-desmarcar/buscar', [
             'as'   => 'omisos-desmarcar-buscar',
             'uses' => 'Admin\Consultas\ConsultasController@desmarcarOmisosBuscar'
         ]);
 
-        /**
-         * ruta para buscar omisos
-         */
+        // ruta para buscar omisos
         Route::post('consultas/declaraciones/omisos/buscar', [
             'as'   => 'omisos-buscar',
             'uses' => 'Admin\Consultas\ConsultasController@buscarOmisos'
         ]);
 
-        /**
-         * ruta para marcar a los omisos
-         */
+        // ruta para marcar a los omisos
         Route::post('consultas/declaraciones/omisos/marcar', [
             'as'   => 'omisos-marcar',
             'uses' => 'Admin\Consultas\ConsultasController@marcarOmisos'
         ]);
 
-        /**
-         * ruta para desmarcar a los omisos marcados
-         */
+        // ruta para desmarcar a los omisos marcados
         Route::post('consultas/declaraciones/omisos-desmarcar', [
             'as'   => 'omisos-desmarcar',
             'uses' => 'Admin\Consultas\ConsultasController@desmarcarOmisos'
         ]);
 
-        /**
-         * ruta para generar la vista de los requerimientos
-         */
+        ################ rutas declaraciones
+
+        // ruta para generar la vista de los requerimientos
         Route::get('declaraciones/requerimientos', 'Admin\Declaraciones\DeclaracionesController@requerimientos');
 
-        /**
-         * ruta para generar el pdf de los requerimientos
-         */
-        Route::get('declaraciones/requerimientos/pdf/{declaracionId}', 'Admin\Declaraciones\DeclaracionesController@requerimientoPdf');
+        // ruta para generar el pdf de los requerimientos
+        Route::get('declaraciones/requerimientos/pdf/{declaracionId?}', 'Admin\Declaraciones\DeclaracionesController@requerimientoPdf');
 
-        /**
-         * ruta para buscar requerimientos
-         */
+        // ruta para buscar requerimientos
         Route::post('declaraciones/requerimientos/buscar', [
             'as'   => 'requerimientos-buscar',
             'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientosBuscar'
         ]);
 
-        /**
-         * ruta para eliminar el requerimiento
-         */
+        // ruta para eliminar el requerimiento
         Route::post('declaraciones/requerimientos', [
             'as'   => 'requerimiento-eliminar',
             'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientoEliminar'
         ]);
 
-        /**
-         * ruta para generar la vista del retorno de requerimientos
-         */
+        // ruta para generar la vista del retorno de requerimientos
         Route::get('declaraciones/requerimientos/retorno', 'Admin\Declaraciones\DeclaracionesController@retornoRequerimientos');
 
-        /**
-         * ruta para buscar a las declaraciones que tienen requerimientos activos
-         */
+        // ruta para buscar a las declaraciones que tienen requerimientos activos
         Route::post('declaraciones/requerimientos/retorno/buscar', [
             'as'   => 'requerimientos-retorno-buscar',
             'uses' => 'Admin\Declaraciones\DeclaracionesController@retornoRequerimientosBuscar'
         ]);
 
-        /**
-         * ruta para marcar el retorno de las declaraciones que tiene requerimientos activos
-         */
+        // ruta para marcar el retorno de las declaraciones que tiene requerimientos activos
         Route::post('declaraciones/requerimientos/retorno/marcar', [
             'as'   => 'requerimientos-retorno-marcar',
             'uses' => 'Admin\Declaraciones\DeclaracionesController@retornoRequerimientosMarcar'
         ]);
 
-        /**
-         * ruta para generar la vista de la desmarcación de retorno de requerimientos
-         */
+        // ruta para generar la vista de la desmarcación de retorno de requerimientos
         Route::get('declaraciones/requerimientos/desmarcar', 'Admin\Declaraciones\DeclaracionesController@requerimientosDesmarcarMostrar');
 
-        /**
-         * ruta para buscar a declaraciones que tienen requerimientos marcados de retorno
-         */
+        // ruta para buscar a declaraciones que tienen requerimientos marcados de retorno
         Route::post('declaraciones/requerimientos/desmarcar/buscar', [
             'as'   => 'requerimientos-desmarcar-buscar',
             'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientosDesmarcarBuscar'
         ]);
 
-        /**
-         * ruta para desmarcar la recepción de requerimientos
-         */
+        // ruta para desmarcar la recepción de requerimientos
         Route::post('declaraciones/requerimientos/desmarcar', [
             'as'   => 'requerimientos-desmarcar',
             'uses' => 'Admin\Declaraciones\Declaracionescontroller@requerimientosDesmarcar'
         ]);
 
-        /**
-         * ruta para mostrar la vista de envíos a SFP
-         */
+        // ruta para mostrar la vista de envíos a SFP
         Route::get('declaraciones/envios-sfp/marcar', 'Admin\Declaraciones\DeclaracionesController@mostrarMarcarEnviosSFP');
 
-        /**
-         * ruta para buscar enviados a sfp
-         */
+        // ruta para buscar enviados a sfp
         Route::post('declaraciones/envios-sfp/marcar-buscar', [
             'as'   => 'envios-sfp-marcar-buscar',
             'uses' => 'Admin\Declaraciones\DeclaracionesController@enviosSFPBuscar'
         ]);
 
-        /**
-         * ruta para marcar a las declaraciones como enviadas a SFP
-         */
+        // ruta para marcar a las declaraciones como enviadas a SFP
         Route::post('declaraciones/envios-sfp/marcar', [
             'as'   => 'enviados-sfp-marcar',
             'uses' => 'Admin\Declaraciones\DeclaracionesController@marcarEnviosSFP'
         ]);
 
-        /**
-         * ruta para mostrar la vista de los que ya fueron enviados a SFP
-         */
+        // ruta para mostrar la vista de los que ya fueron enviados a SFP
         Route::get('declaraciones/enviados-sfp', 'Admin\Declaraciones\DeclaracionesController@mostrarEnviadosASFP');
 
-        /**
-         * ruta para buscar enviados a sfp
-         */
+        // ruta para buscar enviados a sfp
         Route::post('declaraciones/enviados-sfp/marcar-buscar', [
             'as'   => 'enviados-sfp-marcar-buscar',
             'uses' => 'Admin\Declaraciones\DeclaracionesController@enviadosSFPBuscar'
         ]);
 
-        /**
-         * ruta para eliminar la sanción
-         */
+        // ruta para eliminar la sanción
         Route::post('declaraciones/enviados-sfp/sancion-eliminar', [
             'as'   => 'sancion-eliminar',
             'uses' => 'Admin\Declaraciones\DeclaracionesController@enviadosSFPEliminar'
         ]);
 
-        /**
-         * ruta para generar la sanción en PDF
-         */
-        Route::get('declaraciones/enviados-sfp/pdf/{declaracionId}', 'Admin\Declaraciones\Declaracionescontroller@envioSancionPDF');
+        // ruta para generar la sanción en PDF
+        Route::get('declaraciones/enviados-sfp/pdf/{declaracionId?}', 'Admin\Declaraciones\Declaracionescontroller@envioSancionPDF');
 
-        /**
-         * ruta para generar la vista de reportes de modificacion
-         */
+        // ruta para generar la vista de reportes de modificacion
         Route::get('reportes/reporte-modificacion', 'Admin\Reportes\ReportesController@reporteModificacion');
 
-        /**
-         * ruta para generar la vista de usuarios
-         */
+        ################ rutas usuarios
+
+        // ruta para generar la vista de usuarios
         Route::get('usuarios', 'Admin\Usuarios\UsuariosController@index');
 
-        /**
-         * ruta para generar usuario
-         */
-        Route::post('usuarios/nuevo', 'Admin\Usuarios\UsuariosController@generar');
-
-        /**
-         * ruta para generar la vista de usuarios
-         */
+        // ruta para generar la vista de usuarios
         Route::post('usuarios', 'Admin\Usuarios\UsuariosController@buscar');
 
-        /**
-         * ruta para generar el form de privilegios
-         */
+        // ruta para generar usuario
+        Route::post('usuarios/nuevo', 'Admin\Usuarios\UsuariosController@generar');
+
+        // ruta para generar el form de privilegios
         Route::post('usuarios/privilegios/editar', 'Admin\Usuarios\UsuariosController@generarVistaPrivilegios');
 
-        /**
-         * ruta para asignar privilegios
-         */
+        // ruta para asignar privilegios
         Route::post('usuarios/privilegios', 'Admin\Usuarios\UsuariosController@asignarPrivilegios');
+
+        // ruta para eliminar usuarios
+        Route::post('usuarios/eliminar', 'Admin\Usuarios\UsuariosController@eliminar');
+
+        ################ rutas configuracion
+        // ruta para mostrar la vista de días festivos oficiales
+        Route::get('conf/dias-festivos-oficiales', 'Admin\Configuraciones\ConfiguracionesController@diasFestivosOficiales');
+
+        // ruta para buscar días festivos
+        Route::post('conf/dias-festivos-oficiales', 'Admin\Configuraciones\ConfiguracionesController@recargarDiasFestivosOficiales');
+
+        // ruta para guardar nuevo día festivo
+        Route::post('conf/dias-festivos-oficiales/agregar', [
+            'as'   => 'dia-festivo-agregar',
+            'uses' => 'Admin\Configuraciones\ConfiguracionesController@agregarDiaFestivoOficial'
+        ]);
+
+        // ruta para eliminar día festivo
+        Route::post('conf/dias-festivos-eliminar', 'Admin\Configuraciones\ConfiguracionesController@eliminarDiaFestivoOficial');
+
+        //ruta para mostrar días festivos no oficiales - anuales
+        Route::get('conf/dias-festivos-no-oficiales', 'Admin\Configuraciones\ConfiguracionesController@diasFestivosNoOficiales');
+
+        // ruta para buscar días festivos
+        Route::post('conf/dias-festivos-no-oficiales', 'Admin\Configuraciones\ConfiguracionesController@recargarDiasFestivosNoOficiales');
+
+        // ruta para guardar nuevo día festivo
+        Route::post('conf/dias-festivos-no-oficiales/agregar', [
+            'as'   => 'dia-festivo-no-oficial-agregar',
+            'uses' => 'Admin\Configuraciones\ConfiguracionesController@agregarDiaFestivoNoOficial'
+        ]);
+
+        // ruta para eliminar día festivo
+        Route::post('conf/dias-festivos-no-oficial/eliminar', 'Admin\Configuraciones\ConfiguracionesController@eliminarDiaFestivoNoOficial');
     });
 
-    /**
-     * ruta para mostrar la vista de login
-     */
+    // ruta para mostrar la vista de login
     Route::get('login', function(){
         return view('admin.login');
     });
 
-    /**
-     * ruta para procesar el login
-     */
+    // ruta para procesar el login
     Route::post('login', 'LoginController@login');
 
-    /**
-     * ruta para cerrar la sesión de usuario
-     */
+    // ruta para cerrar la sesión de usuario
     Route::get('logout', 'LoginController@logout');
 });
 

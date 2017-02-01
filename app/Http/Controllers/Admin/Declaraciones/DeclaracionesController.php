@@ -15,6 +15,7 @@ use Sidep\Dominio\ServidoresPublicos\Repositorios\MovimientosRepositorio;
 use Sidep\Exceptions\SidepLogger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Sidep\Jobs\GuardarAccionDeEncargo;
 use Sidep\Http\Controllers\Controller;
 
 /**
@@ -65,6 +66,8 @@ class Declaracionescontroller extends Controller
         $dependencias  = $this->dependenciasRepositorio->obtenerTodos();
         $declaraciones = $this->declaracionesRepositorio->obtenerPor($parametros);
 
+        (new GuardarAccionDeEncargo('INGRESÓ A VER LISTADO DE REQUERIMIENTOS', session('encargo')))->handle();
+
         return view('admin.declaraciones.requerimientos', compact('declaraciones', 'dependencias'));
     }
 
@@ -92,6 +95,8 @@ class Declaracionescontroller extends Controller
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.declaraciones.requerimientos_resultados', compact('declaraciones'))->render();
 
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES EN LISTADO DE REQUERIMIENTOS: [' . serialize($parametros) . ']', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -114,7 +119,6 @@ class Declaracionescontroller extends Controller
             }
 
             $respuesta['estatus'] = 'OK';
-            return response()->json($respuesta);
 
         } catch(Exception $e) {
             $pdoLogger = new SidepLogger(new Logger('exception'), new StreamHandler(storage_path() . '/logs/exceptions/exc_' . date('Y-m-d') . '.log', Logger::ERROR));
@@ -122,6 +126,10 @@ class Declaracionescontroller extends Controller
 
             $respuesta['estatus'] = 'fail';
             $respuesta['mensaje'] = $e->getMessage();
+
+        } finally {
+            (new GuardarAccionDeEncargo('ELIMINÓ EL REQUERIMIENTO DE LA DECLARACIÓN: [' . serialize($declaracion) . ']', session('encargo')))->handle();
+
             return response()->json($respuesta);
         }
     }
@@ -141,6 +149,8 @@ class Declaracionescontroller extends Controller
 
         $reporte = new Reporte(new RequerimientoCrystalReports($declaracion));
 
+        (new GuardarAccionDeEncargo('GENERÓ EL REQUERIMIENTO EN PDF: [' . serialize($declaracion) . ']', session('encargo')))->handle();
+
         if ($reporte->existe()) {
             return response()->file($reporte->ruta());
         }
@@ -157,6 +167,8 @@ class Declaracionescontroller extends Controller
     public function retornoRequerimientos()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+
+        (new GuardarAccionDeEncargo('INGRESÓ A VISUALIZAR EL RETORNO DE REQUERIMIENTOS', session('encargo')))->handle();
         return view('admin.declaraciones.requerimientos_retorno', compact('dependencias'));
     }
 
@@ -181,6 +193,8 @@ class Declaracionescontroller extends Controller
 
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.declaraciones.requerimientos_retorno_resultados', compact('declaraciones'))->render();
+
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES EN LISTADO DE RETORNO DE REQUERIMIENTOS: [' . serialize($parametros) . ']', session('encargo')))->handle();
 
         return response()->json($respuesta);
     }
@@ -211,6 +225,8 @@ class Declaracionescontroller extends Controller
             }
         }
 
+        (new GuardarAccionDeEncargo('MARCÓ EL RETORNO DE REQUERIMIENTOS CON EL OFICIO: [' . serialize($oficio) . '] Y LAS DECLARACIONES [' . serialize($request->get('declaracionId')) . ']', session('encargo')))->handle();
+
         $respuesta['estatus'] = 'OK';
         return response()->json($respuesta);
     }
@@ -222,6 +238,8 @@ class Declaracionescontroller extends Controller
     public function requerimientosDesmarcarMostrar()
     {
         $dependencias = $this->dependenciasRepositorio->obtenerTodos();
+        (new GuardarAccionDeEncargo('INGRESÓ A DESMARCAR REQUERIMIENTOS', session('encargo')))->handle();
+
         return view('admin.declaraciones.requerimientos_desmarcar', compact('dependencias'));
     }
 
@@ -288,6 +306,8 @@ class Declaracionescontroller extends Controller
         $declaraciones = $this->declaracionesRepositorio->obtenerPor($parametros);
         $dependencias  = $this->dependenciasRepositorio->obtenerTodos();
 
+        (new GuardarAccionDeEncargo('INGRESÓ A MARCAR DECLARACIONES PARA ENVÍO A SFP', session('encargo')))->handle();
+
         return view('admin.declaraciones.envios_sfp', compact('dependencias', 'declaraciones'));
     }
 
@@ -315,6 +335,8 @@ class Declaracionescontroller extends Controller
 
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.declaraciones.envios_sfp_resultados', compact('declaraciones'))->render();
+
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES DESDE EL MÓDULO DE ENVÍO A SFP [' . serialize($parametros) . ']', session('encargo')))->handle();
 
         return response()->json($respuesta);
     }
@@ -344,6 +366,8 @@ class Declaracionescontroller extends Controller
             }
         }
 
+        (new GuardarAccionDeEncargo('MARCAR A LAS DECLARACIONES PARA ENVÍO A SFP [' . serialize($request->get('declaracionId')) . ']', session('encargo')))->handle();
+
         $respuesta['estatus'] = 'OK';
         return response()->json($respuesta);
     }
@@ -363,6 +387,7 @@ class Declaracionescontroller extends Controller
         $declaraciones = $this->declaracionesRepositorio->obtenerPor($parametros);
         $dependencias  = $this->dependenciasRepositorio->obtenerTodos();
 
+        (new GuardarAccionDeEncargo('INGRESÓ A MOSTRAR LISTA DE ENVIADOS A SFP', session('encargo')))->handle();
         return view('admin.declaraciones.enviados_sfp', compact('dependencias', 'declaraciones'));
     }
 
@@ -389,6 +414,8 @@ class Declaracionescontroller extends Controller
         $respuesta['estatus'] = 'OK';
         $respuesta['html']    = view('admin.declaraciones.enviados_sfp_resultados', compact('declaraciones'))->render();
 
+        (new GuardarAccionDeEncargo('BUSCÓ DECLARACIONES DESDE MÓDULO DE ENVIADOS A SFP [' . serialize($parametros) . ']', session('encargo')))->handle();
+
         return response()->json($respuesta);
     }
 
@@ -410,6 +437,8 @@ class Declaracionescontroller extends Controller
             return response()->json($respuesta);
         }
 
+        (new GuardarAccionDeEncargo('REMOVIÓ EL ESTATUS DE ENVIADO A SFP A DECLARACIÓN [' . serialize($declaracion) . ']', session('encargo')))->handle();
+
         $respuesta['estatus'] = 'OK';
         return response()->json($respuesta);
     }
@@ -427,6 +456,8 @@ class Declaracionescontroller extends Controller
         $this->declaracionesRepositorio->actualizar($declaracion);
 
         $reporte = new Reporte(new SancionCrystalReports($declaracion));
+
+        (new GuardarAccionDeEncargo('GENERÓ FORMATO DE ENVÍO A SFP EN PDF', session('encargo')))->handle();
 
         if ($reporte->existe()) {
             return response()->file($reporte->ruta(), ['Content-Disposition' => 'inline;filename=Descripcion.pdf']);
